@@ -30,7 +30,7 @@ $ npm install
 Before running application, make sure having server part running.
 
 ```bash
-$ npm run dev
+$ npm start
 ```
 
 ### Needed extensions
