@@ -37,5 +37,5 @@ $ npm start
 
 In order to work with the project you need to instal the following VScode extensions:
 
-- Prettier
-- ESlint
+- ESLint (code analyze and syntax check)
+- Prettier (Prettify and format the code depending on ESLint rules)
