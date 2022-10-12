@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -8,8 +8,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useTranslation } from 'react-i18next';
 
-import validate from './LoginValidationRules';
-import useForm from './useForm';
+import validate from './LoginValidationRules.js';
+import useForm from './useForm.js';
 
 export default function Login({ handleFormClick }) {
   const { t } = useTranslation();
