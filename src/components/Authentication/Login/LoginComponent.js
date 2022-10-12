@@ -28,8 +28,6 @@ export default function Login({ handleFormClick }) {
         password: values.password,
       }),
     );
-
-    /*HERE SHOULD BE CREDENTIAL CHECK FROM API*/
   }
 
   return (
