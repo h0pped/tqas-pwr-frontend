@@ -1,0 +1,9 @@
+.appTitle {
+  text-transform: uppercase;
+  font-weight: 700;
+  font-style: normal;
+  text-align: center;
+  width: 100%;
+  color: rgb(217, 55, 42);
+  font-family: 'Roboto', sans-serif;
+}

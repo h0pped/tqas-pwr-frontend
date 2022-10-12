@@ -1,23 +1,79 @@
 /* eslint-disable import/no-named-as-default-member */
 /* eslint-disable import/no-named-as-default */
-import React from 'react';
+import React, { Suspense } from 'react';
+import { createTheme, ThemeProvider } from '@mui/material';
 import './index.css';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+import i18next from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import HttpApi from 'i18next-http-backend';
+import LanguageDetector from 'i18next-browser-languagedetector';
+
 import App from './App.js';
 import reportWebVitals from './reportWebVitals.js';
 import Login from './pages/Login/Login.js';
 
+const theme = createTheme({
+  typography: {
+    fontFamily: [
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(','),
+  },
+  palette: {
+    primary: {
+      light: '#FFB99A',
+      main: '#D9372A',
+      dark: '#C31E1A',
+    },
+  },
+});
+
+i18next
+  .use(HttpApi)
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init({
+    supportedLngs: ['en', 'pl'],
+    fallbackLng: 'pl',
+    debug: false,
+    // Options for language detector
+    detection: {
+      order: ['path', 'cookie', 'htmlTag'],
+      caches: ['cookie'],
+    },
+    // react: { useSuspense: false },
+    backend: {
+      loadPath: '/assets/locales/{{lng}}/translation.json',
+    },
+  });
+
+const loadingMarkupAlert = <h2>Loading...</h2>;
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
-    </BrowserRouter>
-  </React.StrictMode>,
+  <Suspense fallback={loadingMarkupAlert}>
+    <ThemeProvider theme={theme}>
+      <React.StrictMode>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<App />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </BrowserRouter>
+      </React.StrictMode>
+    </ThemeProvider>
+  </Suspense>,
 );
 
 // If you want to start measuring performance in your app, pass a function

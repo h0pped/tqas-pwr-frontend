@@ -1,0 +1,40 @@
+.switchContainer {
+  margin-right: 8px;
+  display: flex;
+  gap: 4px;
+  width: auto;
+  height: 20px;
+  margin-right: 12px;
+  margin-left: 12px;
+}
+
+.languageBtnActive {
+  height: max-content;
+  margin: 0;
+  width: 24px;
+  text-align: center;
+  font-size: 14px;
+  padding: 2px;
+  color: #d9372a;
+  text-decoration: underline;
+  cursor: not-allowed;
+  -webkit-box-shadow: inset 0px -10px 12px -9px rgba(165, 165, 165, 1);
+  -moz-box-shadow: inset 0px -10px 12px -9px rgba(165, 165, 165, 1);
+  box-shadow: inset 0px -10px 12px -9px rgba(165, 165, 165, 1);
+}
+
+.languageBtn {
+  height: max-content;
+  margin: 0;
+  width: 24px;
+  text-align: center;
+  font-size: 14px;
+  padding: 2px;
+}
+
+.languageBtn:hover {
+  background-color: #d9372a;
+  color: #ffffff;
+  text-decoration: underline;
+  cursor: pointer;
+}
