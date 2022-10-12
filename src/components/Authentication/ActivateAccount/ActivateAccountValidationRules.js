@@ -5,16 +5,16 @@ export default function validate(values) {
     errors.email = 'login_validation_email_required';
   }
 
-  if (values.email && !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(String(values.email))) {
-    errors.email = 'login_validation_not_email';
-  }
+  if (values.email) {
+    if (!/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(String(values.email))) {
+      errors.email = 'login_validation_not_email';
 
-  if (
-    values.email
-    && /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(String(values.email))
-    && !values.email.endsWith('@pwr.edu.pl')
-  ) {
-    errors.email = 'login_validation_not_university_email';
+      if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(String(values.email))
+        && !values.email.endsWith('@pwr.edu.pl')
+      ) {
+        errors.email = 'login_validation_not_university_email';
+      }
+    }
   }
 
   if (!values.password) {
