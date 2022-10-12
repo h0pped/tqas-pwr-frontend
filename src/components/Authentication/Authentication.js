@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
-// import { useTranslation } from 'react-i18next';
 import Login from './Login/LoginComponent.js';
 import ActivateAccountComponent from './ActivateAccount/ActivateAccountComponent.js';
 import PasswordResetComponent from './PasswordReset/PasswordResetComponent.js';
 
 export default function Authentication() {
-  // const { t } = useTranslation();
-
   const [page, setPage] = useState(0);
 
   const handleFormClick = (event, num) => {
