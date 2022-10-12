@@ -39,8 +39,6 @@ export default function ActivateAccountComponent({ handleFormClick }) {
   };
 
   function verify() {
-    /* HERE SHOULD BE CHECK IF EMAIL IS IN SYSTEM DB */
-
     if (state === 0 && values.email && !errors.email) {
       setState(1);
     }
