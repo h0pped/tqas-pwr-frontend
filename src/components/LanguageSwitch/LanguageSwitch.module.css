@@ -16,6 +16,14 @@
   font-size: 14px;
   padding: 2px;
   color: #d9372a;
+
+  background: none;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+
   text-decoration: underline;
   cursor: not-allowed;
   -webkit-box-shadow: inset 0px -10px 12px -9px rgba(165, 165, 165, 1);
@@ -30,6 +38,13 @@
   text-align: center;
   font-size: 14px;
   padding: 2px;
+
+  background: none;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
 }
 
 .languageBtn:hover {

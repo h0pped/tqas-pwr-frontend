@@ -7,20 +7,18 @@ export default function validate(values) {
 
   if (values.email) {
     if (
-      !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
-        String(values.email),
-      )
+      // eslint-disable-next-line max-len
+      !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(String(values.email))
     ) {
       errors.email = 'login_validation_not_email';
+    }
 
-      if (
-        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
-          String(values.email),
-        )
-        && !values.email.endsWith('@pwr.edu.pl')
-      ) {
-        errors.email = 'login_validation_not_university_email';
-      }
+    if (
+      // eslint-disable-next-line max-len
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(String(values.email))
+      && !values.email.endsWith('@pwr.edu.pl')
+    ) {
+      errors.email = 'login_validation_not_university_email';
     }
   }
 

@@ -18,6 +18,7 @@ const languages = [
 
 export default function LanguageSwitch() {
   const currentLanguageCode = cookies.get('i18next');
+  // eslint-disable-next-line no-unused-vars
   const [ignored, forceUpdate] = useReducer((x) => x + 1, 0);
 
   const { t } = useTranslation();
@@ -32,17 +33,18 @@ export default function LanguageSwitch() {
   return (
     <div className={classes.switchContainer}>
       {languages.map(({ code, name }) => (
-        <p
+        <button
           className={
             currentLanguageCode === code
               ? classes.languageBtnActive
               : classes.languageBtn
           }
+          type="button"
           key={code}
           onClick={() => handleLanguageSwitch(code)}
         >
           {name}
-        </p>
+        </button>
       ))}
     </div>
   );
