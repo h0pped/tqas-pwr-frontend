@@ -1,6 +1,7 @@
 import React from 'react';
-import classes from './DepartmentTitleHeading.module.css';
 import { useTranslation } from 'react-i18next';
+
+import classes from './DepartmentTitleHeading.module.css';
 
 export default function DepartmentTitleHeading() {
   const { t } = useTranslation();
