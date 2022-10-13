@@ -1,9 +1,9 @@
 import LanguageSwitch from '../../components/LanguageSwitch/LanguageSwitch.js';
 import DepartmentTitleHeading from '../../components/DepartmentTitleHeading/DepartmenTitleHeading.js';
 
-import departmentLogo from '../../images/departmentLogo.svg';
+import departmentLogo from '../../assets/images/departmentLogo.svg';
 
-import pwrLogo from '../../images/pwrLogo.svg';
+import pwrLogo from '../../assets/images/pwrLogo.svg';
 
 import classes from './Login.module.css';
 import Authentication from '../../components/Authentication/Authentication.js';

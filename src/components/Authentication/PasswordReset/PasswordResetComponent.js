@@ -19,7 +19,6 @@ import validate from './PasswordResetValidationRules.js';
 import useForm from './useForm.js';
 
 const Transition = React.forwardRef(
-  // eslint-disable-next-line react/jsx-props-no-spreading
   (props, ref) => <Slide direction="down" ref={ref} {...props} />,
 );
 

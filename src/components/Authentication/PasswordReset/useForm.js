@@ -7,10 +7,10 @@ const useForm = (callback, validate) => {
 
   useEffect(() => {
     if (
-      !errors.email
+      (!errors.email
       || !errors.code
-      || !errors.password
-      || isSubmitting
+      || !errors.password)
+      && isSubmitting
     ) {
       callback();
     }
