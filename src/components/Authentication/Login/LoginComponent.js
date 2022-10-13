@@ -3,7 +3,6 @@ import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useTranslation } from 'react-i18next';
@@ -20,8 +19,7 @@ export default function Login({ handleFormClick }) {
   );
 
   function login() {
-    console.log('No errors from fron-end validation!');
-
+    // eslint-disable-next-line no-alert
     alert(
       JSON.stringify({
         email: values.email,
@@ -81,13 +79,12 @@ export default function Login({ handleFormClick }) {
                 alignItems: 'end',
               }}
             >
-              <Link
-                href="#"
-                variant="body2"
+              <Button
+                variant="text"
                 onClick={(event) => handleFormClick(event, 2)}
               >
                 {t('act_link_reset_psw')}
-              </Link>
+              </Button>
             </Box>
             <Button
               fullWidth
