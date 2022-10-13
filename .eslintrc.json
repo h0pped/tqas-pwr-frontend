@@ -53,7 +53,7 @@
           "warn",
           {
              "code":80,
-             "ignoreRegex": true
+             "ignorePattern": true
           }
        ],
        "react-hooks/rules-of-hooks":"error",
