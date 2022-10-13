@@ -19,7 +19,6 @@ export default function Login({ handleFormClick }) {
   );
 
   function login() {
-    // eslint-disable-next-line no-alert
     alert(
       JSON.stringify({
         email: values.email,

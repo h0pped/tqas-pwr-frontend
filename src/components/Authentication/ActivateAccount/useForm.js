@@ -1,4 +1,3 @@
-/* eslint-disable no-prototype-builtins */
 import { useState, useEffect } from 'react';
 
 const useForm = (callback, validate) => {
@@ -8,9 +7,9 @@ const useForm = (callback, validate) => {
 
   useEffect(() => {
     if (
-      (!errors.hasOwnProperty('email')
-      || !errors.hasOwnProperty('code')
-      || !errors.hasOwnProperty('password'))
+      (!errors.email
+      || !errors.code
+      || !errors.password)
       && isSubmitting
     ) {
       callback();
