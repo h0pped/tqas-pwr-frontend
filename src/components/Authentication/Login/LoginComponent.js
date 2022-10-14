@@ -19,12 +19,7 @@ export default function Login({ handleFormClick }) {
   );
 
   function login() {
-    alert(
-      JSON.stringify({
-        email: values.email,
-        password: values.password,
-      }),
-    );
+    // here login logic
   }
 
   return (

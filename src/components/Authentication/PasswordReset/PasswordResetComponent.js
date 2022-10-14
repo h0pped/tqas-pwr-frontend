@@ -32,24 +32,25 @@ export default function PasswordResetComponent({ handleFormClick }) {
     validate,
   );
 
-  const [open, setOpen] = React.useState(false);
+  const [isOpen, setOpen] = React.useState(false);
 
   const handleClose = () => {
     setOpen(false);
   };
 
   function verify() {
-    if (state === 0 && values.email && !errors.email) {
-      setState(1);
-    }
+    if (state < 3) {
+      if (values.email && !errors.email) {
+        setState(1);
+      }
 
-    if (state === 1 && values.code && !errors.email) {
-      setState(2);
-    }
-
-    if (state === 2 && values.password && !errors.password) {
-      setState(3);
-      setOpen(true);
+      if (values.code && !errors.code) {
+        setState(2);
+      }
+      if (values.password && !errors.password) {
+        setState(3);
+        setOpen(true);
+      }
     }
   }
 
@@ -95,7 +96,7 @@ export default function PasswordResetComponent({ handleFormClick }) {
             arrow
           >
             <TextField
-              error={state === 1 ? errors.code : null}
+              error={state === 1 && errors.code}
               helperText={state === 1 ? t(errors.code) : ''}
               margin="normal"
               required
@@ -116,7 +117,7 @@ export default function PasswordResetComponent({ handleFormClick }) {
             arrow
           >
             <TextField
-              error={state === 2 ? errors.password : null}
+              error={state === 2 && errors.password}
               helperText={state === 2 ? t(errors.password) : ''}
               margin="normal"
               required
@@ -154,7 +155,7 @@ export default function PasswordResetComponent({ handleFormClick }) {
         </Box>
       </Box>
       <Dialog
-        open={open}
+        open={isOpen}
         TransitionComponent={Transition}
         keepMounted
         onClose={handleClose}

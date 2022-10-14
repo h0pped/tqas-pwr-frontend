@@ -22,6 +22,7 @@
        "no-use-before-define":"off",
        "react/react-in-jsx-scope": "off",
        "react/jsx-props-no-spreading": "off",
+       "no-const-assign": "off",
        "object-curly-newline": [
         "error",
         {
