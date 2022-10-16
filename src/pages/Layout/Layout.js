@@ -100,7 +100,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 export default function Layout() {
   const { t } = useTranslation();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -173,7 +173,7 @@ export default function Layout() {
         <Divider />
         <List>
           {drawerContentList.map((item) => (
-            <Tooltip title={!open ? item.title : ''} placement="right">
+            <Tooltip key={item.title} title={!open ? item.title : ''} placement="right">
               <ListItem key={item.title} disablePadding sx={{ display: 'block' }}>
                 <ListItemButton
                   sx={{
