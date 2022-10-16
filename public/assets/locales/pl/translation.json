@@ -37,5 +37,10 @@
   "acc_activation_success": "Twoje konto zostało pomyślnie aktywowane, teraz możesz się zalogować.",
   "reset_psw_email_helper": "Użyj adresu e-mail powiązanego z kontem, do którego chcesz zresetować hasło.",
   "password_reset_success": "Twoje hasło zostało pomyślnie zresetowane, teraz możesz się zalogować.",
-  "success": "Sukces!"
+  "success": "Sukces!",
+
+  "drawer_item_title_classes_eval": "Hospitacja",
+  "drawer_item_title_wzhz": "Grupa WZHZ/SZHZ",
+  "drawer_item_title_protocols": "Protokoły",
+  "drawer_item_title_users": "Użytkownicy systemu"
 }

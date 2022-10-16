@@ -14,6 +14,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import App from './App.js';
 import reportWebVitals from './reportWebVitals.js';
 import Login from './pages/Login/Login.js';
+import Layout from './pages/Layout/Layout.js';
 
 const theme = createTheme({
   typography: {
@@ -32,7 +33,7 @@ const theme = createTheme({
   },
   palette: {
     primary: {
-      light: '#FFB99A',
+      light: '#DF9A8C',
       main: '#D9372A',
       dark: '#C31E1A',
     },
@@ -69,6 +70,7 @@ root.render(
           <Routes>
             <Route path="/" element={<App />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/dashboard/*" element={<Layout />} />
           </Routes>
         </BrowserRouter>
       </React.StrictMode>

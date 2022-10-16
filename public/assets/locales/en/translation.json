@@ -37,5 +37,10 @@
   "acc_activation_success": "Your account has been successfully activated, now you can log in.",
   "reset_psw_email_helper": "Use the email associated with the account you want to reset password to.",
   "password_reset_success": "Your password has been successfully reset, now you can log in.",
-  "success": "Success!"
+  "success": "Success!",
+
+  "drawer_item_title_classes_eval": "Classes evaluation",
+  "drawer_item_title_wzhz": "Manage WZHZ/SZHZ",
+  "drawer_item_title_protocols": "Protocols",
+  "drawer_item_title_users": "Manage users"
 }
