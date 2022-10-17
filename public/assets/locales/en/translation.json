@@ -42,5 +42,6 @@
   "drawer_item_title_classes_eval": "Classes evaluation",
   "drawer_item_title_wzhz": "Manage WZHZ/SZHZ",
   "drawer_item_title_protocols": "Protocols",
-  "drawer_item_title_users": "Manage users"
+  "drawer_item_title_users": "Manage users",
+  "manage_users_required": "Required field."
 }

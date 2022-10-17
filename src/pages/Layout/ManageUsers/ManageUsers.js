@@ -3,10 +3,19 @@ import React, { useEffect } from 'react';
 import axios from 'axios';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import LinearProgress from '@mui/material/LinearProgress';
+import MenuItem from '@mui/material/MenuItem';
 import { DataGrid, GridToolbarContainer, GridToolbarExport, GridToolbarColumnsButton, GridToolbarDensitySelector, GridToolbarQuickFilter, GridToolbarFilterButton } from '@mui/x-data-grid';
 import { ToastContainer, toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
+
 import 'react-toastify/dist/ReactToastify.css';
+
+import validate from './ManageUsersValidationRules.js';
+import useForm from './useForm.js';
+
+const baseUrl = 'http://192.168.0.141:8080';
 
 function CustomToolbar() {
   return (
@@ -27,11 +36,13 @@ function CustomToolbar() {
 }
 
 export default function ManageUsers({ setDrawerSelectedItem, link }) {
+  const { t } = useTranslation();
+
   useEffect(() => {
     setDrawerSelectedItem(link);
   }, []);
 
-  const [pageSize, setPageSize] = React.useState(10);
+  const [pageSize, setPageSize] = React.useState(5);
 
   const columns = [
     { field: 'email', headerName: 'Email address', minWidth: 200, flex: 2 },
@@ -89,21 +100,25 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
   });
 
   const handleSubmit = async () => {
-    setIsLoading(true);
-    const formData = new FormData();
-    formData.append('files', selectedFile);
-    try {
-      axios({
-        method: 'post',
-        url: 'http://192.168.0.141:8080/upload_users/append_users/',
-        data: formData,
-      }).then((response) => {
-        notifySuccess('File was successfully imported.');
+    if (selectedFile.type !== 'text/csv' && selectedFile.type !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      notifyError('File must be .csv or .xlsx!');
+    } else {
+      setIsLoading(true);
+      const formData = new FormData();
+      formData.append('files', selectedFile);
+      try {
+        await axios({
+          method: 'post',
+          url: `${baseUrl}/upload_users/append_users/`,
+          data: formData,
+        }).then(() => {
+          notifySuccess('File was successfully imported.');
+          setIsLoading(false);
+        });
+      } catch (error) {
+        notifyError('There was an error.');
         setIsLoading(false);
-      });
-    } catch (error) {
-      notifyError('There was an error.');
-      setIsLoading(false);
+      }
     }
   };
 
@@ -111,26 +126,103 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
     setSelectedFile(event.target.files[0]);
   };
 
+  const [role, setAcademicTitle] = React.useState('evaluatee');
+
+  const handleRoleChange = (event) => {
+    setAcademicTitle(event.target.value);
+  };
+
+  const { values, handleChange, errors, handleSubmitNewUser } = useForm(
+    addUser,
+    validate,
+  );
+
+  function addUser() {
+    // api call post user
+    notifySuccess('New user created.');
+  }
+
   return (
-    <Box sx={{ m: 0, p: 0, height: 500 }}>
+    <Box sx={{ m: 0, p: 0, height: 400 }}>
       <ToastContainer />
       <Box sx={{ pt: 1, pb: 1, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
         <Typography variant="h5">Manage users</Typography>
-        <Box sx={{ p: 0.5, border: 'solid 1px #e0e0e0', borderRadius: '5px' }}>
-          <input accept=".csv" multiple type="file" onChange={handleFileSelect} />
-          <Button size="small" onClick={handleSubmit}>Import</Button>
-          {isLoading && <LinearProgress />}
-        </Box>
+      </Box>
+      <Box sx={{ mb: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', gap: 1 }}>
+        <TextField
+          id="text-field-email"
+          error={errors.email}
+          helperText={t(errors.email)}
+          name="email"
+          size="small"
+          label="Email address"
+          variant="outlined"
+          value={values.email || ''}
+          onChange={handleChange}
+          sx={{ minWidth: 200, flex: 1 }}
+        />
+        <TextField
+          id="text-field-fn"
+          error={errors.fn}
+          helperText={t(errors.fn)}
+          name="fn"
+          size="small"
+          label="First name"
+          variant="outlined"
+          value={values.fn || ''}
+          onChange={handleChange}
+          sx={{ minWidth: 100, flex: 1 }}
+        />
+        <TextField
+          id="text-field-ln"
+          error={errors.ln}
+          helperText={t(errors.ln)}
+          name="ln"
+          size="small"
+          label="Last name"
+          variant="outlined"
+          value={values.ln || ''}
+          onChange={handleChange}
+          sx={{ minWidth: 100, flex: 1 }}
+        />
+        <TextField
+          id="text-field-role"
+          select
+          label="User role"
+          value={role}
+          size="small"
+          onChange={handleRoleChange}
+          sx={{ minWidth: 100, flex: 1 }}
+        >
+          <MenuItem key="admin" value="admin">admin</MenuItem>
+          <MenuItem key="dean" value="dean">dean</MenuItem>
+          <MenuItem key="head" value="head">head</MenuItem>
+          <MenuItem key="evaluatee" value="evaluatee">evaluatee</MenuItem>
+        </TextField>
+        <Button
+          size="small"
+          variant="contained"
+          onClick={handleSubmitNewUser}
+          sx={{ width: 100 }}
+        >
+          Add
+        </Button>
       </Box>
       <DataGrid
         columns={columns}
         rows={rows}
-        rowsPerPageOptions={[10, 25, 50]}
+        rowsPerPageOptions={[5, 25, 50]}
         pageSize={pageSize}
         onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-        components={{ Toolbar: CustomToolbar }}
-        density="compact"
+        components={{ Toolbar: CustomToolbar, LoadingOverlay: LinearProgress }}
       />
+      <Box sx={{ pt: 1, pb: 1, display: 'flex', flexDirection: 'row' }}>
+        <Box sx={{ p: 0.5, border: 'solid 1px #e0e0e0', borderRadius: '5px' }}>
+          <input accept=".csv,.xslx" multiple type="file" onChange={handleFileSelect} />
+          <Button size="small" onClick={handleSubmit}>Import</Button>
+          {isLoading && <LinearProgress />}
+        </Box>
+      </Box>
     </Box>
   );
 }
