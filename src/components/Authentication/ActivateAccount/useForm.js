@@ -13,6 +13,7 @@ const useForm = (callback, validate) => {
       && isSubmitting
     ) {
       callback();
+      setIsSubmitting(false);
     }
   }, [callback, errors, isSubmitting]);
 
