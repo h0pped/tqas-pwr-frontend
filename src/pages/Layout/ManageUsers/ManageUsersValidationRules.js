@@ -26,9 +26,5 @@ export default function validate(values) {
     errors.ln = 'manage_users_required';
   }
 
-  if (!values.date) {
-    errors.date = 'manage_users_required';
-  }
-
   return errors;
 }
