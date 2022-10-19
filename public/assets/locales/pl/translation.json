@@ -37,5 +37,7 @@
   "acc_activation_success": "Twoje konto zostało pomyślnie aktywowane, teraz możesz się zalogować.",
   "reset_psw_email_helper": "Użyj adresu e-mail powiązanego z kontem, do którego chcesz zresetować hasło.",
   "password_reset_success": "Twoje hasło zostało pomyślnie zresetowane, teraz możesz się zalogować.",
-  "success": "Sukces!"
+  "success": "Sukces!",
+  "error_dialog": "Błąd!",
+  "acc_login_error": "Logowanie nie powiodło się: e-mail lub hasło są nieprawidłowe."
 }

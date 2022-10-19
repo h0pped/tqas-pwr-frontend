@@ -37,5 +37,7 @@
   "acc_activation_success": "Your account has been successfully activated, now you can log in.",
   "reset_psw_email_helper": "Use the email associated with the account you want to reset password to.",
   "password_reset_success": "Your password has been successfully reset, now you can log in.",
-  "success": "Success!"
+  "success": "Success!",
+  "error_dialog": "Error!",
+  "acc_login_error": "Login failed: Email or password are incorrect. Please try again."
 }
