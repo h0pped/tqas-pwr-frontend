@@ -18,39 +18,103 @@ import { useTranslation } from 'react-i18next';
 import validate from './ActivateAccountValidationRules.js';
 import useForm from './useForm.js';
 
-const Transition = React.forwardRef(
-  (props, ref) => <Slide direction="down" ref={ref} {...props} />,
-);
+import config from '../../../config/index.config.js';
+
+const Transition = React.forwardRef((props, ref) => (
+  <Slide direction="down" ref={ref} {...props} />
+));
 
 export default function ActivateAccountComponent({ handleFormClick }) {
   const { t } = useTranslation();
 
   const [state, setState] = useState(0);
+  const [dialogContent, setDialogContent] = useState({
+    title: t('success'),
+    severity: 'success',
+    content: t('acc_activation_success'),
+  });
+  const [isOpen, setIsOpen] = React.useState(false);
 
   const { values, handleChange, errors, handleSubmit } = useForm(
     verify,
     validate,
   );
 
-  const [isOpen, setOpen] = React.useState(false);
-
   const handleClose = () => {
-    setOpen(false);
+    setIsOpen(false);
+  };
+  const handleCodeSend = async () => {
+    await fetch(`${config.server.url}/auth/sendCode`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: values.email,
+      }),
+    }).then((res) => res.json());
   };
 
-  function verify() {
-    if (state < 3) {
-      if (values.email && !errors.email) {
-        setState(1);
-      }
+  const verifyActivationCode = async () => {
+    const res = await fetch(`${config.server.url}/auth/verifyCode`, {
+      method: 'POST',
 
-      if (values.code && !errors.code) {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: values.email,
+        code: values.code,
+      }),
+    });
+    return res.status === 200;
+  };
+
+  const activateAccountHandler = async () => {
+    const res = await fetch(`${config.server.url}/auth/activateAccount`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: values.email,
+        code: values.code,
+        password: values.password,
+      }),
+    });
+    return res.status === 201;
+  };
+  async function verify() {
+    if (state === 0 && values.email && !errors.email) {
+      await handleCodeSend();
+      setState(1);
+    } else if (state === 1 && values.code && !errors.code) {
+      if (await verifyActivationCode()) {
         setState(2);
+      } else {
+        setIsOpen(true);
+        setDialogContent({
+          title: t('error_dialog'),
+          severity: 'error',
+          content: t('acc_activation_code_error'),
+        });
       }
-      if (values.password && !errors.password) {
+    } else if (state === 2 && values.password && !errors.password) {
+      if (await activateAccountHandler()) {
         setState(3);
-        setOpen(true);
+        setDialogContent({
+          title: t('success'),
+          severity: 'success',
+          content: t('acc_activation_success'),
+        });
+      } else {
+        setDialogContent({
+          title: t('error_dialog'),
+          severity: 'error',
+          content: t('acc_activation_error'),
+        });
       }
+      setIsOpen(true);
     }
   }
 
@@ -161,10 +225,12 @@ export default function ActivateAccountComponent({ handleFormClick }) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{t('success')}</DialogTitle>
+        <DialogTitle>{dialogContent.title}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            <Alert severity="success">{t('acc_activation_success')}</Alert>
+            <Alert severity={dialogContent.severity}>
+              {dialogContent.content}
+            </Alert>
           </DialogContentText>
         </DialogContent>
         <DialogActions>

@@ -39,5 +39,7 @@
   "password_reset_success": "Your password has been successfully reset, now you can log in.",
   "success": "Success!",
   "error_dialog": "Error!",
-  "acc_login_error": "Login failed: Email or password are incorrect. Please try again."
+  "acc_login_error": "Login failed: Email or password are incorrect. Please try again.",
+  "acc_activation_code_error": "Provided activation code is incorrect. Please try again.",
+  "acc_activation_error": "Account activation failed. Please try again."
 }
