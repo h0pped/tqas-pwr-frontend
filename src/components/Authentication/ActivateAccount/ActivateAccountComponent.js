@@ -10,7 +10,6 @@ import Alert from '@mui/material/Alert';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { useTranslation } from 'react-i18next';
@@ -43,8 +42,9 @@ export default function ActivateAccountComponent({ handleFormClick }) {
   const handleClose = () => {
     setIsOpen(false);
   };
+
   const handleCodeSend = async () => {
-    await fetch(`${config.server.url}/auth/sendCode`, {
+    const res = await fetch(`${config.server.url}/auth/sendCode`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -52,7 +52,8 @@ export default function ActivateAccountComponent({ handleFormClick }) {
       body: JSON.stringify({
         email: values.email,
       }),
-    }).then((res) => res.json());
+    });
+    return res.status;
   };
 
   const verifyActivationCode = async () => {
@@ -82,12 +83,28 @@ export default function ActivateAccountComponent({ handleFormClick }) {
         password: values.password,
       }),
     });
-    return res.status === 201;
+    return res.status;
   };
   async function verify() {
     if (state === 0 && values.email && !errors.email) {
-      await handleCodeSend();
-      setState(1);
+      const codeSendStatus = await handleCodeSend();
+      if (codeSendStatus === 404) {
+        setDialogContent({
+          title: t('error_dialog'),
+          severity: 'error',
+          content: t('email_not_found'),
+        });
+        setIsOpen(true);
+      } else if (codeSendStatus === 409) {
+        setDialogContent({
+          title: t('error_dialog'),
+          severity: 'error',
+          content: t('already_activated'),
+        });
+        setIsOpen(true);
+      } else if (codeSendStatus === 200) {
+        setState(1);
+      }
     } else if (state === 1 && values.code && !errors.code) {
       if (await verifyActivationCode()) {
         setState(2);
@@ -100,12 +117,19 @@ export default function ActivateAccountComponent({ handleFormClick }) {
         });
       }
     } else if (state === 2 && values.password && !errors.password) {
-      if (await activateAccountHandler()) {
+      const status = await activateAccountHandler();
+      if (status === 201) {
         setState(3);
         setDialogContent({
           title: t('success'),
           severity: 'success',
           content: t('acc_activation_success'),
+        });
+      } else if (status === 404) {
+        setDialogContent({
+          title: t('error_dialog'),
+          severity: 'error',
+          content: t('acc_activation_error_not_found'),
         });
       } else {
         setDialogContent({
@@ -227,11 +251,9 @@ export default function ActivateAccountComponent({ handleFormClick }) {
       >
         <DialogTitle>{dialogContent.title}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            <Alert severity={dialogContent.severity}>
-              {dialogContent.content}
-            </Alert>
-          </DialogContentText>
+          <Alert severity={dialogContent.severity}>
+            {dialogContent.content}
+          </Alert>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>OK</Button>

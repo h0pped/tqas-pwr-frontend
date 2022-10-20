@@ -39,5 +39,10 @@
   "password_reset_success": "Twoje hasło zostało pomyślnie zresetowane, teraz możesz się zalogować.",
   "success": "Sukces!",
   "error_dialog": "Błąd!",
-  "acc_login_error": "Logowanie nie powiodło się: e-mail lub hasło są nieprawidłowe."
+  "acc_login_error": "Logowanie nie powiodło się: e-mail lub hasło są nieprawidłowe.",
+  "acc_activation_code_error": "Podany kod aktywacyjny jest nieprawidłowy. Proszę spróbuj ponownie.",
+  "acc_activation_error": "Aktywacja konta nie powiodła się. Proszę spróbuj ponownie.",
+  "acc_activation_error_not_found": "Konto z podanym adresem e-mail nie istnieje.",
+  "email_not_found": "Podany adres e-mail nie został znaleziony w naszych rejestrach. Spróbuj innego.",
+  "already_activated": "Użytkownik z podanym adresem e-mail jest już aktywowany. Spróbuj zalogować się przy użyciu swoich danych logowania."
 }

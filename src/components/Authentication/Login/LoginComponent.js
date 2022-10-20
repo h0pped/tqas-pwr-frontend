@@ -12,7 +12,6 @@ import Slide from '@mui/material/Slide';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Alert from '@mui/material/Alert';
 
@@ -77,7 +76,7 @@ export default function Login({ handleFormClick }) {
           </Typography>
           <Box component="form" noValidate sx={{ mt: 1 }}>
             <TextField
-              error={errors.email}
+              error={!!errors.email}
               helperText={t(errors.email)}
               margin="normal"
               required
@@ -91,7 +90,7 @@ export default function Login({ handleFormClick }) {
               autoFocus
             />
             <TextField
-              error={errors.password}
+              error={!!errors.password}
               helperText={t(errors.password)}
               margin="normal"
               required
@@ -146,9 +145,7 @@ export default function Login({ handleFormClick }) {
       >
         <DialogTitle>{t('error_dialog')}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            <Alert severity="error">{t('acc_login_error')}</Alert>
-          </DialogContentText>
+          <Alert severity="error">{t('acc_login_error')}</Alert>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>OK</Button>
