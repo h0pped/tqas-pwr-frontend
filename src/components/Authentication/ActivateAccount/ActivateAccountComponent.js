@@ -18,9 +18,9 @@ import { useTranslation } from 'react-i18next';
 import validate from './ActivateAccountValidationRules.js';
 import useForm from './useForm.js';
 
-const Transition = React.forwardRef(
-  (props, ref) => <Slide direction="down" ref={ref} {...props} />,
-);
+const Transition = React.forwardRef((props, ref) => (
+  <Slide direction="down" ref={ref} {...props} />
+));
 
 export default function ActivateAccountComponent({ handleFormClick }) {
   const { t } = useTranslation();

@@ -6,12 +6,7 @@ const useForm = (callback, validate) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    if (
-      (!errors.email
-      || !errors.code
-      || !errors.password)
-      && isSubmitting
-    ) {
+    if ((!errors.email || !errors.code || !errors.password) && isSubmitting) {
       callback();
     }
   }, [callback, errors, isSubmitting]);

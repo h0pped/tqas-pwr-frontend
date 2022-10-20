@@ -11,8 +11,9 @@ export default function validate(values) {
       errors.email = 'login_validation_not_email';
     }
 
-    if (validEmail.test(String(values.email))
-      && !values.email.endsWith('@pwr.edu.pl')
+    if (
+      validEmail.test(String(values.email)) &&
+      !values.email.endsWith('@pwr.edu.pl')
     ) {
       errors.email = 'login_validation_not_university_email';
     }
