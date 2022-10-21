@@ -23,6 +23,8 @@ import customDataGridToolbar from './CustomDataGridToolBar.js';
 import validate from './ManageUsersValidationRules.js';
 import useForm from './useForm.js';
 
+const baseUrl = 'http://localhost:8080';
+
 export default function ManageUsers({ setDrawerSelectedItem, link }) {
   const { t } = useTranslation();
 
@@ -85,7 +87,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
     setAddUserBtnLoading(true);
     try {
       await fetch(
-        'http://192.168.0.141:8080/user_data/create_user',
+        `${baseUrl}/userData/createUser`,
         {
           method: 'POST',
           headers: {
@@ -102,6 +104,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
           }),
         },
       ).then((response) => {
+        console.log(response);
         if (response.ok) {
           notifySuccess('User has been added.');
         } else {
@@ -125,7 +128,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
     setUsersTableLoading(true);
     try {
       await fetch(
-        'http://192.168.0.141:8080/user_data/get_users',
+        `${baseUrl}/userData/getUsers`,
         {
           method: 'GET',
         },
@@ -199,7 +202,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
 
       try {
         await fetch(
-          'http://192.168.0.141:8080/upload_users/append_users/',
+          ' http://192.168.0.141:8080/uploadUsers/appendUsers/',
           {
             method: 'POST',
             body: formData,
