@@ -10,7 +10,6 @@ import Alert from '@mui/material/Alert';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { useTranslation } from 'react-i18next';
@@ -18,39 +17,128 @@ import { useTranslation } from 'react-i18next';
 import validate from './ActivateAccountValidationRules.js';
 import useForm from './useForm.js';
 
-const Transition = React.forwardRef(
-  (props, ref) => <Slide direction="down" ref={ref} {...props} />,
-);
+import config from '../../../config/index.config.js';
+
+const Transition = React.forwardRef((props, ref) => (
+  <Slide direction="down" ref={ref} {...props} />
+));
 
 export default function ActivateAccountComponent({ handleFormClick }) {
   const { t } = useTranslation();
 
   const [state, setState] = useState(0);
+  const [dialogContent, setDialogContent] = useState({
+    title: t('success'),
+    severity: 'success',
+    content: t('acc_activation_success'),
+  });
+  const [isOpen, setIsOpen] = React.useState(false);
 
   const { values, handleChange, errors, handleSubmit } = useForm(
     verify,
     validate,
   );
 
-  const [isOpen, setOpen] = React.useState(false);
-
   const handleClose = () => {
-    setOpen(false);
+    setIsOpen(false);
   };
 
-  function verify() {
-    if (state < 3) {
-      if (values.email && !errors.email) {
+  const handleCodeSend = async () => {
+    const res = await fetch(`${config.server.url}/auth/sendCode`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: values.email,
+      }),
+    });
+    return res.status;
+  };
+
+  const verifyActivationCode = async () => {
+    const res = await fetch(`${config.server.url}/auth/verifyCode`, {
+      method: 'POST',
+
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: values.email,
+        code: values.code,
+      }),
+    });
+    return res.status === 200;
+  };
+
+  const activateAccountHandler = async () => {
+    const res = await fetch(`${config.server.url}/auth/activateAccount`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: values.email,
+        code: values.code,
+        password: values.password,
+      }),
+    });
+    return res.status;
+  };
+  async function verify() {
+    if (state === 0 && values.email && !errors.email) {
+      const codeSendStatus = await handleCodeSend();
+      if (codeSendStatus === 404) {
+        setDialogContent({
+          title: t('error_dialog'),
+          severity: 'error',
+          content: t('email_not_found'),
+        });
+        setIsOpen(true);
+      } else if (codeSendStatus === 409) {
+        setDialogContent({
+          title: t('error_dialog'),
+          severity: 'error',
+          content: t('already_activated'),
+        });
+        setIsOpen(true);
+      } else if (codeSendStatus === 200) {
         setState(1);
       }
-
-      if (values.code && !errors.code) {
+    } else if (state === 1 && values.code && !errors.code) {
+      if (await verifyActivationCode()) {
         setState(2);
+      } else {
+        setIsOpen(true);
+        setDialogContent({
+          title: t('error_dialog'),
+          severity: 'error',
+          content: t('acc_activation_code_error'),
+        });
       }
-      if (values.password && !errors.password) {
+    } else if (state === 2 && values.password && !errors.password) {
+      const status = await activateAccountHandler();
+      if (status === 201) {
         setState(3);
-        setOpen(true);
+        setDialogContent({
+          title: t('success'),
+          severity: 'success',
+          content: t('acc_activation_success'),
+        });
+      } else if (status === 404) {
+        setDialogContent({
+          title: t('error_dialog'),
+          severity: 'error',
+          content: t('acc_activation_error_not_found'),
+        });
+      } else {
+        setDialogContent({
+          title: t('error_dialog'),
+          severity: 'error',
+          content: t('acc_activation_error'),
+        });
       }
+      setIsOpen(true);
     }
   }
 
@@ -161,11 +249,11 @@ export default function ActivateAccountComponent({ handleFormClick }) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{t('success')}</DialogTitle>
+        <DialogTitle>{dialogContent.title}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            <Alert severity="success">{t('acc_activation_success')}</Alert>
-          </DialogContentText>
+          <Alert severity={dialogContent.severity}>
+            {dialogContent.content}
+          </Alert>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>OK</Button>
