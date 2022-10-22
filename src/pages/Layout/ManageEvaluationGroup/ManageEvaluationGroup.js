@@ -17,7 +17,6 @@ import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ToastContainer, toast } from 'react-toastify';
-import useForm from './useForm.js';
 
 function CustomToolbar() {
   return (
@@ -46,25 +45,23 @@ function CustomToolbar() {
 
 export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
   const [users, setUsers] = React.useState({ users: [] });
+  const [isUsersTableLoading, setUsersTableLoading] = React.useState(false);
 
   useEffect(() => {
     getUsers();
   }, []);
 
   async function getUsers() {
+    setUsersTableLoading(true);
     try {
-      await fetch('http://localhost:8000/userData/getUsers', {
+      await fetch(`$ (http://localhost:8000/userData/getUsers)`, {
         method: 'GET',
       })
         .then((response) => response.json())
         .then((data) => {
           console.log(data);
-          setUsers(
-            data.map(
-              (user) =>
-                `${user.academic_title} ${user.first_name} ${user.last_name}`,
-            ),
-          );
+          setUsers(data);
+          setUsersTableLoading(false);
           console.log(users);
         });
     } catch (error) {
@@ -236,10 +233,12 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
           </Button>
         </Box>
         <DataGrid
-          rows={rows}
+          rows={users}
           columns={columns}
           rowsPerPageOptions={[5, 25, 50]}
           pageSize={pageSize}
+          getRowId={(row) => row.id}
+          loading={isUsersTableLoading}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
           components={{
             Toolbar: CustomToolbar,
