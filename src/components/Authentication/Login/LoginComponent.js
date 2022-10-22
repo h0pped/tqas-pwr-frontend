@@ -1,26 +1,63 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
+
+import { useTranslation } from 'react-i18next';
+
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { useTranslation } from 'react-i18next';
+import Slide from '@mui/material/Slide';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Alert from '@mui/material/Alert';
+
+import UserContext from '../../../context/UserContext/UserContext.js';
 
 import validate from './LoginValidationRules.js';
 import useForm from './useForm.js';
+
+import config from '../../../config/index.config.js';
+
+const Transition = React.forwardRef((props, ref) => (
+  <Slide direction="down" ref={ref} {...props} />
+));
 
 export default function Login({ handleFormClick }) {
   const { t } = useTranslation();
 
   const { values, handleChange, errors, handleSubmit } = useForm(
-    login,
+    loginHandler,
     validate,
   );
 
-  function login() {
-    // here login logic
+  const [isLoginError, setIsLoginError] = useState(false);
+
+  const { login } = useContext(UserContext);
+
+  async function loginHandler() {
+    try {
+      const result = await fetch(`${config.server.url}/auth/signIn`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+      if (result.status !== 200) {
+        setIsLoginError(true);
+      } else {
+        const { token } = await result.json();
+        login(token);
+      }
+    } catch (err) {
+      setIsLoginError(true);
+    }
   }
+  const handleClose = () => setIsLoginError(false);
 
   return (
     <>
@@ -39,7 +76,7 @@ export default function Login({ handleFormClick }) {
           </Typography>
           <Box component="form" noValidate sx={{ mt: 1 }}>
             <TextField
-              error={errors.email}
+              error={!!errors.email}
               helperText={t(errors.email)}
               margin="normal"
               required
@@ -53,7 +90,7 @@ export default function Login({ handleFormClick }) {
               autoFocus
             />
             <TextField
-              error={errors.password}
+              error={!!errors.password}
               helperText={t(errors.password)}
               margin="normal"
               required
@@ -99,6 +136,21 @@ export default function Login({ handleFormClick }) {
           </Box>
         </Box>
       </Container>
+      <Dialog
+        open={isLoginError}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{t('error_dialog')}</DialogTitle>
+        <DialogContent>
+          <Alert severity="error">{t('acc_login_error')}</Alert>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>OK</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

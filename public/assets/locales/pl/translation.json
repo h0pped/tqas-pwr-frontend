@@ -38,9 +38,11 @@
   "reset_psw_email_helper": "Użyj adresu e-mail powiązanego z kontem, do którego chcesz zresetować hasło.",
   "password_reset_success": "Twoje hasło zostało pomyślnie zresetowane, teraz możesz się zalogować.",
   "success": "Sukces!",
-
-  "drawer_item_title_classes_eval": "Hospitacja",
-  "drawer_item_title_wzhz": "Grupa WZHZ/SZHZ",
-  "drawer_item_title_protocols": "Protokoły",
-  "drawer_item_title_users": "Użytkownicy systemu"
+  "error_dialog": "Błąd!",
+  "acc_login_error": "Logowanie nie powiodło się: e-mail lub hasło są nieprawidłowe.",
+  "acc_activation_code_error": "Podany kod aktywacyjny jest nieprawidłowy. Proszę spróbuj ponownie.",
+  "acc_activation_error": "Aktywacja konta nie powiodła się. Proszę spróbuj ponownie.",
+  "acc_activation_error_not_found": "Konto z podanym adresem e-mail nie istnieje.",
+  "email_not_found": "Podany adres e-mail nie został znaleziony w naszych rejestrach. Spróbuj innego.",
+  "already_activated": "Użytkownik z podanym adresem e-mail jest już aktywowany. Spróbuj zalogować się przy użyciu swoich danych logowania."
 }
