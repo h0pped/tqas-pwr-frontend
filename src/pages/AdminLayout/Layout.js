@@ -202,8 +202,11 @@ export default function Layout() {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, pl: 3, pr: 3 }}>
         <DrawerHeader />
-        <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-          <p>Logged in as</p>
+        <Box>
+          <Typography sx={{ p: 2, flex: 1, textAlign: 'end' }}>
+            {t('title_logged_in_as')}
+            ...
+          </Typography>
         </Box>
         <Routes>
           {drawerContentList.map((item) => (

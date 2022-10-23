@@ -4,8 +4,8 @@ import Box from '@mui/material/Box';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
 import Tooltip from '@mui/material/Tooltip';
-import { CircularProgress, Fab } from '@mui/material';
-import { Check } from '@mui/icons-material';
+import CircularProgress from '@mui/material/CircularProgress';
+import Fab from '@mui/material/Fab';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -14,31 +14,59 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import Slide from '@mui/material/Slide';
 
-const baseUrl = 'http://localhost:8080';
+import { useTranslation } from 'react-i18next';
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="down" ref={ref} {...props} />;
-});
+import { toast } from 'react-toastify';
 
-export default function UsersActions({ params, activeRowId, setActiveRow }) {
+import config from '../../../config/index.config.js';
+
+const Transition = React.forwardRef((props, ref) => (
+  <Slide direction="down" ref={ref} {...props} />
+));
+
+export default function UsersActions({ params, activeRowId, setActiveRow, setUpdated }) {
+  const { t } = useTranslation();
+
   const [isEditLoading, setEditLoading] = React.useState(false);
-  const [isEditSuccess, setEditSuccess] = React.useState(false);
-
   const [isDeleteLoading, setDeleteLoading] = React.useState(false);
-  const [isDeleteSuccess, setDeleteSuccess] = React.useState(false);
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
 
-  const [isDeleteConfirmed, setDeleteConfirmed] = React.useState(false);
+  const notifySuccess = (msg) => toast.success(`${t('success')} ${msg}`, {
+    position: 'top-center',
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: 'light',
+  });
+
+  const notifyError = (msg) => toast.error(`${t('error_dialog')} ${msg}`, {
+    position: 'top-center',
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: 'light',
+  });
 
   const handleUpdateUser = async () => {
     setEditLoading(true);
 
-    const lastEvalDateYYYYMMDD = params.row.evaluatee.last_evaluated_date;
-    const dateParts = lastEvalDateYYYYMMDD.split('-');
-    const lastEvalDateDDMMYYYY = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+    let lastEvalDateDDMMYYYY = null;
+
+    if (params.row.evaluatee.last_evaluated_date) {
+      const lastEvalDateYYYYMMDD = params.row.evaluatee.last_evaluated_date;
+      const dateParts = lastEvalDateYYYYMMDD.split('-');
+      lastEvalDateDDMMYYYY = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+    }
 
     try {
       await fetch(
-        `${baseUrl}/userData/updateUser`,
+        `${config.server.url}/userData/updateUser`,
         {
           method: 'POST',
           headers: {
@@ -57,24 +85,36 @@ export default function UsersActions({ params, activeRowId, setActiveRow }) {
           }),
         },
       ).then((response) => {
-        console.log(response);
+        setEditLoading(false);
+        setActiveRow(null);
         if (response.ok) {
-          setEditLoading(false);
-          setEditSuccess(true);
+          notifySuccess(t('success_user_updated'));
+          setUpdated(true);
         } else {
-          setEditLoading(false);
+          notifyError(t('error_user_not_updated'));
         }
       });
     } catch (error) {
       setEditLoading(false);
+      notifyError(t('error_server'));
     }
   };
 
   const handleDeleteUser = async () => {
-    handleClickOpen();
+    setDeleteLoading(true);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteDialogOptionNo = () => {
+    setDeleteDialogOpen(false);
+    setDeleteLoading(false);
+  };
+
+  const handleDeleteDialogOptionYes = async () => {
+    setDeleteDialogOpen(false);
     try {
       await fetch(
-        `${baseUrl}/userData/deleteUser`,
+        `${config.server.url}/userData/deleteUser`,
         {
           method: 'POST',
           headers: {
@@ -87,51 +127,39 @@ export default function UsersActions({ params, activeRowId, setActiveRow }) {
           }),
         },
       ).then((response) => {
-        console.log(response);
+        setDeleteLoading(false);
         if (response.ok) {
-          setDeleteLoading(false);
-          setDeleteSuccess(true);
+          notifySuccess(t('success_user_deleted'));
+          setActiveRow(null);
+          setUpdated(true);
         } else {
-          setDeleteLoading(false);
+          notifyError(t('error_user_not_deleted'));
         }
       });
     } catch (error) {
       setDeleteLoading(false);
+      notifyError(t('error_server'));
     }
-  };
-
-  const [open, setOpen] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleDeleteConfirmation = () => {
-    setDeleteConfirmed(true);
   };
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
       <Dialog
-        open={open}
+        open={isDeleteDialogOpen}
         TransitionComponent={Transition}
         keepMounted
-        onClose={handleClose}
+        onClose={handleDeleteDialogOptionNo}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Delete user?"}</DialogTitle>
+        <DialogTitle>{t('dialog_header')}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Are you sure you want to delete this user?
+            {t('dialog_content')}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Yes</Button>
-          <Button onClick={handleClose}>No</Button>
+          <Button onClick={handleDeleteDialogOptionYes}>{t('button_yes')}</Button>
+          <Button onClick={handleDeleteDialogOptionNo}>{t('button_no')}</Button>
         </DialogActions>
       </Dialog>
       <Box sx={{
@@ -139,30 +167,30 @@ export default function UsersActions({ params, activeRowId, setActiveRow }) {
         position: 'relative',
       }}
       >
-        {isEditSuccess ? (
+        <Tooltip title={t('tooltip_save_changes')} placement="top">
           <Fab
             size="small"
             color="primary"
-            sx={{ backgroundColor: 'green', color: 'white' }}
+            disabled={params.id !== activeRowId || isEditLoading}
+            aria-label="save"
+            sx={{
+              backgroundColor: 'primary',
+              color: 'white',
+            }}
+            onClick={handleUpdateUser}
           >
-            <Check />
+            <SaveIcon />
           </Fab>
-        ) : (
-          <Tooltip title="Save changes" placement="top">
-            <Fab
-              size="small"
-              color="primary"
-              disabled={params.id !== activeRowId || isEditLoading}
-              aria-label="save"
-              sx={{ backgroundColor: 'primary', color: 'white' }}
-              onClick={handleUpdateUser}
-            >
-              <SaveIcon />
-            </Fab>
-          </Tooltip>
-        )}
+        </Tooltip>
         {isEditLoading && (
-          <CircularProgress sx={{ position: 'absolute', top: -1, left: 0, zIndex: 1 }} />
+          <CircularProgress
+            sx={{
+              position: 'absolute',
+              top: -1,
+              left: 0,
+              zIndex: 1,
+            }}
+          />
         )}
       </Box>
       <Box sx={{
@@ -170,29 +198,30 @@ export default function UsersActions({ params, activeRowId, setActiveRow }) {
         position: 'relative',
       }}
       >
-        <Tooltip title="Delete user" placement="top">
-          {isDeleteSuccess ? (
-            <Fab
-              size="small"
-              sx={{ backgroundColor: 'green', color: 'white' }}
-              aria-label="delete"
-            >
-              <Check />
-            </Fab>
-          ) : (
-            <Fab
-              size="small"
-              sx={{ backgroundColor: '#fafafa', color: '#39e9e9e', '&:hover': { bgcolor: '#D9372A', color: '#FFFFFF' } }}
-              disabled={isDeleteLoading}
-              aria-label="delete"
-              onClick={handleDeleteUser}
-            >
-              <DeleteIcon />
-            </Fab>
-          )}
+        <Tooltip title={t('tooltip_delete_user')} placement="top">
+          <Fab
+            size="small"
+            sx={{
+              backgroundColor: '#fafafa',
+              color: '#39e9e9e',
+              '&:hover': { bgcolor: '#D9372A', color: '#FFFFFF' },
+            }}
+            disabled={isDeleteLoading}
+            aria-label="delete"
+            onClick={handleDeleteUser}
+          >
+            <DeleteIcon />
+          </Fab>
         </Tooltip>
         {isDeleteLoading && (
-          <CircularProgress />
+          <CircularProgress
+            sx={{
+              position: 'absolute',
+              top: -1,
+              left: 0,
+              zIndex: 1,
+            }}
+          />
         )}
       </Box>
     </Box>

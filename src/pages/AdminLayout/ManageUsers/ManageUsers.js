@@ -21,7 +21,7 @@ import validate from './ManageUsersValidationRules.js';
 import useForm from './useForm.js';
 import UsersActions from './UsersActions.js';
 
-const baseUrl = 'http://localhost:8080';
+import config from '../../../config/index.config.js';
 
 export default function ManageUsers({ setDrawerSelectedItem, link }) {
   const { t } = useTranslation();
@@ -85,11 +85,17 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
     validate,
   );
 
+  useEffect(() => {
+    setDrawerSelectedItem(link);
+    getUsers();
+    setUpdated(false);
+  }, [link, setDrawerSelectedItem, isUpdated]);
+
   async function addUser() {
     setAddUserBtnLoading(true);
     try {
       await fetch(
-        `${baseUrl}/userData/createUser`,
+        `${config.server.url}/userData/createUser`,
         {
           method: 'POST',
           headers: {
@@ -101,39 +107,31 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
             first_name: values.fn,
             last_name: values.ln,
             academic_title: academicTitleInputValue,
-            email: values.email,
+            email: values.email.toLowerCase(),
             user_type: roleInputValue,
             last_evaluated_date: lastDateOfEvalInputValue,
           }),
         },
       ).then((response) => {
-        console.log(response);
         if (response.ok) {
-          notifySuccess('User has been added.');
+          notifySuccess(t('success_user_created'));
           setUpdated(true);
         } else {
-          notifyError('Network error.');
+          notifyError(t('error_user_not_created'));
         }
-
         setAddUserBtnLoading(false);
       });
     } catch (error) {
       setAddUserBtnLoading(false);
-      notifyError('There was an error while creating new user.');
+      notifyError(t('error_server'));
     }
   }
-
-  useEffect(() => {
-    setDrawerSelectedItem(link);
-    getUsers();
-    setUpdated(false);
-  }, [link, setDrawerSelectedItem, isUpdated]);
 
   async function getUsers() {
     setUsersTableLoading(true);
     try {
       await fetch(
-        `${baseUrl}/userData/getUsers`,
+        `${config.server.url}/userData/getUsers`,
         {
           method: 'GET',
           headers: {
@@ -143,7 +141,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
       ).then((response) => response.json())
         .then((data) => {
           setUsers(
-            data.sort((a, b) => (a.id > b.id) ? 1 : -1)
+            data.sort((a, b) => ((a.id > b.id) ? 1 : -1)),
           );
           setUsersTableLoading(false);
         });
@@ -152,26 +150,63 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
     }
   }
 
-  const columns = [
-    { field: 'id', headerName: 'Id' },
-    { field: 'email', headerName: 'Email address', minWidth: 200, flex: 2 },
-    { field: 'academic_title', headerName: 'Academic title', minWidth: 140, type: 'singleSelect', valueOptions: academicTitlesList, editable: true },
-    { field: 'first_name', headerName: 'First name', minWidth: 120, flex: 0.8 },
-    { field: 'last_name', headerName: 'Last name', minWidth: 120, flex: 0.8 },
-    { field: 'user_type', headerName: 'User role', minWidth: 100, flex: 0.8, type: 'singleSelect', valueOptions: userRolesList.map((role) => role.title), editable: true },
-    { field: 'account_status', headerName: 'Account status', minWidth: 120 },
+  const usersTableColumnsDef = [
+    {
+      field: 'id',
+      headerName: 'Id',
+    },
+    {
+      field: 'email',
+      headerName: t('label_first_name'),
+      minWidth: 200,
+      flex: 2,
+    },
+    {
+      field: 'academic_title',
+      headerName: t('label_academic_title'),
+      minWidth: 140,
+      type: 'singleSelect',
+      valueOptions: academicTitlesList,
+      editable: true,
+    },
+    {
+      field: 'first_name',
+      headerName: t('label_first_name'),
+      minWidth: 120,
+      flex: 0.8,
+    },
+    {
+      field: 'last_name',
+      headerName: t('label_last_name'),
+      minWidth: 120,
+      flex: 0.8,
+    },
+    {
+      field: 'user_type',
+      headerName: t('label_user_role'),
+      minWidth: 100,
+      flex: 0.8,
+      type: 'singleSelect',
+      valueOptions: userRolesList.map((role) => role.title),
+      editable: true,
+    },
+    {
+      field: 'account_status',
+      headerName: t('label_account_status'),
+      minWidth: 120,
+    },
     {
       field: 'actions',
-      headerName: 'Actions',
+      headerName: t('label_actions'),
       type: 'actions',
       flex: 1,
       renderCell: (params) => (
-        <UsersActions {...{ params, activeRowId, setActiveRow }} />
+        <UsersActions {...{ params, activeRowId, setActiveRow, setUpdated }} />
       ),
     },
   ];
 
-  const notifySuccess = (msg) => toast.success(`Success! ${msg}`, {
+  const notifySuccess = (msg) => toast.success(`${t('success')} ${msg}`, {
     position: 'top-center',
     autoClose: 5000,
     hideProgressBar: false,
@@ -182,7 +217,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
     theme: 'light',
   });
 
-  const notifyError = (msg) => toast.error(`Error! ${msg}`, {
+  const notifyError = (msg) => toast.error(`${t('error_dialog')} ${msg}`, {
     position: 'top-center',
     autoClose: 5000,
     hideProgressBar: false,
@@ -196,7 +231,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
   const importFile = async () => {
     if (selectedFileToImport.type !== 'text/csv'
       && selectedFileToImport.type !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-      notifyError('File must be .csv or .xlsx!');
+      notifyError(t('error_filetype_csv_or_xlsx'));
     } else {
       setFileUploadIsLoading(true);
       const formData = new FormData();
@@ -204,7 +239,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
 
       try {
         await fetch(
-          ' http://192.168.0.141:8080/uploadUsers/appendUsers/',
+          `${config.server.url}/uploadUsers/appendUsers/`,
           {
             method: 'POST',
             body: formData,
@@ -212,15 +247,14 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
         ).then((response) => {
           setFileUploadIsLoading(false);
           if (response.ok) {
-            notifySuccess('File was successfully imported.');
-            setUpdated(true);
+            notifySuccess(t('success_file_uploaded'));
           } else {
-            notifyError('Network error.');
+            notifyError(t('error_file_not_uploaded'));
           }
         });
       } catch (error) {
-        notifyError('There was a problem with uploading your file.');
         setFileUploadIsLoading(false);
+        notifyError(t('server_error'));
       }
     }
   };
@@ -228,8 +262,8 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
   return (
     <Box sx={{ m: 0, p: 0, height: 400 }}>
       <ToastContainer />
-      <Box sx={{ pt: 1, pb: 1, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Typography variant="h5">Manage users</Typography>
+      <Box sx={{ pb: 3, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+        <Typography variant="h5">{t('admin_manage_users_title')}</Typography>
       </Box>
       <Box sx={{ mb: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', gap: 1 }}>
         <TextField
@@ -238,7 +272,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
           helperText={t(errors.email)}
           name="email"
           size="small"
-          label="Email address"
+          label={t('label_email')}
           variant="outlined"
           value={values.email || ''}
           onChange={handleChange}
@@ -247,7 +281,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
         <TextField
           id="text-field-acad-title"
           select
-          label="Academic title"
+          label={t('label_academic_title')}
           value={academicTitleInputValue}
           size="small"
           onChange={handleAcademicTitleInputValueChange}
@@ -263,7 +297,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
           helperText={t(errors.fn)}
           name="fn"
           size="small"
-          label="First name"
+          label={t('label_first_name')}
           variant="outlined"
           value={values.fn || ''}
           onChange={handleChange}
@@ -275,7 +309,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
           helperText={t(errors.ln)}
           name="ln"
           size="small"
-          label="Last name"
+          label={t('label_last_name')}
           variant="outlined"
           value={values.ln || ''}
           onChange={handleChange}
@@ -284,7 +318,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
         <TextField
           id="text-field-role"
           select
-          label="User role"
+          label={t('label_user_role')}
           value={roleInputValue}
           size="small"
           onChange={handleRoleInputValueChange}
@@ -296,7 +330,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
         </TextField>
         <LocalizationProvider size="small" dateAdapter={AdapterDayjs}>
           <DesktopDatePicker
-            label="Last date of evaluation"
+            label={t('label_last_date_of_evaluation')}
             inputFormat="DD/MM/YYYY"
             value={lastDateOfEvalInputValue}
             onChange={handleLastDateOfEvalInputValueChange}
@@ -311,7 +345,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
             onClick={handleSubmitNewUser}
             sx={{ width: 100 }}
           >
-            Add
+            {t('button_add')}
           </Button>
           {isAddUserBtnLoading && (
             <CircularProgress
@@ -328,7 +362,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
         </Box>
       </Box>
       <DataGrid
-        columns={columns}
+        columns={usersTableColumnsDef}
         rows={users}
         getRowId={(row) => row.id}
         rowsPerPageOptions={[5, 25, 50]}
@@ -341,7 +375,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
       <Box sx={{ pt: 1, pb: 1, display: 'flex', flexDirection: 'row' }}>
         <Box sx={{ p: 0.5, border: 'solid 1px #e0e0e0', borderRadius: '5px' }}>
           <input multiple name="files" type="file" onChange={handleFileSelect} />
-          <Button size="small" onClick={importFile}>Import</Button>
+          <Button size="small" onClick={importFile}>{t('button_import')}</Button>
           {isFileUploadLoading && <LinearProgress />}
         </Box>
       </Box>
