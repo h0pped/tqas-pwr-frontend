@@ -10,8 +10,9 @@ export default function validate(values) {
       errors.email = 'login_validation_not_email';
     }
 
-    if (validEmail.test(String(values.email))
-      && !values.email.endsWith('@pwr.edu.pl')
+    if (
+      validEmail.test(String(values.email)) &&
+      !values.email.endsWith('@pwr.edu.pl')
     ) {
       errors.email = 'login_validation_not_university_email';
     }
@@ -24,8 +25,9 @@ export default function validate(values) {
   if (!values.password) {
     errors.password = 'login_validation_psw_required';
   } else {
-    if (String(values.password).length < 8
-      || String(values.password).length > 16
+    if (
+      String(values.password).length < 8 ||
+      String(values.password).length > 16
     ) {
       errors.password = 'login_validation_psw_err_length';
     }

@@ -1,6 +1,6 @@
 # Getting started
 
-## Where to find back-end part of the project 
+## Where to find back-end part of the project
 
 In order to find back-end part of project, please follow the link: https://github.com/h0pped/tqas-pwr
 
@@ -8,10 +8,9 @@ In order to find back-end part of project, please follow the link: https://githu
 
 ### First Step
 
-Make sure to have [NodeJS](https://nodejs.org/uk/) and [Git](https://git-scm.com/downloads) installed. 
+Make sure to have [NodeJS](https://nodejs.org/uk/) and [Git](https://git-scm.com/downloads) installed.
 
 To clone project, open in code editor new folder and in terminal run next commands:
-
 
 ```bash
 $ git clone git@github.com:h0pped/tqas-pwr-frontend.git
