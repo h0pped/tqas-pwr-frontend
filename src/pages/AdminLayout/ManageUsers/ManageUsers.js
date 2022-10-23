@@ -1,13 +1,10 @@
-import { Tooltip, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import LinearProgress from '@mui/material/LinearProgress';
 import MenuItem from '@mui/material/MenuItem';
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import SaveIcon from '@mui/icons-material/Save';
 import { DataGrid } from '@mui/x-data-grid';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -22,6 +19,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import customDataGridToolbar from './CustomDataGridToolBar.js';
 import validate from './ManageUsersValidationRules.js';
 import useForm from './useForm.js';
+import UsersActions from './UsersActions.js';
 
 const baseUrl = 'http://localhost:8080';
 
@@ -49,6 +47,8 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
     { key: 'evaluatee', title: 'evaluatee' },
   ];
 
+  const [isUpdated, setUpdated] = React.useState(false);
+
   const [users, setUsers] = React.useState({ users: [] });
 
   const [isFileUploadLoading, setFileUploadIsLoading] = React.useState(false);
@@ -61,6 +61,8 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
   const [roleInputValue, setRoleInputValue] = React.useState('evaluatee');
   const [academicTitleInputValue, setAcademicTitleInputValue] = React.useState('dr');
   const [lastDateOfEvalInputValue, setLastDateOfEvalInputValue] = React.useState(null);
+
+  const [activeRowId, setActiveRow] = React.useState(null);
 
   const handleFileSelect = (event) => {
     setSelectedFileToImport(event.target.files[0]);
@@ -91,6 +93,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
         {
           method: 'POST',
           headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
             Accept: 'application/json',
             'Content-Type': 'application/json',
           },
@@ -107,6 +110,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
         console.log(response);
         if (response.ok) {
           notifySuccess('User has been added.');
+          setUpdated(true);
         } else {
           notifyError('Network error.');
         }
@@ -122,7 +126,8 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
   useEffect(() => {
     setDrawerSelectedItem(link);
     getUsers();
-  }, [isAddUserBtnLoading, link, setDrawerSelectedItem]);
+    setUpdated(false);
+  }, [link, setDrawerSelectedItem, isUpdated]);
 
   async function getUsers() {
     setUsersTableLoading(true);
@@ -131,40 +136,37 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
         `${baseUrl}/userData/getUsers`,
         {
           method: 'GET',
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
         },
       ).then((response) => response.json())
-        .then((data) => { setUsers(data); setUsersTableLoading(false); });
+        .then((data) => {
+          setUsers(
+            data.sort((a, b) => (a.id > b.id) ? 1 : -1)
+          );
+          setUsersTableLoading(false);
+        });
     } catch (error) {
       setUsersTableLoading(false);
     }
   }
 
   const columns = [
+    { field: 'id', headerName: 'Id' },
     { field: 'email', headerName: 'Email address', minWidth: 200, flex: 2 },
     { field: 'academic_title', headerName: 'Academic title', minWidth: 140, type: 'singleSelect', valueOptions: academicTitlesList, editable: true },
     { field: 'first_name', headerName: 'First name', minWidth: 120, flex: 0.8 },
     { field: 'last_name', headerName: 'Last name', minWidth: 120, flex: 0.8 },
     { field: 'user_type', headerName: 'User role', minWidth: 100, flex: 0.8, type: 'singleSelect', valueOptions: userRolesList.map((role) => role.title), editable: true },
     { field: 'account_status', headerName: 'Account status', minWidth: 120 },
-    { field: 'status_date', headerName: 'Date of activation', minWidth: 150 },
     {
       field: 'actions',
       headerName: 'Actions',
       type: 'actions',
       flex: 1,
-      renderCell: () => (
-        <Box>
-          <Tooltip title="Save changes" placement="top">
-            <IconButton aria-label="save">
-              <SaveIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Delete user" placement="top">
-            <IconButton aria-label="delete">
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
-        </Box>
+      renderCell: (params) => (
+        <UsersActions {...{ params, activeRowId, setActiveRow }} />
       ),
     },
   ];
@@ -211,6 +213,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
           setFileUploadIsLoading(false);
           if (response.ok) {
             notifySuccess('File was successfully imported.');
+            setUpdated(true);
           } else {
             notifyError('Network error.');
           }
@@ -297,7 +300,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
             inputFormat="DD/MM/YYYY"
             value={lastDateOfEvalInputValue}
             onChange={handleLastDateOfEvalInputValueChange}
-            renderInput={(params) => <TextField size="small" {...params} />}
+            renderInput={(params) => <TextField type="date" size="small" {...params} />}
           />
         </LocalizationProvider>
         <Box sx={{ position: 'relative' }}>
@@ -327,11 +330,13 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
       <DataGrid
         columns={columns}
         rows={users}
+        getRowId={(row) => row.id}
         rowsPerPageOptions={[5, 25, 50]}
         pageSize={tablePageSize}
         loading={isUsersTableLoading}
         onPageSizeChange={(newPageSize) => setTablePageSize(newPageSize)}
         components={{ Toolbar: customDataGridToolbar, LoadingOverlay: LinearProgress }}
+        onCellEditCommit={(params) => setActiveRow(params.id)}
       />
       <Box sx={{ pt: 1, pb: 1, display: 'flex', flexDirection: 'row' }}>
         <Box sx={{ p: 0.5, border: 'solid 1px #e0e0e0', borderRadius: '5px' }}>
