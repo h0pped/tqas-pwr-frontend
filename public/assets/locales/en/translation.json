@@ -43,5 +43,12 @@
   "drawer_item_title_wzhz": "Manage WZHZ/SZHZ",
   "drawer_item_title_protocols": "Protocols",
   "drawer_item_title_users": "Manage users",
-  "manage_users_required": "Required field."
+  "manage_users_required": "Required field.",
+  "error_dialog": "Error!",
+  "acc_login_error": "Login failed: Email or password are incorrect. Please try again.",
+  "acc_activation_code_error": "Provided activation code is incorrect. Please try again.",
+  "acc_activation_error": "Account activation failed. Please try again.",
+  "acc_activation_error_not_found": "Account with provided email does not exist.",
+  "email_not_found": "Provided email was not found in our records. Please try another one",
+  "already_activated": "User with provided email is already activated. Try to login using your credentials."
 }

@@ -15,6 +15,7 @@ import App from './App.js';
 import reportWebVitals from './reportWebVitals.js';
 import Login from './pages/Login/Login.js';
 import Layout from './pages/Layout/Layout.js';
+import { UserContextProvider } from './context/UserContext/UserContext.js';
 
 const theme = createTheme({
   typography: {
@@ -65,15 +66,14 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Suspense fallback={loadingMarkupAlert}>
     <ThemeProvider theme={theme}>
-      <React.StrictMode>
+      <UserContextProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<App />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/dashboard/*" element={<Layout />} />
+            <Route path="/" element={<Login />} />
+            <Route path="/app" element={<App />} />
           </Routes>
         </BrowserRouter>
-      </React.StrictMode>
+      </UserContextProvider>
     </ThemeProvider>
   </Suspense>,
 );
