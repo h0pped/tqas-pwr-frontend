@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -29,6 +29,8 @@ import ClassesEvaluation from './ClassesEvaluation/ClassesEvaluation.js';
 import ManageEvaluationGroup from './ManageEvaluationGroup/ManageEvaluationGroup.js';
 import Protocols from './Protocols/Protocols.js';
 import ManageUsers from './ManageUsers/ManageUsers.js';
+
+import UserContext from '../../context/UserContext/UserContext.js';
 
 const drawerWidth = 240;
 
@@ -101,6 +103,8 @@ export default function Layout() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
+  const { token } = useContext(UserContext);
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -139,6 +143,10 @@ export default function Layout() {
   ];
 
   const navigate = useNavigate();
+
+  if (!token) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <Box sx={{ display: 'flex' }}>
