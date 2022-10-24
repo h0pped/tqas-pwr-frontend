@@ -16,7 +16,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 
 import 'react-toastify/dist/ReactToastify.css';
-import customDataGridToolbar from './CustomDataGridToolBar.js';
+import customDataGridToolbar from '../../../components/CustomGridToolbar/CustomDataGridToolBar.js';
 import validate from './ManageUsersValidationRules.js';
 import useForm from './useForm.js';
 import UsersActions from './UsersActions.js';
@@ -85,6 +85,84 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
     validate,
   );
 
+  const notifySuccess = (msg) => toast.success(`${t('success')} ${msg}`, {
+    position: 'top-center',
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: 'light',
+  });
+
+  const notifyError = (msg) => toast.error(`${t('error_dialog')} ${msg}`, {
+    position: 'top-center',
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: 'light',
+  });
+
+  const usersTableColumnsDef = [
+    {
+      field: 'id',
+      headerName: 'Id',
+    },
+    {
+      field: 'email',
+      headerName: t('label_first_name'),
+      minWidth: 200,
+      flex: 2,
+    },
+    {
+      field: 'academic_title',
+      headerName: t('label_academic_title'),
+      minWidth: 140,
+      type: 'singleSelect',
+      valueOptions: academicTitlesList,
+      editable: true,
+    },
+    {
+      field: 'first_name',
+      headerName: t('label_first_name'),
+      minWidth: 120,
+      flex: 0.8,
+    },
+    {
+      field: 'last_name',
+      headerName: t('label_last_name'),
+      minWidth: 120,
+      flex: 0.8,
+    },
+    {
+      field: 'user_type',
+      headerName: t('label_user_role'),
+      minWidth: 100,
+      flex: 0.8,
+      type: 'singleSelect',
+      valueOptions: userRolesList.map((role) => role.title),
+      editable: true,
+    },
+    {
+      field: 'account_status',
+      headerName: t('label_account_status'),
+      minWidth: 120,
+    },
+    {
+      field: 'actions',
+      headerName: t('label_actions'),
+      type: 'actions',
+      flex: 1,
+      renderCell: (params) => (
+        <UsersActions {...{ params, activeRowId, setActiveRow, setUpdated }} />
+      ),
+    },
+  ];
+
   useEffect(() => {
     setDrawerSelectedItem(link);
     getUsers();
@@ -149,84 +227,6 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
       setUsersTableLoading(false);
     }
   }
-
-  const usersTableColumnsDef = [
-    {
-      field: 'id',
-      headerName: 'Id',
-    },
-    {
-      field: 'email',
-      headerName: t('label_first_name'),
-      minWidth: 200,
-      flex: 2,
-    },
-    {
-      field: 'academic_title',
-      headerName: t('label_academic_title'),
-      minWidth: 140,
-      type: 'singleSelect',
-      valueOptions: academicTitlesList,
-      editable: true,
-    },
-    {
-      field: 'first_name',
-      headerName: t('label_first_name'),
-      minWidth: 120,
-      flex: 0.8,
-    },
-    {
-      field: 'last_name',
-      headerName: t('label_last_name'),
-      minWidth: 120,
-      flex: 0.8,
-    },
-    {
-      field: 'user_type',
-      headerName: t('label_user_role'),
-      minWidth: 100,
-      flex: 0.8,
-      type: 'singleSelect',
-      valueOptions: userRolesList.map((role) => role.title),
-      editable: true,
-    },
-    {
-      field: 'account_status',
-      headerName: t('label_account_status'),
-      minWidth: 120,
-    },
-    {
-      field: 'actions',
-      headerName: t('label_actions'),
-      type: 'actions',
-      flex: 1,
-      renderCell: (params) => (
-        <UsersActions {...{ params, activeRowId, setActiveRow, setUpdated }} />
-      ),
-    },
-  ];
-
-  const notifySuccess = (msg) => toast.success(`${t('success')} ${msg}`, {
-    position: 'top-center',
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
-
-  const notifyError = (msg) => toast.error(`${t('error_dialog')} ${msg}`, {
-    position: 'top-center',
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
 
   const importFile = async () => {
     if (selectedFileToImport.type !== 'text/csv'

@@ -53,6 +53,48 @@ export default function UsersActions({ params, activeRowId, setActiveRow, setUpd
     theme: 'light',
   });
 
+  const handleDeleteUser = async () => {
+    setDeleteLoading(true);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteDialogOptionNo = () => {
+    setDeleteDialogOpen(false);
+    setDeleteLoading(false);
+  };
+
+  const handleDeleteDialogOptionYes = async () => {
+    setDeleteDialogOpen(false);
+    try {
+      await fetch(
+        `${config.server.url}/userData/deleteUser`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: params.row.id,
+          }),
+        },
+      ).then((response) => {
+        setDeleteLoading(false);
+        if (response.ok) {
+          notifySuccess(t('success_user_deleted'));
+          setActiveRow(null);
+          setUpdated(true);
+        } else {
+          notifyError(t('error_user_not_deleted'));
+        }
+      });
+    } catch (error) {
+      setDeleteLoading(false);
+      notifyError(t('error_server'));
+    }
+  };
+
   const handleUpdateUser = async () => {
     setEditLoading(true);
 
@@ -96,48 +138,6 @@ export default function UsersActions({ params, activeRowId, setActiveRow, setUpd
       });
     } catch (error) {
       setEditLoading(false);
-      notifyError(t('error_server'));
-    }
-  };
-
-  const handleDeleteUser = async () => {
-    setDeleteLoading(true);
-    setDeleteDialogOpen(true);
-  };
-
-  const handleDeleteDialogOptionNo = () => {
-    setDeleteDialogOpen(false);
-    setDeleteLoading(false);
-  };
-
-  const handleDeleteDialogOptionYes = async () => {
-    setDeleteDialogOpen(false);
-    try {
-      await fetch(
-        `${config.server.url}/userData/deleteUser`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            id: params.row.id,
-          }),
-        },
-      ).then((response) => {
-        setDeleteLoading(false);
-        if (response.ok) {
-          notifySuccess(t('success_user_deleted'));
-          setActiveRow(null);
-          setUpdated(true);
-        } else {
-          notifyError(t('error_user_not_deleted'));
-        }
-      });
-    } catch (error) {
-      setDeleteLoading(false);
       notifyError(t('error_server'));
     }
   };
