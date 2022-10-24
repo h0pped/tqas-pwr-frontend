@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -20,6 +20,8 @@ import { toast } from 'react-toastify';
 
 import config from '../../../config/index.config.js';
 
+import UserContext from '../../../context/UserContext/UserContext.js';
+
 const Transition = React.forwardRef((props, ref) => (
   <Slide direction="down" ref={ref} {...props} />
 ));
@@ -27,9 +29,11 @@ const Transition = React.forwardRef((props, ref) => (
 export default function UsersActions({ params, activeRowId, setActiveRow, setUpdated }) {
   const { t } = useTranslation();
 
-  const [isEditLoading, setEditLoading] = React.useState(false);
-  const [isDeleteLoading, setDeleteLoading] = React.useState(false);
-  const [isDeleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+  const { token } = useContext(UserContext);
+
+  const [isEditLoading, setEditLoading] = useState(false);
+  const [isDeleteLoading, setDeleteLoading] = useState(false);
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const notifySuccess = (msg) => toast.success(`${t('success')} ${msg}`, {
     position: 'top-center',
@@ -53,7 +57,7 @@ export default function UsersActions({ params, activeRowId, setActiveRow, setUpd
     theme: 'light',
   });
 
-  const handleDeleteUser = async () => {
+  const handleDeleteUser = () => {
     setDeleteLoading(true);
     setDeleteDialogOpen(true);
   };
@@ -71,7 +75,7 @@ export default function UsersActions({ params, activeRowId, setActiveRow, setUpd
         {
           method: 'POST',
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${token}`,
             Accept: 'application/json',
             'Content-Type': 'application/json',
           },
@@ -112,7 +116,7 @@ export default function UsersActions({ params, activeRowId, setActiveRow, setUpd
         {
           method: 'POST',
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${token}`,
             Accept: 'application/json',
             'Content-Type': 'application/json',
           },

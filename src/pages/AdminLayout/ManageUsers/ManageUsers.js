@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import React, { useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -23,46 +23,30 @@ import UsersActions from './UsersActions.js';
 
 import config from '../../../config/index.config.js';
 
+import { academicTitlesList, userRolesList } from '../../../constants.js';
+import UserContext from '../../../context/UserContext/UserContext.js';
+
 export default function ManageUsers({ setDrawerSelectedItem, link }) {
   const { t } = useTranslation();
 
-  const academicTitlesList = [
-    'lic',
-    'inz',
-    'mgr',
-    'mgr inz',
-    'dr',
-    'dr inz',
-    'dr hab',
-    'dr hab inz',
-    'prof dr hab',
-    'prof dr hab inz',
-  ];
+  const { token } = useContext(UserContext);
 
-  const userRolesList = [
-    { key: 'admin', title: 'admin' },
-    { key: 'dean', title: 'dean' },
-    { key: 'head', title: 'head of department' },
-    { key: 'et', title: 'evaluation team member' },
-    { key: 'evaluatee', title: 'evaluatee' },
-  ];
+  const [isUpdated, setUpdated] = useState(false);
 
-  const [isUpdated, setUpdated] = React.useState(false);
+  const [users, setUsers] = useState({ users: [] });
 
-  const [users, setUsers] = React.useState({ users: [] });
+  const [isFileUploadLoading, setFileUploadIsLoading] = useState(false);
+  const [isAddUserBtnLoading, setAddUserBtnLoading] = useState(false);
+  const [isUsersTableLoading, setUsersTableLoading] = useState(false);
 
-  const [isFileUploadLoading, setFileUploadIsLoading] = React.useState(false);
-  const [isAddUserBtnLoading, setAddUserBtnLoading] = React.useState(false);
-  const [isUsersTableLoading, setUsersTableLoading] = React.useState(false);
+  const [tablePageSize, setTablePageSize] = useState(5);
 
-  const [tablePageSize, setTablePageSize] = React.useState(5);
+  const [selectedFileToImport, setSelectedFileToImport] = useState(null);
+  const [roleInputValue, setRoleInputValue] = useState('evaluatee');
+  const [academicTitleInputValue, setAcademicTitleInputValue] = useState('dr');
+  const [lastDateOfEvalInputValue, setLastDateOfEvalInputValue] = useState(null);
 
-  const [selectedFileToImport, setSelectedFileToImport] = React.useState(null);
-  const [roleInputValue, setRoleInputValue] = React.useState('evaluatee');
-  const [academicTitleInputValue, setAcademicTitleInputValue] = React.useState('dr');
-  const [lastDateOfEvalInputValue, setLastDateOfEvalInputValue] = React.useState(null);
-
-  const [activeRowId, setActiveRow] = React.useState(null);
+  const [activeRowId, setActiveRow] = useState(null);
 
   const handleFileSelect = (event) => {
     setSelectedFileToImport(event.target.files[0]);
@@ -177,13 +161,13 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
         {
           method: 'POST',
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${token}`,
             Accept: 'application/json',
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            first_name: values.fn,
-            last_name: values.ln,
+            first_name: values.firstName,
+            last_name: values.lastName,
             academic_title: academicTitleInputValue,
             email: values.email.toLowerCase(),
             user_type: roleInputValue,
@@ -213,13 +197,13 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
         {
           method: 'GET',
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${token}`,
           },
         },
       ).then((response) => response.json())
         .then((data) => {
           setUsers(
-            data.sort((a, b) => ((a.id > b.id) ? 1 : -1)),
+            data.sort((a, b) => a - b),
           );
           setUsersTableLoading(false);
         });
@@ -293,25 +277,25 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
         </TextField>
         <TextField
           id="text-field-fn"
-          error={errors.fn}
-          helperText={t(errors.fn)}
-          name="fn"
+          error={errors.firstName}
+          helperText={t(errors.firstName)}
+          name="firstName"
           size="small"
           label={t('label_first_name')}
           variant="outlined"
-          value={values.fn || ''}
+          value={values.firstName || ''}
           onChange={handleChange}
           sx={{ minWidth: 100, flex: 1 }}
         />
         <TextField
           id="text-field-ln"
-          error={errors.ln}
-          helperText={t(errors.ln)}
-          name="ln"
+          error={errors.lastName}
+          helperText={t(errors.lastName)}
+          name="lastName"
           size="small"
           label={t('label_last_name')}
           variant="outlined"
-          value={values.ln || ''}
+          value={values.lastName || ''}
           onChange={handleChange}
           sx={{ minWidth: 100, flex: 1 }}
         />

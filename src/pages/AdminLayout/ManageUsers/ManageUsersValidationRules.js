@@ -18,12 +18,12 @@ export default function validate(values) {
     }
   }
 
-  if (!values.fn) {
-    errors.fn = 'manage_users_required';
+  if (!values.firstName) {
+    errors.firstName = 'manage_users_required';
   }
 
-  if (!values.ln) {
-    errors.ln = 'manage_users_required';
+  if (!values.lastName) {
+    errors.lastName = 'manage_users_required';
   }
 
   return errors;

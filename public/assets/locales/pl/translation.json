@@ -43,6 +43,7 @@
   "drawer_item_title_wzhz": "Grupa WZHZ/SZHZ",
   "drawer_item_title_protocols": "Protokoły",
   "drawer_item_title_users": "Użytkownicy systemu",
+  "manage_users_required": "Pole wymagane.",
   "error_dialog": "Błąd!",
   "acc_login_error": "Logowanie nie powiodło się: e-mail lub hasło są nieprawidłowe.",
   "acc_activation_code_error": "Podany kod aktywacyjny jest nieprawidłowy. Proszę spróbuj ponownie.",
