@@ -18,7 +18,7 @@ const Login = () => {
   const { isLoggedIn } = useContext(UserContext);
 
   if (isLoggedIn) {
-    return <Navigate to="/app" />;
+    return <Navigate to="/home" />;
   }
   return (
     <div className={classes.container}>
