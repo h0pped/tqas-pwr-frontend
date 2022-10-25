@@ -7,7 +7,7 @@ import { GridToolbarContainer,
   GridToolbarFilterButton }
   from '@mui/x-data-grid';
 
-const customDataGridToolbar = function () {
+const customDataGridToolbar = function CustomToolbar() {
   return (
     <GridToolbarContainer>
       <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
