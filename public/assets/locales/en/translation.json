@@ -48,5 +48,6 @@
   "wrong_recovery_code": "Provided recovery code is incorrect. Please try again.",
   "acc_revovery_not_found": "Account with provided email does not exist.",
   "acc_revovery_error": "Account recovery failed. Please try again later.",
-  "acc_recovery_success": "Your account has been successfully recovered"
+  "acc_recovery_success": "Your account has been successfully recovered",
+  "recovery_code_blocked": "Recovery process is blocked for that account. Please try again later in 15 minutes."
 }
