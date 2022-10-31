@@ -1,56 +1,4 @@
 .switchContainer {
-<<<<<<< HEAD
-  margin-right: 8px;
-  display: flex;
-  gap: 4px;
-  width: auto;
-  height: 20px;
-  margin-right: 12px;
-  margin-left: 12px;
-}
-
-.languageBtnActive {
-  height: max-content;
-  margin: 0;
-  width: 24px;
-  text-align: center;
-  font-size: 14px;
-  padding: 2px;
-  color: #ffffff;
-
-  background: none;
-  border: none;
-  padding: 0;
-  font: inherit;
-  cursor: pointer;
-  outline: inherit;
-
-  text-decoration: underline;
-  cursor: not-allowed;
-}
-
-.languageBtn {
-  height: max-content;
-  margin: 0;
-  width: 24px;
-  text-align: center;
-  font-size: 14px;
-  padding: 2px;
-  color: #ffffff;
-  background: none;
-  border: none;
-  padding: 0;
-  font: inherit;
-  cursor: pointer;
-  outline: inherit;
-}
-
-.languageBtn:hover {
-  color: #ffffff;
-  text-decoration: underline;
-  cursor: pointer;
-}
-=======
     display: flex;
     gap: 0.25px;
     width: auto;
@@ -94,4 +42,3 @@
     cursor: pointer;
   }
   
->>>>>>> 22c6e5c837bd014b45b334c5605edbc46ed29854
