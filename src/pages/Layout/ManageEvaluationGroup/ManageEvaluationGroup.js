@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   DataGrid,
   GridToolbarContainer,
@@ -8,15 +8,19 @@ import {
   GridToolbarQuickFilter,
   GridToolbarFilterButton,
 } from '@mui/x-data-grid';
-import { Tooltip, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { ToastContainer, toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
+import indexConfig from '../../../config/index.config.js';
+import UserContext from '../../../context/UserContext/UserContext.js';
+import DeleteAction from './DeleteActions.js';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 function CustomToolbar() {
   return (
@@ -46,16 +50,70 @@ function CustomToolbar() {
 export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
   const [users, setUsers] = React.useState({ users: [] });
   const [isUsersTableLoading, setUsersTableLoading] = React.useState(false);
+  const [lists, setLists] = React.useState({ lists: [] });
+  const { token } = useContext(UserContext);
+  const [activeRowId, setActiveRow] = useState(null);
+
+  const [selectedUser, setSelectedUser] = useState(null);
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     getUsers();
+    getLists();
   }, []);
 
-  async function getUsers() {
-    setUsersTableLoading(true);
+  const notifySuccess = (msg) =>
+    toast.success(`${t('success')} ${msg}`, {
+      position: 'top-center',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+    });
+
+  const notifyError = (msg) =>
+    toast.error(`${t('error_dialog')} ${msg}`, {
+      position: 'top-center',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+    });
+
+  async function getLists() {
     try {
-      await fetch(`$ (http://localhost:8000/userData/getUsers)`, {
+      await fetch(`${indexConfig.server.url}/wzhzData/getMembers`, {
         method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          setLists(data);
+          console.log(lists);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function getUsers() {
+    try {
+      console.log(localStorage.getItem('token'));
+      await fetch(`${indexConfig.server.url}/userData/getUsers`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       })
         .then((response) => response.json())
         .then((data) => {
@@ -69,26 +127,55 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
     }
   }
 
-  const academicTitles = [
-    'lic',
-    'inz',
-    'mgr',
-    'mgr inz',
-    'dr',
-    'dr inz',
-    'dr hab',
-    'dr hab inz',
-    'prof dr hab',
-    'prof dr hab inz',
-  ];
+  async function addMembers() {
+    if (selectedUser) {
+      console.log(`PARAMS: ${selectedUser}`);
+      try {
+        await fetch(`${indexConfig.server.url}/wzhzData/addMember`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: selectedUser,
+          }),
+        }).then((response) => {
+          console.log(`ADDD RESPONSE >>> ${JSON.stringify(response)}`);
+          if (response.ok) {
+            notifySuccess('Member was addedd. Please reload your page');
+          } else {
+            notifyError(
+              'There was an error while adding a new member. Please try again',
+            );
+          }
+        });
+        // .then((response) => response.json())
+        // .then((data) => {
+        //   console.log(data);
+        //   console.log(members);
+        //   notifySuccess('Member was added!');
+        // });
+      } catch (error) {
+        console.log(error);
+        notifyError('Please select a user!');
+      }
+    }
+  }
 
   const columns = [
-    { field: 'id', headerName: 'Id', minWidth: 50, flex: 0.3 },
+    {
+      field: 'wzhz',
+      headerName: 'Id',
+      minWidth: 50,
+      flex: 0.3,
+      valueFormatter: ({ value }) => value.id,
+    },
     { field: 'email', headerName: 'Email address', minWidth: 300, flex: 1.5 },
     {
       field: 'academic_title',
       headerName: 'Academic title',
-      valueOptions: academicTitles,
       minWidth: 150,
       flex: 0.5,
     },
@@ -100,87 +187,16 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
       type: 'actions',
       flex: 0.5,
       renderCell: (params) => (
-        <Box>
-          <Tooltip title="Delete user" placement="top">
-            <IconButton aria-label="delete">
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
-        </Box>
+        <DeleteAction {...{ params, activeRowId, setActiveRow }} />
       ),
     },
   ];
 
-  const rows = [
-    {
-      id: 1,
-      email: 'Jhon.Miller@pwr.edu.pl',
-      academic_title: 'DR',
-      first_name: 'Jhon',
-      last_name: 'Miller',
-    },
-    {
-      id: 2,
-      email: 'Jhon.Miller@pwr.edu.pl',
-      academic_title: 'DR',
-      first_name: 'Mike',
-      last_name: 'Smith',
-    },
-    {
-      id: 3,
-      email: 'philip.stuart@pwr.edu.pl',
-      academic_title: 'DR',
-      first_name: 'Philip',
-      last_name: 'Stuart',
-    },
-    {
-      id: 4,
-      email: 'alice.oliver@pwr.edu.pl',
-      academic_title: 'DR.',
-      first_name: 'Alice',
-      last_name: 'Oliver',
-    },
-    {
-      id: 5,
-      email: 'Jhon.Miller@pwr.edu.pl',
-      academic_title: 'DR.',
-      first_name: 'Jhon',
-      last_name: 'Miller',
-    },
-    {
-      id: 6,
-      email: 'kate.Cecil@pwr.edu.pl',
-      academic_title: 'DR.',
-      first_name: 'Kate',
-      last_name: 'Cecil',
-    },
-  ];
   useEffect(() => {
     setDrawerSelectedItem(link);
   }, []);
 
   const [pageSize, setPageSize] = React.useState(5);
-
-  const notifySuccess = (msg) =>
-    toast.success(`Success! ${msg}`, {
-      position: 'top-center',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'light',
-    });
-
-  // const { values, handleChange, errors, handleSubmitNewUser } = useForm(
-  //   addUser,
-  // );
-
-  // function addUser() {
-  //   // api call post user
-  //   notifySuccess('New user created.');
-  // }
 
   return (
     <Box sx={{ m: 0, p: 0, height: 400 }}>
@@ -220,20 +236,26 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
             id="combo-box-demo"
             size="small"
             options={users}
+            onChange={(event, value) => setSelectedUser(value.id)}
+            getOptionLabel={(option) =>
+              `${option.academic_title} ${option.first_name} ${option.last_name} <${option.email}>`
+            }
             sx={{ width: 300, flex: 1 }}
             renderInput={(params) => <TextField {...params} label="User" />}
           />
           <Button
-            size="small"
+            size="24px"
             variant="contained"
-            // onClick={handleSubmitNewUser}
+            onClick={() => {
+              addMembers();
+            }}
             sx={{ width: 100 }}
           >
             Add
           </Button>
         </Box>
         <DataGrid
-          rows={users}
+          rows={lists}
           columns={columns}
           rowsPerPageOptions={[5, 25, 50]}
           pageSize={pageSize}

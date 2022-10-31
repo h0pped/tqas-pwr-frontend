@@ -12,6 +12,7 @@ import HttpApi from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
 import App from './App.js';
+import Layout from './pages/Layout/Layout.js';
 import reportWebVitals from './reportWebVitals.js';
 import Login from './pages/Login/Login.js';
 import { UserContextProvider } from './context/UserContext/UserContext.js';
@@ -70,6 +71,7 @@ root.render(
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/app" element={<App />} />
+            <Route path="/home/*" element={<Layout />} />
           </Routes>
         </BrowserRouter>
       </UserContextProvider>
