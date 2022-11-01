@@ -38,7 +38,7 @@
   "reset_psw_email_helper": "Use the email associated with the account you want to reset password to.",
   "password_reset_success": "Your password has been successfully reset, now you can log in.",
   "success": "Success!",
-  "drawer_item_title_classes_eval": "Classes evaluation",
+  "drawer_item_title_classes_eval": "Assesments",
   "drawer_item_title_wzhz": "Manage WZHZ/SZHZ",
   "drawer_item_title_protocols": "Protocols",
   "drawer_item_title_users": "Manage users",
@@ -51,7 +51,7 @@
   "wrong_recovery_code": "Provided recovery code is incorrect. Please try again.",
   "acc_revovery_not_found": "Account with provided email does not exist.",
   "acc_revovery_error": "Account recovery failed. Please try again later.",
-  "acc_recovery_success": "Your account has been successfully recovered"
+  "acc_recovery_success": "Your account has been successfully recovered",
   "email_not_found": "Provided email was not found in our records. Please try another one",
   "already_activated": "User with provided email is already activated. Try to login using your credentials.",
   "admin_manage_users_title": "Manage users",

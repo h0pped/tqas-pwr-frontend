@@ -25,12 +25,14 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import DescriptionIcon from '@mui/icons-material/Description';
 import LanguageSwitchV2 from '../../components/LanguageSwitch/LanguageSwitchV2.js';
-import ClassesEvaluation from './ClassesEvaluation/ClassesEvaluation.js';
+import ClassesEvaluation from './Assesments/Assesments.js';
 import ManageEvaluationGroup from './ManageEvaluationGroup/ManageEvaluationGroup.js';
 import Protocols from './Protocols/Protocols.js';
 import ManageUsers from './ManageUsers/ManageUsers.js';
 
 import UserContext from '../../context/UserContext/UserContext.js';
+
+import './layout.css';
 
 const drawerWidth = 240;
 
@@ -149,7 +151,7 @@ export default function Layout() {
   }
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', height: '100%' }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
         <Toolbar>
@@ -207,7 +209,7 @@ export default function Layout() {
           ))}
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, pl: 3, pr: 3 }}>
+      <Box component="main" sx={{ flexGrow: 1, pl: 3, pr: 3, height: '100%' }}>
         <DrawerHeader />
         <Box>
           <Typography sx={{ p: 2, flex: 1, textAlign: 'end' }}>
