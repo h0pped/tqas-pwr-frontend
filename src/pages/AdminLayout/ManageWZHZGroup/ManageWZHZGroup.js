@@ -16,9 +16,10 @@ import customDataGridToolbar from '../../../components/CustomGridToolbar/CustomD
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
-  const [usersLists, setUsersList] = useState({ usersLists: [] });
+  const [usersList, setUsersList] = useState({ usersList: [] });
+  const [isAddUserBtnLoading, setAddUserBtnLoading] = useState(false);
   const [isUsersTableLoading, setUsersTableLoading] = useState(false);
-  const [member, setMember] = useState({ member: [] });
+  const [members, setMembers] = useState({ members: [] });
   const { token } = useContext(UserContext);
   const [activeRowId, setActiveRow] = useState(null);
 
@@ -28,8 +29,8 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
   const { t } = useTranslation();
 
   useEffect(() => {
-    getUsersLists();
-    getMember();
+    getUsersList();
+    getMembers();
   }, [isUpdate]);
 
   const notifySuccess = (msg) =>
@@ -56,7 +57,7 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
       theme: 'light',
     });
 
-  async function getMember() {
+  async function getMembers() {
     setUsersTableLoading(true);
     try {
       fetch(`${indexConfig.server.url}/wzhzData/getMembers`, {
@@ -67,7 +68,7 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
       })
         .then((response) => response.json())
         .then((data) => {
-          setMember(data);
+          setMembers(data);
           setUsersTableLoading(false);
         });
     } catch (error) {
@@ -75,7 +76,7 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
     }
   }
 
-  async function getUsersLists() {
+  async function getUsersList() {
     setUsersTableLoading(true);
     try {
       fetch(`${indexConfig.server.url}/userData/getUsers`, {
@@ -95,6 +96,7 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
   }
 
   async function addMembers() {
+    setAddUserBtnLoading(true);
     if (selectedUser) {
       try {
         fetch(`${indexConfig.server.url}/wzhzData/addMember`, {
@@ -114,10 +116,13 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
           } else {
             notifyError(t('error_added_wzhz_member'));
           }
+          setAddUserBtnLoading(false);
         });
       } catch (error) {
-        notifyError('Please select a user!');
+        setAddUserBtnLoading(false);
       }
+    } else {
+      notifyError(t('error_select_user'));
     }
   }
 
@@ -202,7 +207,7 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
             disablePortal
             id="combo-box-demo"
             size="small"
-            options={usersLists}
+            options={usersList}
             onChange={(event, value) => setSelectedUser(value.id)}
             getOptionLabel={(option) =>
               `${option.academic_title} ${option.first_name} ${option.last_name} <${option.email}>`
@@ -222,7 +227,7 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
           </Button>
         </Box>
         <DataGrid
-          rows={member}
+          rows={members}
           columns={columns}
           rowsPerPageOptions={[5, 25, 50]}
           pageSize={pageSize}

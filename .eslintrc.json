@@ -18,7 +18,7 @@
     "react/jsx-props-no-spreading": "off",
     "operator-linebreak": "off",
     "object-curly-newline": [
-      "error",
+      "error", 
       {
         "ObjectExpression": { "consistent": true, "multiline": true },
         "ObjectPattern": { "consistent": true, "multiline": true },

@@ -72,6 +72,7 @@
   "success_remove_wzhz_member": "Member was removed.",
   "success_added_wzhz_member": "Members was added",
   "error_added_wzhz_member": "There was an error while adding a new member. Please try again",
+  "error_select_user": "Please select a user!",
   "success_user_created": "User has been added.",
   "button_import": "Import",
   "success_user_updated": "User was updated.",
