@@ -151,12 +151,6 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
             );
           }
         });
-        // .then((response) => response.json())
-        // .then((data) => {
-        //   console.log(data);
-        //   console.log(members);
-        //   notifySuccess('Member was added!');
-        // });
       } catch (error) {
         console.log(error);
         notifyError('Please select a user!');
