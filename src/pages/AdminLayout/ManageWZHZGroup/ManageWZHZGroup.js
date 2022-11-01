@@ -1,13 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
-import {
-  DataGrid,
-  GridToolbarContainer,
-  GridToolbarExport,
-  GridToolbarColumnsButton,
-  GridToolbarDensitySelector,
-  GridToolbarQuickFilter,
-  GridToolbarFilterButton,
-} from '@mui/x-data-grid';
+import { useContext, useEffect, useState } from 'react';
+import { DataGrid } from '@mui/x-data-grid';
 import { Typography } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
 import Box from '@mui/material/Box';
@@ -19,49 +11,26 @@ import { useTranslation } from 'react-i18next';
 import indexConfig from '../../../config/index.config.js';
 import UserContext from '../../../context/UserContext/UserContext.js';
 import DeleteAction from './DeleteActions.js';
+import customDataGridToolbar from '../../../components/CustomGridToolbar/CustomDataGridToolBar.js';
 
 import 'react-toastify/dist/ReactToastify.css';
 
-function CustomToolbar() {
-  return (
-    <GridToolbarContainer>
-      <Box
-        sx={{
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}
-      >
-        <Box>
-          <GridToolbarQuickFilter />
-        </Box>
-        <Box>
-          <GridToolbarExport />
-          <GridToolbarColumnsButton />
-          <GridToolbarDensitySelector />
-          <GridToolbarFilterButton />
-        </Box>
-      </Box>
-    </GridToolbarContainer>
-  );
-}
-
 export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
-  const [users, setUsers] = React.useState({ users: [] });
-  const [isUsersTableLoading, setUsersTableLoading] = React.useState(false);
-  const [lists, setLists] = React.useState({ lists: [] });
+  const [usersLists, setUsersList] = useState({ usersLists: [] });
+  const [isUsersTableLoading, setUsersTableLoading] = useState(false);
+  const [member, setMember] = useState({ member: [] });
   const { token } = useContext(UserContext);
   const [activeRowId, setActiveRow] = useState(null);
 
   const [selectedUser, setSelectedUser] = useState(null);
+  const [isUpdate, setUpdated] = useState(false);
 
   const { t } = useTranslation();
 
   useEffect(() => {
-    getUsers();
-    getLists();
-  }, []);
+    getUsersLists();
+    getMember();
+  }, [isUpdate]);
 
   const notifySuccess = (msg) =>
     toast.success(`${t('success')} ${msg}`, {
@@ -87,9 +56,10 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
       theme: 'light',
     });
 
-  async function getLists() {
+  async function getMember() {
+    setUsersTableLoading(true);
     try {
-      await fetch(`${indexConfig.server.url}/wzhzData/getMembers`, {
+      fetch(`${indexConfig.server.url}/wzhzData/getMembers`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -97,19 +67,18 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
-          setLists(data);
-          console.log(lists);
+          setMember(data);
+          setUsersTableLoading(false);
         });
     } catch (error) {
-      console.log(error);
+      notifyError(t('error_server;'));
     }
   }
 
-  async function getUsers() {
+  async function getUsersLists() {
+    setUsersTableLoading(true);
     try {
-      console.log(localStorage.getItem('token'));
-      await fetch(`${indexConfig.server.url}/userData/getUsers`, {
+      fetch(`${indexConfig.server.url}/userData/getUsers`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -117,21 +86,18 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
-          setUsers(data);
+          setUsersList(data);
           setUsersTableLoading(false);
-          console.log(users);
         });
     } catch (error) {
-      console.log(error);
+      notifyError(t('error_server'));
     }
   }
 
   async function addMembers() {
     if (selectedUser) {
-      console.log(`PARAMS: ${selectedUser}`);
       try {
-        await fetch(`${indexConfig.server.url}/wzhzData/addMember`, {
+        fetch(`${indexConfig.server.url}/wzhzData/addMember`, {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -142,17 +108,14 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
             userId: selectedUser,
           }),
         }).then((response) => {
-          console.log(`ADDD RESPONSE >>> ${JSON.stringify(response)}`);
           if (response.ok) {
-            notifySuccess('Member was addedd. Please reload your page');
+            notifySuccess(t('success_added_wzhz_member'));
+            setUpdated(true);
           } else {
-            notifyError(
-              'There was an error while adding a new member. Please try again',
-            );
+            notifyError(t('error_added_wzhz_member'));
           }
         });
       } catch (error) {
-        console.log(error);
         notifyError('Please select a user!');
       }
     }
@@ -169,12 +132,22 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
     { field: 'email', headerName: 'Email address', minWidth: 300, flex: 1.5 },
     {
       field: 'academic_title',
-      headerName: 'Academic title',
+      headerName: t('label_academic_title'),
       minWidth: 150,
       flex: 0.5,
     },
-    { field: 'first_name', headerName: 'First name', minWidth: 200, flex: 0.5 },
-    { field: 'last_name', headerName: 'Last name', minWidth: 200, flex: 0.5 },
+    {
+      field: 'first_name',
+      headerName: t('label_first_name'),
+      minWidth: 200,
+      flex: 0.5,
+    },
+    {
+      field: 'last_name',
+      headerName: t('label_last_name'),
+      minWidth: 200,
+      flex: 0.5,
+    },
     {
       field: 'actions',
       headerName: '',
@@ -190,7 +163,7 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
     setDrawerSelectedItem(link);
   }, []);
 
-  const [pageSize, setPageSize] = React.useState(5);
+  const [pageSize, setPageSize] = useState(5);
 
   return (
     <Box sx={{ m: 0, p: 0, height: 400 }}>
@@ -229,7 +202,7 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
             disablePortal
             id="combo-box-demo"
             size="small"
-            options={users}
+            options={usersLists}
             onChange={(event, value) => setSelectedUser(value.id)}
             getOptionLabel={(option) =>
               `${option.academic_title} ${option.first_name} ${option.last_name} <${option.email}>`
@@ -245,11 +218,11 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
             }}
             sx={{ width: 100 }}
           >
-            Add
+            {t('button_add')}
           </Button>
         </Box>
         <DataGrid
-          rows={lists}
+          rows={member}
           columns={columns}
           rowsPerPageOptions={[5, 25, 50]}
           pageSize={pageSize}
@@ -257,7 +230,7 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
           loading={isUsersTableLoading}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
           components={{
-            Toolbar: CustomToolbar,
+            Toolbar: customDataGridToolbar,
             LoadingOverlay: LinearProgress,
           }}
           componentsProps={{

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Tooltip from '@mui/material/Tooltip';
@@ -26,6 +26,9 @@ export default function DeleteAction({ params }) {
   const [isDeleteLoading, setDeleteLoading] = useState(false);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const { token } = useContext(UserContext);
+  const [isUpdate, setUpdated] = useState(false);
+
+  useEffect(() => {}, [isUpdate]);
 
   const notifySuccess = (msg) =>
     toast.success(`${t('success')} ${msg}`, {
@@ -63,33 +66,23 @@ export default function DeleteAction({ params }) {
 
   const handleDeleteDialogOptionYes = async () => {
     setDeleteDialogOpen(false);
-    console.log(`>>>>>>>>>>>>>> ${JSON.stringify(params.row.wzhz.id)}`);
-    const response = await fetch(
-      `${indexConfig.server.url}/wzhzData/removeMember`,
-      {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          id: params.row.wzhz.id,
-        }),
+    fetch(`${indexConfig.server.url}/wzhzData/removeMember`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
-    ).then(async (response) => {
-      console.log(`DEL RESPONSE >>> ${response}`);
-      const data = await response.json();
+      body: JSON.stringify({
+        id: params.row.wzhz.id,
+      }),
+    }).then(async (response) => {
       setDeleteLoading(false);
-      console.log(data);
-      if (!response.ok) {
-        const error = (data && data.message) || response.status;
-        notifyError(
-          'There was an error while removing the member. Please try again.',
-        );
-        return Promise.reject(error);
+      if (response.ok) {
+        notifySuccess(t('success_remove_wzhz_member'));
+        setUpdated(true);
       } else {
-        notifySuccess('Member was removed. Please reload your page');
+        notifyError(t('error_remove_wzhz_member'));
       }
     });
   };

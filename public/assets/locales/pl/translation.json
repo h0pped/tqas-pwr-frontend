@@ -80,5 +80,10 @@
   "button_no": "Nie",
   "tooltip_save_changes": "Zapisz zmiany",
   "tooltip_delete_user": "Usuń użytkownika",
-  "title_logged_in_as": "Zalogowany jako"
+  "title_logged_in_as": "Zalogowany jako",
+
+  "error_remove_wzhz_member": "Podczas usuwania członka wystąpił błąd. Proszę spróbuj ponownie",
+  "success_remove_wzhz_member": "Członek został usunięty.",
+  "success_added_wzhz_member": "Członek został dodany.",
+  "error_added_wzhz_member": "Wystąpił błąd podczas dodawania nowego członka. Proszę spróbuj ponownie"
 }
