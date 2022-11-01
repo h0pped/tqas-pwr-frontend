@@ -71,7 +71,7 @@ export default function PasswordResetComponent({ handleFormClick }) {
         code: values.code,
       }),
     });
-    return res.status === 200;
+    return res.status;
   };
 
   const passwordRecoveryHandler = async () => {
@@ -105,17 +105,32 @@ export default function PasswordResetComponent({ handleFormClick }) {
           content: t('server_error'),
         });
         setIsOpen(true);
+      } else if (codeSendStatus === 405) {
+        setDialogContent({
+          title: t('error_dialog'),
+          severity: 'error',
+          content: t('recovery_code_blocked'),
+        });
+        setIsOpen(true);
       } else if (codeSendStatus === 200) {
         setState(1);
       }
     } else if (state === 1 && values.code && !errors.code) {
-      if (await verifyRecoveryCode()) {
+      const verifyCodeStatus = await verifyRecoveryCode();
+      if (verifyCodeStatus === 200) {
         setState(2);
-      } else {
+      } else if (verifyCodeStatus === 400) {
         setDialogContent({
           title: t('error_dialog'),
           severity: 'error',
           content: t('wrong_recovery_code'),
+        });
+        setIsOpen(true);
+      } else if (verifyCodeStatus === 405) {
+        setDialogContent({
+          title: t('error_dialog'),
+          severity: 'error',
+          content: t('recovery_code_blocked'),
         });
         setIsOpen(true);
       }

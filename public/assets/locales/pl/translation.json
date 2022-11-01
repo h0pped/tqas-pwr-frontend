@@ -53,7 +53,8 @@
   "wrong_recovery_code": "Podany kod odzyskiwania jest nieprawidłowy. Proszę spróbuj ponownie.",
   "acc_revovery_not_found": "Konto z podanym adresem e-mail nie istnieje.",
   "acc_revovery_error": "Odzyskiwanie konta nie powiodło się. Spróbuj ponownie później.",
-  "acc_recovery_success": "Twoje konto zostało pomyślnie odzyskane, możesz zalogować się przy użyciu nowych danych uwierzytelniających"
+  "recovery_code_blocked": "Proces odzyskiwania jest zablokowany dla tego konta. Spróbuj ponownie później za 15 minut.",
+  "acc_recovery_success": "Twoje konto zostało pomyślnie odzyskane, możesz zalogować się przy użyciu nowych danych uwierzytelniających",
   "admin_manage_users_title": "Zarządzanie użytkownikami",
   "label_academic_title": "Tytuł akademicki",
   "label_first_name": "Imię",
