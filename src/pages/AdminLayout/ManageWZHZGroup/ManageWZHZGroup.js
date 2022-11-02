@@ -18,7 +18,7 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
   const [usersList, setUsersList] = useState({ usersList: [] });
   const [isAddUserBtnLoading, setAddUserBtnLoading] = useState(false);
-  const [isUsersTableLoading, setUsersTableLoading] = useState(false);
+  const [isMembersTableLoading, setMembersTableLoading] = useState(false);
   const [members, setMembers] = useState({ members: [] });
   const { token } = useContext(UserContext);
   const [activeRowId, setActiveRow] = useState(null);
@@ -58,7 +58,7 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
     });
 
   async function getMembers() {
-    setUsersTableLoading(true);
+    setMembersTableLoading(true);
     try {
       fetch(`${indexConfig.server.url}/wzhzData/getMembers`, {
         method: 'GET',
@@ -69,7 +69,7 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
         .then((response) => response.json())
         .then((data) => {
           setMembers(data);
-          setUsersTableLoading(false);
+          setMembersTableLoading(false);
         });
     } catch (error) {
       notifyError(t('error_server;'));
@@ -77,7 +77,7 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
   }
 
   async function getUsersList() {
-    setUsersTableLoading(true);
+    setMembersTableLoading(true);
     try {
       fetch(`${indexConfig.server.url}/userData/getUsers`, {
         method: 'GET',
@@ -88,7 +88,7 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
         .then((response) => response.json())
         .then((data) => {
           setUsersList(data);
-          setUsersTableLoading(false);
+          setMembersTableLoading(false);
         });
     } catch (error) {
       notifyError(t('error_server'));
@@ -218,6 +218,7 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
           <Button
             size="24px"
             variant="contained"
+            disabled={isAddUserBtnLoading}
             onClick={() => {
               addMembers();
             }}
@@ -232,7 +233,7 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
           rowsPerPageOptions={[5, 25, 50]}
           pageSize={pageSize}
           getRowId={(row) => row.id}
-          loading={isUsersTableLoading}
+          loading={isMembersTableLoading}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
           components={{
             Toolbar: customDataGridToolbar,
