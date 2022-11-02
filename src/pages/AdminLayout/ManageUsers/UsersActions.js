@@ -26,7 +26,12 @@ const Transition = React.forwardRef((props, ref) => (
   <Slide direction="down" ref={ref} {...props} />
 ));
 
-export default function UsersActions({ params, activeRowId, setActiveRow, setUpdated }) {
+export default function UsersActions({
+  params,
+  activeRowId,
+  setActiveRow,
+  setUpdated,
+}) {
   const { t } = useTranslation();
 
   const { token } = useContext(UserContext);
@@ -35,27 +40,29 @@ export default function UsersActions({ params, activeRowId, setActiveRow, setUpd
   const [isDeleteLoading, setDeleteLoading] = useState(false);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-  const notifySuccess = (msg) => toast.success(`${t('success')} ${msg}`, {
-    position: 'top-center',
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
+  const notifySuccess = (msg) =>
+    toast.success(`${t('success')} ${msg}`, {
+      position: 'top-center',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+    });
 
-  const notifyError = (msg) => toast.error(`${t('error_dialog')} ${msg}`, {
-    position: 'top-center',
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
+  const notifyError = (msg) =>
+    toast.error(`${t('error_dialog')} ${msg}`, {
+      position: 'top-center',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+    });
 
   const handleDeleteUser = () => {
     setDeleteLoading(true);
@@ -70,20 +77,17 @@ export default function UsersActions({ params, activeRowId, setActiveRow, setUpd
   const handleDeleteDialogOptionYes = async () => {
     setDeleteDialogOpen(false);
     try {
-      await fetch(
-        `${config.server.url}/userData/deleteUser`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            id: params.row.id,
-          }),
+      await fetch(`${config.server.url}/userData/deleteUser`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
         },
-      ).then((response) => {
+        body: JSON.stringify({
+          id: params.row.id,
+        }),
+      }).then((response) => {
         setDeleteLoading(false);
         if (response.ok) {
           notifySuccess(t('success_user_deleted'));
@@ -111,26 +115,23 @@ export default function UsersActions({ params, activeRowId, setActiveRow, setUpd
     }
 
     try {
-      await fetch(
-        `${config.server.url}/userData/updateUser`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            id: params.row.id,
-            first_name: params.row.first_name,
-            last_name: params.row.last_name,
-            email: params.row.email,
-            academic_title: params.row.academic_title,
-            user_type: params.row.user_type,
-            last_evaluated_date: lastEvalDateDDMMYYYY,
-          }),
+      await fetch(`${config.server.url}/userData/updateUser`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
         },
-      ).then((response) => {
+        body: JSON.stringify({
+          id: params.row.id,
+          first_name: params.row.first_name,
+          last_name: params.row.last_name,
+          email: params.row.email,
+          academic_title: params.row.academic_title,
+          user_type: params.row.user_type,
+          last_evaluated_date: lastEvalDateDDMMYYYY,
+        }),
+      }).then((response) => {
         setEditLoading(false);
         setActiveRow(null);
         if (response.ok) {
@@ -162,14 +163,17 @@ export default function UsersActions({ params, activeRowId, setActiveRow, setUpd
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDeleteDialogOptionYes}>{t('button_yes')}</Button>
+          <Button onClick={handleDeleteDialogOptionYes}>
+            {t('button_yes')}
+          </Button>
           <Button onClick={handleDeleteDialogOptionNo}>{t('button_no')}</Button>
         </DialogActions>
       </Dialog>
-      <Box sx={{
-        m: 1,
-        position: 'relative',
-      }}
+      <Box
+        sx={{
+          m: 1,
+          position: 'relative',
+        }}
       >
         <Tooltip title={t('tooltip_save_changes')} placement="top">
           <Fab
@@ -197,10 +201,11 @@ export default function UsersActions({ params, activeRowId, setActiveRow, setUpd
           />
         )}
       </Box>
-      <Box sx={{
-        m: 1,
-        position: 'relative',
-      }}
+      <Box
+        sx={{
+          m: 1,
+          position: 'relative',
+        }}
       >
         <Tooltip title={t('tooltip_delete_user')} placement="top">
           <Fab

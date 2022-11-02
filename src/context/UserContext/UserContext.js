@@ -16,12 +16,20 @@ export const UserContextProvider = ({ children }) => {
   const [expiresIn, setExpiresIn] = useState(expIn ? new Date(expIn) : null);
   const [isLoggedIn, setIsLoggedIn] = useState(storageToken?.length > 0);
   const [token, setToken] = useState(storageToken);
+  console.log(getTokenInfo());
+  const [firstName, setFirstName] = useState(getTokenInfo().first_name);
+  const [lastName, setLastName] = useState(getTokenInfo().last_name);
+  const [role, setRole] = useState(getTokenInfo().role);
 
   const loginHandler = (jwt) => {
     saveToken(jwt);
     setToken(jwt);
     const base64 = jwt.split('.')[1].replace('-', '+').replace('_', '/');
-    setExpiresIn(new Date(JSON.parse(window.atob(base64)).exp * 1000));
+    const jsonParsedTokenInfo = JSON.parse(window.atob(base64));
+    setFirstName(jsonParsedTokenInfo.first_name);
+    setLastName(jsonParsedTokenInfo.last_name);
+    setRole(jsonParsedTokenInfo.role);
+    setExpiresIn(new Date(jsonParsedTokenInfo.exp * 1000));
     setIsLoggedIn(true);
   };
   const logoutHandler = () => {
@@ -29,6 +37,8 @@ export const UserContextProvider = ({ children }) => {
     setToken(null);
     setExpiresIn(null);
     setIsLoggedIn(false);
+    setFirstName(null);
+    setLastName(null);
   };
 
   return (
@@ -37,6 +47,9 @@ export const UserContextProvider = ({ children }) => {
         isLoggedIn,
         token,
         expiresIn,
+        firstName,
+        lastName,
+        role,
         login: loginHandler,
         logout: logoutHandler,
       }}
