@@ -25,7 +25,7 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import DescriptionIcon from '@mui/icons-material/Description';
 import LanguageSwitchV2 from '../../components/LanguageSwitch/LanguageSwitchV2.js';
-import ClassesEvaluation from './Assesments/Assesments.js';
+import Assesments from './Assesments/Assesments.js';
 import ManageEvaluationGroup from './ManageEvaluationGroup/ManageEvaluationGroup.js';
 import Protocols from './Protocols/Protocols.js';
 import ManageUsers from './ManageUsers/ManageUsers.js';
@@ -122,7 +122,7 @@ export default function Layout() {
       title: t('drawer_item_title_classes_eval'),
       icon: <FactCheckIcon color={drawerSelectedItem === 'evaluations' ? 'primary' : 'action'} />,
       link: 'evaluations',
-      component: <ClassesEvaluation {...{ setDrawerSelectedItem, link: 'evaluations' }} />,
+      component: <Assesments {...{ setDrawerSelectedItem, link: 'evaluations' }} />,
     },
     {
       title: t('drawer_item_title_wzhz'),

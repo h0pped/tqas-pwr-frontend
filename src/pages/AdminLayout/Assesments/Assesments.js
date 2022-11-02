@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -14,15 +13,15 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import dayjs from 'dayjs';
+import moment from 'moment';
 
 import Add from '@mui/icons-material/Add';
 
 import { semesters } from '../../../constants.js';
 import AssesmentCard from '../../../components/AssesmentCard/AssesmentCard.js';
-import moment from 'moment';
+import AssesmentDetails from './AssesmentDetails/AssesmentDetails.js';
 
-export default function ClassesEvaluation({ setDrawerSelectedItem, link }) {
+export default function Assesments({ setDrawerSelectedItem, link }) {
   const fakeAssesments = [
     {
       id: 1,
@@ -44,16 +43,16 @@ export default function ClassesEvaluation({ setDrawerSelectedItem, link }) {
     {
       id: 2,
       start_date: '2022-09-24 09:46:36.860 +0200',
-      semester: 'Winter 2022/2023',
+      semester: 'Summer 2021/2022',
       end_date: '2022-11-24 09:46:36.860 +0200',
-      status: 'Active',
+      status: 'Completed',
       evaluation: {
         id: 2,
         subject_code: 'MA001',
         assessment_id: 1,
         date_created: '2022-09-24 09:46:36.860 +0200',
         occurences: 'pn 9:15-11:00 D-2 s.333',
-        status: 'Active',
+        status: 'Completed',
         schedule_accepted: true,
         reson_declined: null,
       },
@@ -61,16 +60,16 @@ export default function ClassesEvaluation({ setDrawerSelectedItem, link }) {
     {
       id: 3,
       start_date: '2022-02-27 09:46:36.860 +0200',
-      semester: 'Winter 2022/2023',
+      semester: 'Winter 2021/2022',
       end_date: '2022-11-24 09:46:36.860 +0200',
-      status: 'Active',
+      status: 'Completed',
       evaluation: {
         id: 3,
         subject_code: 'MA001',
         assessment_id: 3,
         date_created: '2022-02-27 09:46:36.860 +0200',
         occurences: 'pn 9:15-11:00 D-2 s.333',
-        status: 'Active',
+        status: 'Completed',
         schedule_accepted: true,
         reson_declined: null,
       },
@@ -78,16 +77,16 @@ export default function ClassesEvaluation({ setDrawerSelectedItem, link }) {
     {
       id: 4,
       start_date: '2022-02-28 09:46:36.860 +0200',
-      semester: 'Winter 2022/2023',
+      semester: 'Summer 2020/2021',
       end_date: '2022-11-24 09:46:36.860 +0200',
-      status: 'Active',
+      status: 'Completed',
       evaluation: {
         id: 4,
         subject_code: 'MA001',
         assessment_id: 4,
         date_created: '2022-10-24 09:46:36.860 +0200',
         occurences: 'pn 9:15-11:00 D-2 s.333',
-        status: 'Active',
+        status: 'Completed',
         schedule_accepted: true,
         reson_declined: null,
       },
@@ -95,29 +94,27 @@ export default function ClassesEvaluation({ setDrawerSelectedItem, link }) {
     {
       id: 5,
       start_date: '2022-10-01 09:46:36.860 +0200',
-      semester: 'Winter 2022/2023',
+      semester: 'Winter 2020/2021',
       end_date: '2022-11-24 09:46:36.860 +0200',
-      status: 'Active',
+      status: 'Completed',
       evaluation: {
         id: 5,
         subject_code: 'MA001',
         assessment_id: 5,
         date_created: '2022-10-24 09:46:36.860 +0200',
         occurences: 'pn 9:15-11:00 D-2 s.333',
-        status: 'Active',
+        status: 'Completed',
         schedule_accepted: true,
         reson_declined: null,
       },
     },
   ];
   const [isCrateAssesmentDialogOpen, setCreateAssesmentDialogOpen] = useState(false);
-  const [selectedAssesment, setSelectedAssesment] = useState(fakeAssesments[0].id);
+  const [selectedAssesment, setSelectedAssesment] = useState(null);
   const [selectedSemesterValue, setSelectedSemesterValue] = useState(semesters.find((semester) => moment(new Date().toISOString().slice(0, 10)).isBetween(semester.dateFrom, semester.dateTo, undefined, '[]')));
 
   const handleOpenCreateAssesmentDialog = () => {
     setCreateAssesmentDialogOpen(true);
-    const currSemester = semesters.find((semester) => moment('2024-02-28').isBetween(semester.dateFrom, semester.dateTo, undefined, '[]'));
-    console.log(currSemester);
   };
 
   const handleCloseCreateAssesmentDialog = () => {
@@ -128,10 +125,6 @@ export default function ClassesEvaluation({ setDrawerSelectedItem, link }) {
     handleCloseCreateAssesmentDialog();
     alert('Creating new assesment...');
   };
-
-  function setSetSelectedCardId(cardId) {
-    setSelectedAssesment(cardId);
-  }
 
   const handleDialogSemesterValueChange = (event) => {
     setSelectedSemesterValue(event.target.value);
@@ -159,50 +152,19 @@ export default function ClassesEvaluation({ setDrawerSelectedItem, link }) {
                 id={item.id}
                 semester={item.semester}
                 status={item.status}
-                setId={setSetSelectedCardId}
+                setId={setSelectedAssesment}
+                isSelected={selectedAssesment === item.id}
               />
             ))}
           </Box>
         </Grid>
         <Grid item xs={8}>
-          <Box sx={{ p: 2, ml: 2, borderRadius: 0.5, border: 'solid 1px rgba(235, 235, 235)', height: '70vh' }}>
-            <Typography sx={{ mb: 1 }} variant="h6">
-              Assesment details
-            </Typography>
-            <Divider sx={{ m: 0 }} variant="middle" />
-            <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                <Typography sx={{ width: '10%' }}>
-                  Status
-                </Typography>
-                <FormControl>
-                  <Select
-                    value="Active"
-                    //onChange={handleChange}
-                    displayEmpty
-                    inputProps={{ 'aria-label': 'Without label' }}
-                    size="small"
-                  >
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                    <MenuItem value="Active">Active</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
-                  </Select>
-
-                </FormControl>
-              </Box>
-              <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                <Typography sx={{ width: '10%' }}>
-                  Semester
-                </Typography>
-                <Typography variant="subtitle2">
-                  Winter 2022/2023
-                </Typography>
-              </Box>
-            </Box>
-
+          <Box sx={{ p: 0.7, ml: 2, borderRadius: 1, backgroundColor: '#f4f5f7', height: '70vh' }}>
+            <AssesmentDetails
+              assesmentDetails={
+                fakeAssesments.find((assesment) => assesment.id === selectedAssesment)
+              }
+            />
           </Box>
         </Grid>
       </Grid>
