@@ -16,7 +16,6 @@ export const UserContextProvider = ({ children }) => {
   const [expiresIn, setExpiresIn] = useState(expIn ? new Date(expIn) : null);
   const [isLoggedIn, setIsLoggedIn] = useState(storageToken?.length > 0);
   const [token, setToken] = useState(storageToken);
-  console.log(getTokenInfo());
   const [firstName, setFirstName] = useState(getTokenInfo().first_name);
   const [lastName, setLastName] = useState(getTokenInfo().last_name);
   const [role, setRole] = useState(getTokenInfo().role);
