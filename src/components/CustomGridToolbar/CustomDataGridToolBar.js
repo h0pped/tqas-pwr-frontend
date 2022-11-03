@@ -1,12 +1,10 @@
 import Box from '@mui/material/Box';
-import {
-  GridToolbarContainer,
+import { GridToolbarContainer,
   GridToolbarExport,
   GridToolbarColumnsButton,
   GridToolbarDensitySelector,
   GridToolbarQuickFilter,
-  GridToolbarFilterButton,
-} from '@mui/x-data-grid';
+  GridToolbarFilterButton } from '@mui/x-data-grid';
 
 const customDataGridToolbar = function CustomToolbar() {
   return (

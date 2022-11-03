@@ -32,29 +32,27 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
     getMembers();
   }, [isUpdate]);
 
-  const notifySuccess = (msg) =>
-    toast.success(`${t('success')} ${msg}`, {
-      position: 'top-center',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'light',
-    });
+  const notifySuccess = (msg) => toast.success(`${t('success')} ${msg}`, {
+    position: 'top-center',
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: 'light',
+  });
 
-  const notifyError = (msg) =>
-    toast.error(`${t('error_dialog')} ${msg}`, {
-      position: 'top-center',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'light',
-    });
+  const notifyError = (msg) => toast.error(`${t('error_dialog')} ${msg}`, {
+    position: 'top-center',
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: 'light',
+  });
 
   function getMembers() {
     setMembersTableLoading(true);
@@ -207,9 +205,7 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
             size="small"
             options={usersList}
             onChange={(event, value) => setSelectedUser(value.id)}
-            getOptionLabel={(option) =>
-              `${option.academic_title} ${option.first_name} ${option.last_name} <${option.email}>`
-            }
+            getOptionLabel={(option) => `${option.academic_title} ${option.first_name} ${option.last_name} <${option.email}>`}
             sx={{ width: 300, flex: 1 }}
             renderInput={(params) => <TextField {...params} label="User" />}
           />
