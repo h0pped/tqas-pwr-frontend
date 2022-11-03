@@ -30,7 +30,7 @@ export default function PasswordResetComponent({ handleFormClick }) {
 
   const { values, handleChange, errors, handleSubmit } = useForm(
     verify,
-    validate,
+    validate
   );
   const [dialogContent, setDialogContent] = useState({
     title: t('success'),
@@ -54,7 +54,7 @@ export default function PasswordResetComponent({ handleFormClick }) {
         body: JSON.stringify({
           email: values.email,
         }),
-      },
+      }
     );
     return res.status;
   };

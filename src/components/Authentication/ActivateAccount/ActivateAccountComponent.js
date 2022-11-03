@@ -36,7 +36,7 @@ export default function ActivateAccountComponent({ handleFormClick }) {
 
   const { values, handleChange, errors, handleSubmit } = useForm(
     verify,
-    validate,
+    validate
   );
 
   const handleClose = () => {

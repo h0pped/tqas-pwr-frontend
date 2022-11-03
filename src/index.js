@@ -76,7 +76,7 @@ root.render(
         </BrowserRouter>
       </UserContextProvider>
     </ThemeProvider>
-  </Suspense>,
+  </Suspense>
 );
 
 // If you want to start measuring performance in your app, pass a function

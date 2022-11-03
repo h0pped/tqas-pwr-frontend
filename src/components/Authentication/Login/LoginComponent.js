@@ -31,7 +31,7 @@ export default function Login({ handleFormClick }) {
 
   const { values, handleChange, errors, handleSubmit } = useForm(
     loginHandler,
-    validate,
+    validate
   );
 
   const [isLoginError, setIsLoginError] = useState(false);

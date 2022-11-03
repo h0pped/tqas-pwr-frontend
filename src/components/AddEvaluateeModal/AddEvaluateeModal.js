@@ -15,6 +15,10 @@ import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import Divider from '@mui/material/Divider';
+
+import { v4 as uuid } from 'uuid';
+
 import { useTranslation } from 'react-i18next';
 
 import UserContext from '../../context/UserContext/UserContext.js';
@@ -267,6 +271,9 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
               />
             )}
           />
+          <Divider
+            sx={{ borderBottomWidth: 1, my: 2, backgroundColor: '#999' }}
+          />
           <Box sx={{ display: 'flex', gap: 1 }}>
             <TextField
               id="outlined-input"
@@ -314,83 +321,88 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
             {!isEditingCourse ? 'Add course' : 'Edit Course'}
           </Button>
           {courses.length > 0 && (
-            <TableContainer component={Paper} sx={{ width: '100%', my: 1 }}>
-              <Table sx={{ width: '100%' }} aria-label="simple table">
-                <TableHead sx={{ width: '100%' }}>
-                  <TableRow sx={{ display: 'flex' }}>
-                    <TableCell sx={{ flex: 1 }}>Course code</TableCell>
-                    <TableCell align="left" sx={{ flex: 1.5 }}>
-                      Course name
-                    </TableCell>
-                    <TableCell align="left" sx={{ flex: 1.5 }}>
-                      Number of people enrolled
-                    </TableCell>
-                    <TableCell align="left" sx={{ flex: 4 }}>
-                      Details
-                    </TableCell>
-                    <TableCell align="left" sx={{ flex: 1 }}>
-                      Actions
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {courses.map(
-                    (
-                      {
-                        courseCode,
-                        courseName,
-                        numberOfPeopleEnrolled,
-                        details,
-                      },
-                      index
-                    ) => (
-                      <TableRow
-                        key={`${courseCode}-${courseName}`}
-                        sx={{
-                          '&:last-child td, &:last-child th': { border: 0 },
-                          display: 'flex',
-                        }}
-                      >
-                        <TableCell
-                          component="th"
-                          scope="row"
-                          sx={{ flex: '1' }}
+            <Box>
+              <Divider
+                sx={{ borderBottomWidth: 1, my: 2, backgroundColor: '#999' }}
+              />
+              <TableContainer component={Paper} sx={{ width: '100%', my: 1 }}>
+                <Table sx={{ width: '100%' }} aria-label="simple table">
+                  <TableHead sx={{ width: '100%' }}>
+                    <TableRow sx={{ display: 'flex' }}>
+                      <TableCell sx={{ flex: 1 }}>Course code</TableCell>
+                      <TableCell align="left" sx={{ flex: 1.5 }}>
+                        Course name
+                      </TableCell>
+                      <TableCell align="left" sx={{ flex: 1.5 }}>
+                        Number of people enrolled
+                      </TableCell>
+                      <TableCell align="left" sx={{ flex: 4 }}>
+                        Details
+                      </TableCell>
+                      <TableCell align="left" sx={{ flex: 1 }}>
+                        Actions
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {courses.map(
+                      (
+                        {
+                          courseCode,
+                          courseName,
+                          numberOfPeopleEnrolled,
+                          details,
+                        },
+                        index
+                      ) => (
+                        <TableRow
+                          key={uuid()}
+                          sx={{
+                            '&:last-child td, &:last-child th': { border: 0 },
+                            display: 'flex',
+                          }}
                         >
-                          {courseCode}
-                        </TableCell>
-                        <TableCell
-                          align="left"
-                          size="medium"
-                          sx={{ flex: 1.5 }}
-                        >
-                          {courseName}
-                        </TableCell>
-                        <TableCell align="left" sx={{ flex: 1.5 }}>
-                          {numberOfPeopleEnrolled}
-                        </TableCell>
-                        <TableCell align="left" sx={{ flex: 4 }}>
-                          {details.split('\n').join(', ')}
-                        </TableCell>
-                        <TableCell sx={{ flex: 1 }}>
-                          <IconButton
-                            color="primary"
-                            onClick={() => setEditingCourseHandler(index)}
+                          <TableCell
+                            component="th"
+                            scope="row"
+                            sx={{ flex: '1' }}
                           >
-                            <EditIcon fontSize="inherit" />
-                          </IconButton>
-                          <IconButton
-                            color="primary"
-                            onClick={() => deleteCourse(index)}
+                            {courseCode}
+                          </TableCell>
+                          <TableCell
+                            align="left"
+                            size="medium"
+                            sx={{ flex: 1.5 }}
                           >
-                            <DeleteIcon fontSize="inherit" />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    )
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                            {courseName}
+                          </TableCell>
+                          <TableCell align="left" sx={{ flex: 1.5 }}>
+                            {numberOfPeopleEnrolled}
+                          </TableCell>
+                          <TableCell align="left" sx={{ flex: 4 }}>
+                            {details.split('\n').join(', ')}
+                          </TableCell>
+                          <TableCell sx={{ flex: 1 }}>
+                            <IconButton
+                              color="primary"
+                              onClick={() => setEditingCourseHandler(index)}
+                            >
+                              <EditIcon fontSize="inherit" />
+                            </IconButton>
+                            <IconButton
+                              color="primary"
+                              onClick={() => deleteCourse(index)}
+                            >
+                              <DeleteIcon fontSize="inherit" />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      )
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Box>
           )}
           <Box sx={bottomButtonsStyle}>
             <Button onClick={onClose} size="large" variant="outlined">
