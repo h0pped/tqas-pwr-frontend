@@ -21,6 +21,7 @@
     "implicit-arrow-linebreak": "off",
     "trailing-comma": "off",
     "object-curly-newline": "off",
+    "comma-dangle":"off",
     
     "react/jsx-filename-extension": [
       "warn",

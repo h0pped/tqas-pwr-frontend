@@ -5,14 +5,16 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Radio from '@mui/material/Radio';
-import FormLabel from '@mui/material/FormLabel';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import { useTranslation } from 'react-i18next';
 
 import UserContext from '../../context/UserContext/UserContext.js';
@@ -20,8 +22,6 @@ import UserContext from '../../context/UserContext/UserContext.js';
 import config from '../../config/index.config.js';
 
 import { formatAcademicTitle } from '../../utils/formatAcademicTitle.js';
-
-import { WEEKDAYS } from '../../constants.js';
 
 const yearsMap = {
   1: '1 year ago',
@@ -37,20 +37,30 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
 
   const [evaluatees, setEvaluatees] = useState([]);
   const [fetchedUsers, setFetchUsers] = useState([]);
+
+  const [courses, setCourses] = useState([]);
+
+  const [isFormFullfilled, setIsFormFullfilled] = useState(false);
+  const [isModalFullfilled, setisModalFullfilled] = useState(false);
+
+  const [isEditingCourse, setIsEditingCourse] = useState(false);
+  const [currentlyEditedCourse, setCurrentlyEditedCourse] = useState(null);
+
   const [evaluateeFormValues, setEvaluateeFormValues] = useState({
     evaluatee: '',
     courseCode: '',
     courseName: '',
-    place: '',
-    timeFrom: '00:00',
-    timeTo: '00:00',
-    weekday: '',
-    week: 'everyweek',
+    numberOfPeopleEnrolled: '',
+    details: '',
   });
   const { token } = useContext(UserContext);
 
+  const sortUsersByEvaluationDate = (a, b) =>
+    new Date(a.evaluatee.last_evaluated_date) -
+    new Date(b.evaluatee.last_evaluated_date);
+
   const mapUsersToDropDownValues = () => {
-    const users = fetchedUsers.map((user) => ({
+    const users = fetchedUsers.sort(sortUsersByEvaluationDate).map((user) => ({
       ...user,
       mappedDate: mapDate(user.evaluatee.last_evaluated_date),
       label: formatUserDropDownTitle(user),
@@ -84,7 +94,13 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
       notifyError(t('evaluatee_adding_error'));
     }
   };
-
+  const deleteCourse = (index) => {
+    const newCourses = [...courses];
+    newCourses.splice(index, 1);
+    setCourses(newCourses);
+    setIsEditingCourse(false);
+    setCurrentlyEditedCourse(null);
+  };
   const mapDate = (date) => {
     if (!date) {
       return 'No evaluation yet';
@@ -114,6 +130,37 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
     }));
   };
 
+  const addCourseHandler = () => {
+    if (isEditingCourse) {
+      const newCourses = [...courses];
+      newCourses[currentlyEditedCourse] = {
+        courseCode: evaluateeFormValues.courseCode,
+        courseName: evaluateeFormValues.courseName,
+        numberOfPeopleEnrolled: evaluateeFormValues.numberOfPeopleEnrolled,
+        details: evaluateeFormValues.details,
+      };
+      setCourses(newCourses);
+      setIsEditingCourse(false);
+      setCurrentlyEditedCourse(null);
+    } else if (!isEditingCourse && isFormFullfilledCheck()) {
+      setCourses((prev) => [
+        ...prev,
+        {
+          courseCode: evaluateeFormValues.courseCode,
+          courseName: evaluateeFormValues.courseName,
+          numberOfPeopleEnrolled: evaluateeFormValues.numberOfPeopleEnrolled,
+          details: evaluateeFormValues.details,
+        },
+      ]);
+    }
+  };
+
+  const setEditingCourseHandler = (index) => {
+    setIsEditingCourse(true);
+    setCurrentlyEditedCourse(index);
+    setEvaluateeFormValues((prev) => ({ ...prev, ...courses[index] }));
+  };
+
   useEffect(() => {
     const fetchEvaluatees = async () => {
       try {
@@ -136,23 +183,46 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
   useEffect(() => {
     mapUsersToDropDownValues();
   }, [fetchedUsers]);
+  useEffect(() => {
+    setIsFormFullfilled(isFormFullfilledCheck());
+    setisModalFullfilled(isModalFullfilledCheck());
+  }, [evaluateeFormValues, courses]);
 
-  const style = {
+  const isFormFullfilledCheck = () =>
+    evaluateeFormValues.courseCode &&
+    evaluateeFormValues.courseName &&
+    evaluateeFormValues.numberOfPeopleEnrolled &&
+    evaluateeFormValues.details;
+
+  const isModalFullfilledCheck = () =>
+    evaluateeFormValues.evaluatee && courses.length > 0;
+
+  const modalStyle = {
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: '40vw',
+    width: '70vw',
     bgcolor: 'background.paper',
-    border: '2px solid #000',
     boxShadow: 24,
     p: 3,
+    maxHeight: '80vh',
+    overflow: 'auto',
   };
-  const inputSx = {
+
+  const inputStyle = {
+    width: '100%',
     minWidth: '100% !important',
-    width: '100% !important',
-    marginTop: '1rem !important',
   };
+  const bottomButtonsStyle = {
+    width: '100%',
+    minWidth: '100%',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginTop: '2rem',
+    gap: 2,
+  };
+
   return (
     <Modal
       open={isOpen}
@@ -160,7 +230,7 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style}>
+      <Box sx={modalStyle}>
         <Typography
           id="modal-modal-title"
           variant="h5"
@@ -182,7 +252,7 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
             freeSolo
             options={evaluatees}
             name="evaluatee"
-            sx={{ width: '100%', minWidth: '100% !important' }}
+            sx={inputStyle}
             onSelect={(e) => handleEvaluateeFormValues(e)}
             groupBy={(option) => option.mappedDate}
             renderInput={(params) => (
@@ -193,7 +263,7 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
                 name="evaluatee"
                 onChange={handleEvaluateeFormValues}
                 value={evaluateeFormValues.evaluatee}
-                sx={{ width: '100%', minWidth: '100% !important' }}
+                sx={inputStyle}
               />
             )}
           />
@@ -216,83 +286,123 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
               sx={{ flex: 1.5 }}
             />
           </Box>
-
           <TextField
             id="outlined-input"
-            label="Place"
-            name="place"
-            value={evaluateeFormValues.place}
+            label="Number of enrolled"
+            name="numberOfPeopleEnrolled"
+            value={evaluateeFormValues.numberOfPeopleEnrolled}
             onChange={handleEvaluateeFormValues}
-            sx={{ width: '100%' }}
+            sx={inputStyle}
           />
-
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            <TextField
-              labelid="time-from-label"
-              id="outlined-input"
-              name="timeFrom"
-              type="time"
-              label="Time From"
-              sx={{ flex: 1 }}
-              value={evaluateeFormValues.timeFrom}
-              onChange={handleEvaluateeFormValues}
-            />
-            <TextField
-              id="outlined-input"
-              label="Time To"
-              name="timeTo"
-              type="time"
-              sx={{ flex: 1 }}
-              value={evaluateeFormValues.timeTo}
-              onChange={handleEvaluateeFormValues}
-            />
-          </Box>
-          <FormControl fullWidth sx={inputSx}>
-            <InputLabel id="demo-simple-select-label">Weekday</InputLabel>
-            <Select
-              labelid="demo-simple-select-label"
-              id="weekday"
-              name="weekday"
-              value={evaluateeFormValues.weekday}
-              label="Weekday"
-              onChange={handleEvaluateeFormValues}
-            >
-              {WEEKDAYS.map((weekday) => (
-                <MenuItem value={weekday}>{weekday}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <Box sx={inputSx}>
-            <FormLabel id="demo-radio-buttons-group-label">Week</FormLabel>
-            <RadioGroup
-              aria-labelledby="demo-radio-buttons-group-label"
-              value={evaluateeFormValues.week}
-              name="week"
-              sx={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}
-              onChange={handleEvaluateeFormValues}
-            >
-              <FormControlLabel
-                value="everyweek"
-                control={<Radio />}
-                label="Every week"
-              />
-              <FormControlLabel value="even" control={<Radio />} label="Even" />
-              <FormControlLabel value="odd" control={<Radio />} label="Odd" />
-            </RadioGroup>
-          </Box>
-          <Box
-            sx={{
-              width: '100%',
-              minWidth: '100%',
-              display: 'flex',
-              justifyContent: 'flex-end',
-              marginTop: '2rem',
-            }}
+          <TextField
+            id="outlined-multiline-flexible"
+            label="Place and date of didactic classes"
+            multiline
+            name="details"
+            value={evaluateeFormValues.details}
+            onChange={handleEvaluateeFormValues}
+            maxRows={5}
+            minRows={5}
+            sx={inputStyle}
+          />
+          <Button
+            onClick={addCourseHandler}
+            size="large"
+            variant="outlined"
+            disabled={!isFormFullfilled}
           >
-            <Button onClick={onClose} size="large">
+            {!isEditingCourse ? 'Add course' : 'Edit Course'}
+          </Button>
+          {courses.length > 0 && (
+            <TableContainer component={Paper} sx={{ width: '100%', my: 1 }}>
+              <Table sx={{ width: '100%' }} aria-label="simple table">
+                <TableHead sx={{ width: '100%' }}>
+                  <TableRow sx={{ display: 'flex' }}>
+                    <TableCell sx={{ flex: 1 }}>Course code</TableCell>
+                    <TableCell align="left" sx={{ flex: 1.5 }}>
+                      Course name
+                    </TableCell>
+                    <TableCell align="left" sx={{ flex: 1.5 }}>
+                      Number of people enrolled
+                    </TableCell>
+                    <TableCell align="left" sx={{ flex: 4 }}>
+                      Details
+                    </TableCell>
+                    <TableCell align="left" sx={{ flex: 1 }}>
+                      Actions
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {courses.map(
+                    (
+                      {
+                        courseCode,
+                        courseName,
+                        numberOfPeopleEnrolled,
+                        details,
+                      },
+                      index
+                    ) => (
+                      <TableRow
+                        key={`${courseCode}-${courseName}`}
+                        sx={{
+                          '&:last-child td, &:last-child th': { border: 0 },
+                          display: 'flex',
+                        }}
+                      >
+                        <TableCell
+                          component="th"
+                          scope="row"
+                          sx={{ flex: '1' }}
+                        >
+                          {courseCode}
+                        </TableCell>
+                        <TableCell
+                          align="left"
+                          size="medium"
+                          sx={{ flex: 1.5 }}
+                        >
+                          {courseName}
+                        </TableCell>
+                        <TableCell align="left" sx={{ flex: 1.5 }}>
+                          {numberOfPeopleEnrolled}
+                        </TableCell>
+                        <TableCell align="left" sx={{ flex: 4 }}>
+                          {details.split('\n').join(', ')}
+                        </TableCell>
+                        <TableCell sx={{ flex: 1 }}>
+                          <IconButton
+                            color="primary"
+                            onClick={() => setEditingCourseHandler(index)}
+                          >
+                            <EditIcon fontSize="inherit" />
+                          </IconButton>
+                          <IconButton
+                            color="primary"
+                            onClick={() => deleteCourse(index)}
+                          >
+                            <DeleteIcon fontSize="inherit" />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+          <Box sx={bottomButtonsStyle}>
+            <Button onClick={onClose} size="large" variant="outlined">
               Cancel
             </Button>
-            <Button onClick={addEvaluateeHandler} color="success" size="large">
+            <Button
+              onClick={addEvaluateeHandler}
+              size="large"
+              variant="contained"
+              sx={{ backgroundColor: '#d9372a', color: 'white' }}
+              disabled={!isModalFullfilled}
+            >
               Save
             </Button>
           </Box>
