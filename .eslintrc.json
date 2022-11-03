@@ -20,15 +20,8 @@
     "operator-linebreak": "off",
     "implicit-arrow-linebreak": "off",
     "trailing-comma": "off",
-    "object-curly-newline": [
-      "error",
-      {
-        "ObjectExpression": { "consistent": true, "multiline": true },
-        "ObjectPattern": { "consistent": true, "multiline": true },
-        "ImportDeclaration": "off",
-        "ExportDeclaration": { "multiline": true }
-      }
-    ],
+    "object-curly-newline": "off",
+    
     "react/jsx-filename-extension": [
       "warn",
       {

@@ -82,5 +82,6 @@
   "tooltip_delete_user": "Usuń użytkownika",
   "title_logged_in_as": "Zalogowany jako",
   "evaluatee_adding_error": "Błąd podczas dodawania. Proszę spróbuj ponownie.",
-  "evaluatee_adding_success": "Oceniany został pomyślnie dodany."
+  "evaluatee_adding_success": "Oceniany został pomyślnie dodany.",
+  "fetching_evaluatees_error": "Błąd podczas pobierania dannych. Proszę spróbuj ponownie."
 }

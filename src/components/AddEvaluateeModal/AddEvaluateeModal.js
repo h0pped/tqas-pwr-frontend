@@ -9,6 +9,10 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import FormLabel from '@mui/material/FormLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
 import { useTranslation } from 'react-i18next';
 
 import UserContext from '../../context/UserContext/UserContext.js';
@@ -16,6 +20,17 @@ import UserContext from '../../context/UserContext/UserContext.js';
 import config from '../../config/index.config.js';
 
 import { formatAcademicTitle } from '../../utils/formatAcademicTitle.js';
+
+import { WEEKDAYS } from '../../constants.js';
+
+const yearsMap = {
+  1: '1 year ago',
+  2: '2 years ago',
+  3: '3 years ago',
+  4: '4 years ago',
+  5: '5 years ago',
+  default: 'More than 5 years ago',
+};
 
 const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
   const { t } = useTranslation();
@@ -27,7 +42,9 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
     courseCode: '',
     courseName: '',
     place: '',
-    time: '',
+    timeFrom: '00:00',
+    timeTo: '00:00',
+    weekday: '',
     week: 'everyweek',
   });
   const { token } = useContext(UserContext);
@@ -51,7 +68,6 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
     }`;
 
   const addEvaluateeHandler = async () => {
-    console.log(evaluateeFormValues);
     try {
       const res = await fetch(`${config.server.url}/evaluatee/addEvaluatee`, {
         method: 'POST',
@@ -68,14 +84,7 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
       notifyError(t('evaluatee_adding_error'));
     }
   };
-  const yearsMap = {
-    1: '1 year ago',
-    2: '2 years ago',
-    3: '3 years ago',
-    4: '4 years ago',
-    5: '5 years ago',
-    default: 'More than 5 years ago',
-  };
+
   const mapDate = (date) => {
     if (!date) {
       return 'No evaluation yet';
@@ -98,7 +107,7 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
       : `${currentMonth - providedDateMonth} months ago`;
   };
 
-  const handleEvaluateeFormValues = (e, value) => {
+  const handleEvaluateeFormValues = (e) => {
     setEvaluateeFormValues((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
@@ -118,7 +127,7 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
         const data = await res.json();
         setFetchUsers(data);
       } catch (err) {
-        console.log(err);
+        notifyError(t('fetching_evaluatees_error'));
       }
     };
     fetchEvaluatees();
@@ -163,7 +172,7 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
         <Box
           component="form"
           sx={{
-            '& .MuiTextField-root': { m: 1, width: '25ch' },
+            '& .MuiTextField-root': { my: 1 },
           }}
           noValidate
           autoComplete="off"
@@ -188,22 +197,25 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
               />
             )}
           />
-          <TextField
-            id="outlined-input"
-            label="Course code"
-            name="courseCode"
-            value={evaluateeFormValues.courseCode}
-            onChange={handleEvaluateeFormValues}
-            sx={inputSx}
-          />
-          <TextField
-            id="outlined-input"
-            label="Course Name"
-            name="courseName"
-            value={evaluateeFormValues.courseName}
-            onChange={handleEvaluateeFormValues}
-            sx={inputSx}
-          />
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <TextField
+              id="outlined-input"
+              label="Course Name"
+              name="courseName"
+              value={evaluateeFormValues.courseName}
+              onChange={handleEvaluateeFormValues}
+              sx={{ flex: 2.5 }}
+            />
+
+            <TextField
+              id="outlined-input"
+              label="Course code"
+              name="courseCode"
+              value={evaluateeFormValues.courseCode}
+              onChange={handleEvaluateeFormValues}
+              sx={{ flex: 1.5 }}
+            />
+          </Box>
 
           <TextField
             id="outlined-input"
@@ -211,17 +223,46 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
             name="place"
             value={evaluateeFormValues.place}
             onChange={handleEvaluateeFormValues}
-            sx={inputSx}
+            sx={{ width: '100%' }}
           />
-          <TextField
-            id="outlined-input"
-            label="Time"
-            name="time"
-            value={evaluateeFormValues.time}
-            onChange={handleEvaluateeFormValues}
-            sx={inputSx}
-          />
-          <Box sx={{ marginLeft: '8px' }}>
+
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <TextField
+              labelid="time-from-label"
+              id="outlined-input"
+              name="timeFrom"
+              type="time"
+              label="Time From"
+              sx={{ flex: 1 }}
+              value={evaluateeFormValues.timeFrom}
+              onChange={handleEvaluateeFormValues}
+            />
+            <TextField
+              id="outlined-input"
+              label="Time To"
+              name="timeTo"
+              type="time"
+              sx={{ flex: 1 }}
+              value={evaluateeFormValues.timeTo}
+              onChange={handleEvaluateeFormValues}
+            />
+          </Box>
+          <FormControl fullWidth sx={inputSx}>
+            <InputLabel id="demo-simple-select-label">Weekday</InputLabel>
+            <Select
+              labelid="demo-simple-select-label"
+              id="weekday"
+              name="weekday"
+              value={evaluateeFormValues.weekday}
+              label="Weekday"
+              onChange={handleEvaluateeFormValues}
+            >
+              {WEEKDAYS.map((weekday) => (
+                <MenuItem value={weekday}>{weekday}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Box sx={inputSx}>
             <FormLabel id="demo-radio-buttons-group-label">Week</FormLabel>
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"

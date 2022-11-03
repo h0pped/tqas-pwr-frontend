@@ -18,3 +18,11 @@ export const userRolesList = [
   { key: 'et', title: 'evaluation team member' },
   { key: 'evaluatee', title: 'evaluatee' },
 ];
+
+export const WEEKDAYS = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+];
