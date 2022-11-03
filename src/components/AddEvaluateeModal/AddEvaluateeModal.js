@@ -20,22 +20,12 @@ import Divider from '@mui/material/Divider';
 import { v4 as uuid } from 'uuid';
 
 import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Radio from '@mui/material/Radio';
-import FormLabel from '@mui/material/FormLabel';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import { useTranslation } from 'react-i18next';
 
 import UserContext from '../../context/UserContext/UserContext.js';
 
 import config from '../../config/index.config.js';
 
 import { formatAcademicTitle } from '../../utils/formatAcademicTitle.js';
-
-import { WEEKDAYS } from '../../constants.js';
 
 const yearsMap = {
   1: '1 year ago',
@@ -205,336 +195,345 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
         ...prev,
         [e.target.name]: e.target.value,
       }));
-    };
 
-    useEffect(() => {
-      const fetchEvaluatees = async () => {
-        try {
-          const res = await fetch(`${config.server.url}/userData/getUsers`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          const data = await res.json();
-          setFetchUsers(data);
-        } catch (err) {
-          notifyError(t('fetching_evaluatees_error'));
-        }
+      useEffect(() => {
+        const fetchEvaluatees = async () => {
+          try {
+            const res = await fetch(`${config.server.url}/userData/getUsers`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+              },
+            });
+            const data = await res.json();
+            setFetchUsers(data);
+          } catch (err) {
+            notifyError(t('fetching_evaluatees_error'));
+          }
+        };
+        fetchEvaluatees();
+      }, []);
+
+      useEffect(() => {
+        mapUsersToDropDownValues();
+      }, [fetchedUsers]);
+      useEffect(() => {
+        setIsFormFullfilled(isFormFullfilledCheck());
+        setisModalFullfilled(isModalFullfilledCheck());
+      }, [evaluateeFormValues, courses]);
+
+      const isFormFullfilledCheck = () =>
+        evaluateeFormValues.courseCode &&
+        evaluateeFormValues.courseName &&
+        evaluateeFormValues.numberOfPeopleEnrolled &&
+        evaluateeFormValues.details;
+
+      const isModalFullfilledCheck = () =>
+        evaluateeFormValues.evaluatee &&
+        evaluateeFormValues.evaluateeId &&
+        courses.length > 0;
+
+      const modalStyle = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '70vw',
+        bgcolor: 'background.paper',
+        boxShadow: 24,
+        p: 3,
+        maxHeight: '80vh',
+        overflow: 'auto',
       };
-      fetchEvaluatees();
-    }, []);
 
-    useEffect(() => {
-      mapUsersToDropDownValues();
-    }, [fetchedUsers]);
-    useEffect(() => {
-      setIsFormFullfilled(isFormFullfilledCheck());
-      setisModalFullfilled(isModalFullfilledCheck());
-    }, [evaluateeFormValues, courses]);
+      const inputStyle = {
+        width: '100%',
+        minWidth: '100% !important',
+      };
 
-    const isFormFullfilledCheck = () =>
-      evaluateeFormValues.courseCode &&
-      evaluateeFormValues.courseName &&
-      evaluateeFormValues.numberOfPeopleEnrolled &&
-      evaluateeFormValues.details;
+      const bottomButtonsStyle = {
+        width: '100%',
+        minWidth: '100%',
+        display: 'flex',
+        justifyContent: 'flex-end',
+        marginTop: '2rem',
+        gap: 2,
+      };
 
-    const isModalFullfilledCheck = () =>
-      evaluateeFormValues.evaluatee &&
-      evaluateeFormValues.evaluateeId &&
-      courses.length > 0;
-
-    const modalStyle = {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      width: '70vw',
-      bgcolor: 'background.paper',
-      boxShadow: 24,
-      p: 3,
-      maxHeight: '80vh',
-      overflow: 'auto',
-    };
-
-    const inputStyle = {
-      width: '100%',
-      minWidth: '100% !important',
-    };
-
-    const bottomButtonsStyle = {
-      width: '100%',
-      minWidth: '100%',
-      display: 'flex',
-      justifyContent: 'flex-end',
-      marginTop: '2rem',
-      gap: 2,
-    };
-
-    return (
-      <Modal
-        open={isOpen}
-        onClose={onClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={modalStyle}>
-          <Typography
-            id="modal-modal-title"
-            variant="h5"
-            component="h5"
-            sx={{ textAlign: 'center', marginBottom: '2rem !important' }}
-          >
-            Add Evaluatee
-          </Typography>
-          <Box
-            component="form"
-            sx={{
-              '& .MuiTextField-root': { my: 1 },
-            }}
-            noValidate
-            autoComplete="off"
-          >
-            <Autocomplete
-              disablePortal
-              options={evaluatees}
-              name="evaluatee"
-              sx={inputStyle}
-              noOptionsText={t('no_evaluatees_found')}
-              onChange={(e, val) => handleEvaluateeFormValues(e, val)}
-              onSelect={(e, val) => handleEvaluateeFormValues(e, val)}
-              onInputChange={(e, val) => handleEvaluateeFormValues(e, val)}
-              groupBy={(option) => option.mappedDate}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  key={params.id}
-                  label="Select Evaluatee"
-                  name="evaluatee"
-                  onChange={handleEvaluateeFormValues}
-                  value={evaluateeFormValues.evaluatee}
-                  sx={inputStyle}
-                />
-              )}
-            />
-            <Divider
-              sx={{ borderBottomWidth: 1, my: 2, backgroundColor: '#999' }}
-            />
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <TextField
-                id="outlined-input"
-                label="Course Name"
-                name="courseName"
-                value={evaluateeFormValues.courseName}
-                onChange={handleEvaluateeFormValues}
-                sx={{ flex: 2.5 }}
-              />
-
-              <TextField
-                id="outlined-input"
-                label="Course code"
-                name="courseCode"
-                value={evaluateeFormValues.courseCode}
-                onChange={handleEvaluateeFormValues}
-                sx={{ flex: 1.5 }}
-              />
-            </Box>
-
-            <TextField
-              id="outlined-input"
-              label="Place"
-              name="place"
-              value={evaluateeFormValues.place}
-              onChange={handleEvaluateeFormValues}
-              sx={{ width: '100%' }}
-            />
-
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <TextField
-                labelid="time-from-label"
-                id="outlined-input"
-                name="timeFrom"
-                type="time"
-                label="Time From"
-                sx={{ flex: 1 }}
-                value={evaluateeFormValues.timeFrom}
-                onChange={handleEvaluateeFormValues}
-              />
-              <TextField
-                id="outlined-input"
-                label="Time To"
-                name="timeTo"
-                type="time"
-                sx={{ flex: 1 }}
-                value={evaluateeFormValues.timeTo}
-                onChange={handleEvaluateeFormValues}
-              />
-            </Box>
-            <FormControl fullWidth sx={inputSx}>
-              <InputLabel id="demo-simple-select-label">Weekday</InputLabel>
-              <Select
-                labelid="demo-simple-select-label"
-                id="weekday"
-                name="weekday"
-                value={evaluateeFormValues.weekday}
-                label="Weekday"
-                onChange={handleEvaluateeFormValues}
-              >
-                {WEEKDAYS.map((weekday) => (
-                  <MenuItem value={weekday}>{weekday}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <Box sx={inputSx}>
-              <FormLabel id="demo-radio-buttons-group-label">Week</FormLabel>
-              <RadioGroup
-                aria-labelledby="demo-radio-buttons-group-label"
-                value={evaluateeFormValues.week}
-                name="week"
-                // sx={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}
-                onChange={handleEvaluateeFormValues}
-                sx={{ flex: 2.5 }}
-              />
-
-              <TextField
-                id="outlined-input"
-                label="Course code"
-                name="courseCode"
-                value={evaluateeFormValues.courseCode}
-                onChange={handleEvaluateeFormValues}
-                sx={{ flex: 1.5 }}
-              />
-            </Box>
-            <TextField
-              id="outlined-input"
-              label="Number of enrolled"
-              name="numberOfPeopleEnrolled"
-              value={evaluateeFormValues.numberOfPeopleEnrolled}
-              onChange={handleEvaluateeFormValues}
-              sx={inputStyle}
-            />
-            <TextField
-              id="outlined-multiline-flexible"
-              label="Place and date of didactic classes"
-              multiline
-              name="details"
-              value={evaluateeFormValues.details}
-              onChange={handleEvaluateeFormValues}
-              maxRows={5}
-              minRows={5}
-              sx={inputStyle}
-            />
-            <Button
-              onClick={addCourseHandler}
-              size="large"
-              variant="outlined"
-              disabled={!isFormFullfilled}
+      return (
+        <Modal
+          open={isOpen}
+          onClose={onClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={modalStyle}>
+            <Typography
+              id="modal-modal-title"
+              variant="h5"
+              component="h5"
+              sx={{ textAlign: 'center', marginBottom: '2rem !important' }}
             >
-              {!isEditingCourse ? 'Add course' : 'Edit Course'}
-            </Button>
-            {courses.length > 0 && (
-              <Box>
-                <Divider
-                  sx={{ borderBottomWidth: 1, my: 2, backgroundColor: '#999' }}
+              Add Evaluatee
+            </Typography>
+            <Box
+              component="form"
+              sx={{
+                '& .MuiTextField-root': { my: 1 },
+              }}
+              noValidate
+              autoComplete="off"
+            >
+              <Autocomplete
+                disablePortal
+                options={evaluatees}
+                name="evaluatee"
+                sx={inputStyle}
+                noOptionsText={t('no_evaluatees_found')}
+                onChange={(e, val) => handleEvaluateeFormValues(e, val)}
+                onSelect={(e, val) => handleEvaluateeFormValues(e, val)}
+                onInputChange={(e, val) => handleEvaluateeFormValues(e, val)}
+                groupBy={(option) => option.mappedDate}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    key={params.id}
+                    label="Select Evaluatee"
+                    name="evaluatee"
+                    onChange={handleEvaluateeFormValues}
+                    value={evaluateeFormValues.evaluatee}
+                    sx={inputStyle}
+                  />
+                )}
+              />
+              <Divider
+                sx={{ borderBottomWidth: 1, my: 2, backgroundColor: '#999' }}
+              />
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                <TextField
+                  id="outlined-input"
+                  label="Course Name"
+                  name="courseName"
+                  value={evaluateeFormValues.courseName}
+                  onChange={handleEvaluateeFormValues}
+                  sx={{ flex: 2.5 }}
                 />
-                <TableContainer component={Paper} sx={{ width: '100%', my: 1 }}>
-                  <Table sx={{ width: '100%' }} aria-label="simple table">
-                    <TableHead sx={{ width: '100%' }}>
-                      <TableRow sx={{ display: 'flex' }}>
-                        <TableCell sx={{ flex: 1 }}>Course code</TableCell>
-                        <TableCell align="left" sx={{ flex: 1.5 }}>
-                          Course name
-                        </TableCell>
-                        <TableCell align="left" sx={{ flex: 1.5 }}>
-                          Number of people enrolled
-                        </TableCell>
-                        <TableCell align="left" sx={{ flex: 4 }}>
-                          Details
-                        </TableCell>
-                        <TableCell align="left" sx={{ flex: 1 }}>
-                          Actions
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {courses.map(
-                        (
-                          {
-                            courseCode,
-                            courseName,
-                            numberOfPeopleEnrolled,
-                            details,
-                          },
-                          index
-                        ) => (
-                          <TableRow
-                            key={uuid()}
-                            sx={{
-                              '&:last-child td, &:last-child th': { border: 0 },
-                              display: 'flex',
-                            }}
-                          >
-                            <TableCell
-                              component="th"
-                              scope="row"
-                              sx={{ flex: '1' }}
-                            >
-                              {courseCode}
-                            </TableCell>
-                            <TableCell
-                              align="left"
-                              size="medium"
-                              sx={{ flex: 1.5 }}
-                            >
-                              {courseName}
-                            </TableCell>
-                            <TableCell align="left" sx={{ flex: 1.5 }}>
-                              {numberOfPeopleEnrolled}
-                            </TableCell>
-                            <TableCell align="left" sx={{ flex: 4 }}>
-                              {details.split('\n').join(', ')}
-                            </TableCell>
-                            <TableCell sx={{ flex: 1 }}>
-                              <IconButton
-                                color="primary"
-                                onClick={() => setEditingCourseHandler(index)}
-                              >
-                                <EditIcon fontSize="inherit" />
-                              </IconButton>
-                              <IconButton
-                                color="primary"
-                                onClick={() => deleteCourse(index)}
-                              >
-                                <DeleteIcon fontSize="inherit" />
-                              </IconButton>
-                            </TableCell>
-                          </TableRow>
-                        )
-                      )}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
+
+                <TextField
+                  id="outlined-input"
+                  label="Course code"
+                  name="courseCode"
+                  value={evaluateeFormValues.courseCode}
+                  onChange={handleEvaluateeFormValues}
+                  sx={{ flex: 1.5 }}
+                />
               </Box>
-            )}
-            <Box sx={bottomButtonsStyle}>
-              <Button onClick={onClose} size="large" variant="outlined">
-                Cancel
-              </Button>
+
+              <TextField
+                id="outlined-input"
+                label="Place"
+                name="place"
+                value={evaluateeFormValues.place}
+                onChange={handleEvaluateeFormValues}
+                sx={{ width: '100%' }}
+              />
+
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                <TextField
+                  labelid="time-from-label"
+                  id="outlined-input"
+                  name="timeFrom"
+                  type="time"
+                  label="Time From"
+                  sx={{ flex: 1 }}
+                  value={evaluateeFormValues.timeFrom}
+                  onChange={handleEvaluateeFormValues}
+                />
+                <TextField
+                  id="outlined-input"
+                  label="Time To"
+                  name="timeTo"
+                  type="time"
+                  sx={{ flex: 1 }}
+                  value={evaluateeFormValues.timeTo}
+                  onChange={handleEvaluateeFormValues}
+                />
+              </Box>
+              <FormControl fullWidth sx={inputSx}>
+                <InputLabel id="demo-simple-select-label">Weekday</InputLabel>
+                <Select
+                  labelid="demo-simple-select-label"
+                  id="weekday"
+                  name="weekday"
+                  value={evaluateeFormValues.weekday}
+                  label="Weekday"
+                  onChange={handleEvaluateeFormValues}
+                >
+                  {WEEKDAYS.map((weekday) => (
+                    <MenuItem value={weekday}>{weekday}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <Box sx={inputSx}>
+                <FormLabel id="demo-radio-buttons-group-label">Week</FormLabel>
+                <RadioGroup
+                  aria-labelledby="demo-radio-buttons-group-label"
+                  value={evaluateeFormValues.week}
+                  name="week"
+                  // sx={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}
+                  onChange={handleEvaluateeFormValues}
+                  sx={{ flex: 2.5 }}
+                />
+
+                <TextField
+                  id="outlined-input"
+                  label="Course code"
+                  name="courseCode"
+                  value={evaluateeFormValues.courseCode}
+                  onChange={handleEvaluateeFormValues}
+                  sx={{ flex: 1.5 }}
+                />
+              </Box>
+              <TextField
+                id="outlined-input"
+                label="Number of enrolled"
+                name="numberOfPeopleEnrolled"
+                value={evaluateeFormValues.numberOfPeopleEnrolled}
+                onChange={handleEvaluateeFormValues}
+                sx={inputStyle}
+              />
+              <TextField
+                id="outlined-multiline-flexible"
+                label="Place and date of didactic classes"
+                multiline
+                name="details"
+                value={evaluateeFormValues.details}
+                onChange={handleEvaluateeFormValues}
+                maxRows={5}
+                minRows={5}
+                sx={inputStyle}
+              />
               <Button
-                onClick={addEvaluateeHandler}
+                onClick={addCourseHandler}
                 size="large"
-                variant="contained"
-                sx={{ backgroundColor: '#d9372a', color: 'white' }}
-                disabled={!isModalFullfilled}
+                variant="outlined"
+                disabled={!isFormFullfilled}
               >
-                Save
+                {!isEditingCourse ? 'Add course' : 'Edit Course'}
               </Button>
+              {courses.length > 0 && (
+                <Box>
+                  <Divider
+                    sx={{
+                      borderBottomWidth: 1,
+                      my: 2,
+                      backgroundColor: '#999',
+                    }}
+                  />
+                  <TableContainer
+                    component={Paper}
+                    sx={{ width: '100%', my: 1 }}
+                  >
+                    <Table sx={{ width: '100%' }} aria-label="simple table">
+                      <TableHead sx={{ width: '100%' }}>
+                        <TableRow sx={{ display: 'flex' }}>
+                          <TableCell sx={{ flex: 1 }}>Course code</TableCell>
+                          <TableCell align="left" sx={{ flex: 1.5 }}>
+                            Course name
+                          </TableCell>
+                          <TableCell align="left" sx={{ flex: 1.5 }}>
+                            Number of people enrolled
+                          </TableCell>
+                          <TableCell align="left" sx={{ flex: 4 }}>
+                            Details
+                          </TableCell>
+                          <TableCell align="left" sx={{ flex: 1 }}>
+                            Actions
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {courses.map(
+                          (
+                            {
+                              courseCode,
+                              courseName,
+                              numberOfPeopleEnrolled,
+                              details,
+                            },
+                            index
+                          ) => (
+                            <TableRow
+                              key={uuid()}
+                              sx={{
+                                '&:last-child td, &:last-child th': {
+                                  border: 0,
+                                },
+                                display: 'flex',
+                              }}
+                            >
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                sx={{ flex: '1' }}
+                              >
+                                {courseCode}
+                              </TableCell>
+                              <TableCell
+                                align="left"
+                                size="medium"
+                                sx={{ flex: 1.5 }}
+                              >
+                                {courseName}
+                              </TableCell>
+                              <TableCell align="left" sx={{ flex: 1.5 }}>
+                                {numberOfPeopleEnrolled}
+                              </TableCell>
+                              <TableCell align="left" sx={{ flex: 4 }}>
+                                {details.split('\n').join(', ')}
+                              </TableCell>
+                              <TableCell sx={{ flex: 1 }}>
+                                <IconButton
+                                  color="primary"
+                                  onClick={() => setEditingCourseHandler(index)}
+                                >
+                                  <EditIcon fontSize="inherit" />
+                                </IconButton>
+                                <IconButton
+                                  color="primary"
+                                  onClick={() => deleteCourse(index)}
+                                >
+                                  <DeleteIcon fontSize="inherit" />
+                                </IconButton>
+                              </TableCell>
+                            </TableRow>
+                          )
+                        )}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Box>
+              )}
+              <Box sx={bottomButtonsStyle}>
+                <Button onClick={onClose} size="large" variant="outlined">
+                  Cancel
+                </Button>
+                <Button
+                  onClick={addEvaluateeHandler}
+                  size="large"
+                  variant="contained"
+                  sx={{ backgroundColor: '#d9372a', color: 'white' }}
+                  disabled={!isModalFullfilled}
+                >
+                  Save
+                </Button>
+              </Box>
             </Box>
           </Box>
-        </Box>
-      </Modal>
-    );
+        </Modal>
+      );
+    };
   };
 };
 
