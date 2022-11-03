@@ -21,7 +21,6 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
   const [isMembersTableLoading, setMembersTableLoading] = useState(false);
   const [members, setMembers] = useState({ members: [] });
   const { token } = useContext(UserContext);
-  const [activeRowId, setActiveRow] = useState(null);
 
   const [selectedUser, setSelectedUser] = useState(null);
   const [isUpdate, setUpdated] = useState(false);

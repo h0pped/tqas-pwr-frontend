@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect, forwardRef } from 'react';
+import { useContext, useState, forwardRef } from 'react';
 import Box from '@mui/material/Box';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Tooltip from '@mui/material/Tooltip';
@@ -115,7 +115,7 @@ export default function DeleteAction({ params, setUpdated }) {
           m: 1,
           position: 'relative',
         }}
-      ></Box>
+      />
       <Box
         sx={{
           m: 1,
