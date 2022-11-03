@@ -193,8 +193,8 @@ export default function Assesments({ setDrawerSelectedItem, link }) {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseCreateAssesmentDialog}>Cancel</Button>
-          <Button onClick={handleCreateNewAssesment}>Create</Button>
+          <Button variant="outlined" onClick={handleCloseCreateAssesmentDialog}>Cancel</Button>
+          <Button variant="contained" onClick={handleCreateNewAssesment}>Create</Button>
         </DialogActions>
       </Dialog>
     </Box>

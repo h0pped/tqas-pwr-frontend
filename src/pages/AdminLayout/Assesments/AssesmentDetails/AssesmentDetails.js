@@ -15,7 +15,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
         alignItems: 'center',
       }}
       >
-        <Typography variant="subtitle2" sx={{ color: '#848884' }}>Select assesment on the left to see details.</Typography>
+        <Typography variant="subtitle2" sx={{ color: '#848884' }}>Select assesment on the left to see details</Typography>
       </Box>
     );
   }
@@ -60,6 +60,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
         <Typography variant="h6">
           Evaluatees
         </Typography>
+        
       </Box>
     </Box>
   );

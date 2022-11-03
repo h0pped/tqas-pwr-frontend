@@ -122,7 +122,7 @@ export default function Layout() {
       title: t('drawer_item_title_classes_eval'),
       icon: <FactCheckIcon color={drawerSelectedItem === 'evaluations' ? 'primary' : 'action'} />,
       link: 'evaluations',
-      component: <Assesments {...{ setDrawerSelectedItem, link: 'evaluations' }} />,
+      component: <Assesments {...{ setDrawerSelectedItem, link: 'assesments' }} />,
     },
     {
       title: t('drawer_item_title_wzhz'),
