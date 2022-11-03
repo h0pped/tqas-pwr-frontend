@@ -8,7 +8,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import { ToastContainer, toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-import indexConfig from '../../../config/index.config.js';
+import config from '../../../config/index.config.js';
 import UserContext from '../../../context/UserContext/UserContext.js';
 import DeleteAction from './DeleteActions.js';
 import customDataGridToolbar from '../../../components/CustomGridToolbar/CustomDataGridToolBar.js';
@@ -57,10 +57,10 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
       theme: 'light',
     });
 
-  async function getMembers() {
+  function getMembers() {
     setMembersTableLoading(true);
     try {
-      fetch(`${indexConfig.server.url}/wzhzData/getMembers`, {
+      fetch(`${config.server.url}/wzhzData/getMembers`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -76,10 +76,10 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
     }
   }
 
-  async function getUsersList() {
+  function getUsersList() {
     setMembersTableLoading(true);
     try {
-      fetch(`${indexConfig.server.url}/userData/getUsers`, {
+      fetch(`${config.server.url}/userData/getUsers`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -95,11 +95,11 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
     }
   }
 
-  async function addMembers() {
+  function addMembers() {
     setAddUserBtnLoading(true);
     if (selectedUser) {
       try {
-        fetch(`${indexConfig.server.url}/wzhzData/addMember`, {
+        fetch(`${config.server.url}/wzhzData/addMember`, {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -122,6 +122,7 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
         setAddUserBtnLoading(false);
       }
     } else {
+      setAddUserBtnLoading(false);
       notifyError(t('error_select_user'));
     }
   }
@@ -158,9 +159,7 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
       headerName: '',
       type: 'actions',
       flex: 0.5,
-      renderCell: (params) => (
-        <DeleteAction {...{ params, activeRowId, setActiveRow }} />
-      ),
+      renderCell: (params) => <DeleteAction {...{ params, setUpdated }} />,
     },
   ];
 
@@ -182,7 +181,7 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
           justifyContent: 'space-between',
         }}
       >
-        <Typography variant="h5">WZHZ Group</Typography>
+        <Typography variant="h5">{t('WZHZ_group')}</Typography>
       </Box>
       <Box
         sx={{
@@ -219,9 +218,7 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
             size="24px"
             variant="contained"
             disabled={isAddUserBtnLoading}
-            onClick={() => {
-              addMembers();
-            }}
+            onClick={addMembers}
             sx={{ width: 100 }}
           >
             {t('button_add')}

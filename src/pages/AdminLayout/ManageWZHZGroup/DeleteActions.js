@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect, forwardRef } from 'react';
 import Box from '@mui/material/Box';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Tooltip from '@mui/material/Tooltip';
@@ -13,22 +13,19 @@ import Button from '@mui/material/Button';
 import Slide from '@mui/material/Slide';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-import indexConfig from '../../../config/index.config.js';
+import config from '../../../config/index.config.js';
 import UserContext from '../../../context/UserContext/UserContext.js';
 import 'react-toastify/dist/ReactToastify.css';
 
-const Transition = React.forwardRef((props, ref) => (
+const Transition = forwardRef((props, ref) => (
   <Slide direction="down" ref={ref} {...props} />
 ));
 
-export default function DeleteAction({ params }) {
+export default function DeleteAction({ params, setUpdated }) {
   const { t } = useTranslation();
   const [isDeleteLoading, setDeleteLoading] = useState(false);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const { token } = useContext(UserContext);
-  const [isUpdate, setUpdated] = useState(false);
-
-  useEffect(() => {}, [isUpdate]);
 
   const notifySuccess = (msg) =>
     toast.success(`${t('success')} ${msg}`, {
@@ -66,25 +63,30 @@ export default function DeleteAction({ params }) {
 
   const handleDeleteDialogOptionYes = async () => {
     setDeleteDialogOpen(false);
-    fetch(`${indexConfig.server.url}/wzhzData/removeMember`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id: params.row.wzhz.id,
-      }),
-    }).then(async (response) => {
+    try {
+      await fetch(`${config.server.url}/wzhzData/removeMember`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: params.row.wzhz.id,
+        }),
+      }).then((response) => {
+        setDeleteLoading(false);
+        if (response.ok) {
+          notifySuccess(t('success_remove_wzhz_member'));
+          setUpdated(true);
+        } else {
+          notifyError(t('error_remove_wzhz_member'));
+        }
+      });
+    } catch (error) {
+      notifyError(t('error_server'));
       setDeleteLoading(false);
-      if (response.ok) {
-        notifySuccess(t('success_remove_wzhz_member'));
-        setUpdated(true);
-      } else {
-        notifyError(t('error_remove_wzhz_member'));
-      }
-    });
+    }
   };
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>

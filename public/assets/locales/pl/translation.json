@@ -38,7 +38,6 @@
   "reset_psw_email_helper": "Użyj adresu e-mail powiązanego z kontem, do którego chcesz zresetować hasło.",
   "password_reset_success": "Twoje hasło zostało pomyślnie zresetowane, teraz możesz się zalogować.",
   "success": "Sukces!",
-
   "drawer_item_title_classes_eval": "Hospitacja",
   "drawer_item_title_wzhz": "Grupa WZHZ/SZHZ",
   "drawer_item_title_protocols": "Protokoły",
@@ -82,10 +81,10 @@
   "tooltip_save_changes": "Zapisz zmiany",
   "tooltip_delete_user": "Usuń użytkownika",
   "title_logged_in_as": "Zalogowany jako",
-
-  "error_remove_wzhz_member": "Podczas usuwania członka wystąpił błąd. Proszę spróbuj ponownie",
+  "error_remove_wzhz_member": "Użytkownik został już usunięty z grupy.",
   "success_remove_wzhz_member": "Członek został usunięty.",
   "success_added_wzhz_member": "Członek został dodany.",
-  "error_added_wzhz_member": "Wystąpił błąd podczas dodawania nowego członka. Proszę spróbuj ponownie",
-  "error_select_user": "Wybierz użytkownika!"
+  "error_added_wzhz_member": "Użytkownik jest już członkiem grupy wzhz.",
+  "error_select_user": "Wybierz użytkownika!",
+  "WZHZ_group": "Grupa WZHZ"
 }
