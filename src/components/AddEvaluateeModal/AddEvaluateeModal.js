@@ -38,7 +38,6 @@ const yearsMap = {
 
 const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
   const { t } = useTranslation();
-
   const [evaluatees, setEvaluatees] = useState([]);
   const [fetchedUsers, setFetchUsers] = useState([]);
 
@@ -56,6 +55,7 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
     courseName: '',
     numberOfPeopleEnrolled: '',
     details: '',
+    evaluateeId: '',
   });
   const { token } = useContext(UserContext);
 
@@ -127,11 +127,18 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
       : `${currentMonth - providedDateMonth} months ago`;
   };
 
-  const handleEvaluateeFormValues = (e) => {
-    setEvaluateeFormValues((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+  const handleEvaluateeFormValues = (e, val) => {
+    if (val) {
+      setEvaluateeFormValues((prev) => ({
+        ...prev,
+        evaluateeId: val.id,
+      }));
+    } else {
+      setEvaluateeFormValues((prev) => ({
+        ...prev,
+        [e.target.name]: e.target.value,
+      }));
+    }
   };
 
   const addCourseHandler = () => {
@@ -199,7 +206,9 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
     evaluateeFormValues.details;
 
   const isModalFullfilledCheck = () =>
-    evaluateeFormValues.evaluatee && courses.length > 0;
+    evaluateeFormValues.evaluatee &&
+    evaluateeFormValues.evaluateeId &&
+    courses.length > 0;
 
   const modalStyle = {
     position: 'absolute',
@@ -253,11 +262,13 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
         >
           <Autocomplete
             disablePortal
-            freeSolo
             options={evaluatees}
             name="evaluatee"
             sx={inputStyle}
-            onSelect={(e) => handleEvaluateeFormValues(e)}
+            noOptionsText={t('no_evaluatees_found')}
+            onChange={(e, val) => handleEvaluateeFormValues(e, val)}
+            onSelect={(e, val) => handleEvaluateeFormValues(e, val)}
+            onInputChange={(e, val) => handleEvaluateeFormValues(e, val)}
             groupBy={(option) => option.mappedDate}
             renderInput={(params) => (
               <TextField

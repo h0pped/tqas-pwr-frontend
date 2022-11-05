@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import useToken from '../../hooks/useToken.js';
 
 const UserContext = React.createContext({
@@ -39,6 +39,20 @@ export const UserContextProvider = ({ children }) => {
     setFirstName(null);
     setLastName(null);
   };
+
+  // eslint-disable-next-line consistent-return
+  useEffect(() => {
+    if (expiresIn && new Date() > expiresIn) {
+      logoutHandler();
+    }
+    if (isLoggedIn && expiresIn) {
+      const remainingTime = expiresIn.getTime() - new Date().getTime();
+      const timer = setTimeout(logoutHandler, remainingTime);
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+  }, []);
 
   return (
     <UserContext.Provider
