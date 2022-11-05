@@ -83,5 +83,6 @@
   "title_logged_in_as": "Logged in as",
   "evaluatee_adding_error": "Error adding evaluatee. Please try again.",
   "evaluatee_adding_success": "Evaluatee was successfully added.",
-  "fetching_evaluatees_error": "Error during geting evaluatees. Please try again."
+  "fetching_evaluatees_error": "Error during geting evaluatees. Please try again.",
+  "no_evaluatees_found": "No evaluatees found."
 }
