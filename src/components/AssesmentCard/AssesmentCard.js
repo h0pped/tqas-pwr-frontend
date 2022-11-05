@@ -4,7 +4,7 @@ import Chip from '@mui/material/Chip';
 
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
-export default function AssesmentCard({ id, semester, status, setId, isSelected }) {
+export default function AssesmentCard({ id, semester, status, setId, isSelected, numberOfEvaluatees }) {
   return (
     <Box
       onClick={() => { setId(id); }}
@@ -36,7 +36,9 @@ export default function AssesmentCard({ id, semester, status, setId, isSelected 
       </Box>
       <Box sx={{ mt: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
         <Chip sx={{ color: isSelected ? '#ffffff' : '#000000' }} size="small" label={status} />
-        <Typography variant="subtitle1">9 evaluatees</Typography>
+        <Typography variant="subtitle1">
+          {`${numberOfEvaluatees} evaluatees`}
+        </Typography>
       </Box>
     </Box>
   );

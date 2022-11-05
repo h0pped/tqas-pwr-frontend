@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -21,97 +21,17 @@ import { semesters } from '../../../constants.js';
 import AssesmentCard from '../../../components/AssesmentCard/AssesmentCard.js';
 import AssesmentDetails from './AssesmentDetails/AssesmentDetails.js';
 
+import config from '../../../config/index.config.js';
+import UserContext from '../../../context/UserContext/UserContext.js';
+
 export default function Assesments({ setDrawerSelectedItem, link }) {
-  const fakeAssesments = [
-    {
-      id: 1,
-      start_date: '2022-10-24 09:46:36.860 +0200',
-      semester: 'Winter 2022/2023',
-      end_date: '2022-11-24 09:46:36.860 +0200',
-      status: 'Active',
-      evaluation: {
-        id: 1,
-        subject_code: 'MA001',
-        assessment_id: 1,
-        date_created: '2022-10-24 09:46:36.860 +0200',
-        occurences: 'pn 9:15-11:00 D-2 s.333',
-        status: 'Active',
-        schedule_accepted: true,
-        reson_declined: null,
-      },
-    },
-    {
-      id: 2,
-      start_date: '2022-09-24 09:46:36.860 +0200',
-      semester: 'Summer 2021/2022',
-      end_date: '2022-11-24 09:46:36.860 +0200',
-      status: 'Completed',
-      evaluation: {
-        id: 2,
-        subject_code: 'MA001',
-        assessment_id: 1,
-        date_created: '2022-09-24 09:46:36.860 +0200',
-        occurences: 'pn 9:15-11:00 D-2 s.333',
-        status: 'Completed',
-        schedule_accepted: true,
-        reson_declined: null,
-      },
-    },
-    {
-      id: 3,
-      start_date: '2022-02-27 09:46:36.860 +0200',
-      semester: 'Winter 2021/2022',
-      end_date: '2022-11-24 09:46:36.860 +0200',
-      status: 'Completed',
-      evaluation: {
-        id: 3,
-        subject_code: 'MA001',
-        assessment_id: 3,
-        date_created: '2022-02-27 09:46:36.860 +0200',
-        occurences: 'pn 9:15-11:00 D-2 s.333',
-        status: 'Completed',
-        schedule_accepted: true,
-        reson_declined: null,
-      },
-    },
-    {
-      id: 4,
-      start_date: '2022-02-28 09:46:36.860 +0200',
-      semester: 'Summer 2020/2021',
-      end_date: '2022-11-24 09:46:36.860 +0200',
-      status: 'Completed',
-      evaluation: {
-        id: 4,
-        subject_code: 'MA001',
-        assessment_id: 4,
-        date_created: '2022-10-24 09:46:36.860 +0200',
-        occurences: 'pn 9:15-11:00 D-2 s.333',
-        status: 'Completed',
-        schedule_accepted: true,
-        reson_declined: null,
-      },
-    },
-    {
-      id: 5,
-      start_date: '2022-10-01 09:46:36.860 +0200',
-      semester: 'Winter 2020/2021',
-      end_date: '2022-11-24 09:46:36.860 +0200',
-      status: 'Completed',
-      evaluation: {
-        id: 5,
-        subject_code: 'MA001',
-        assessment_id: 5,
-        date_created: '2022-10-24 09:46:36.860 +0200',
-        occurences: 'pn 9:15-11:00 D-2 s.333',
-        status: 'Completed',
-        schedule_accepted: true,
-        reson_declined: null,
-      },
-    },
-  ];
+  const { token } = useContext(UserContext);
+
   const [isCrateAssesmentDialogOpen, setCreateAssesmentDialogOpen] = useState(false);
   const [selectedAssesment, setSelectedAssesment] = useState(null);
   const [selectedSemesterValue, setSelectedSemesterValue] = useState(semesters.find((semester) => moment(new Date().toISOString().slice(0, 10)).isBetween(semester.dateFrom, semester.dateTo, undefined, '[]')));
+
+  const [assesments, setAssements] = useState([]);
 
   const handleOpenCreateAssesmentDialog = () => {
     setCreateAssesmentDialogOpen(true);
@@ -130,11 +50,34 @@ export default function Assesments({ setDrawerSelectedItem, link }) {
     setSelectedSemesterValue(event.target.value);
   };
 
+  async function getAssesments() {
+    try {
+      await fetch(
+        `${config.server.url}/assesmentData/getAssesments`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      ).then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          setAssements(
+            data,
+          );
+        });
+    } catch (error) {
+      alert('Error')
+    }
+  }
+
   useEffect(() => {
     setDrawerSelectedItem(link);
-  }, [selectedAssesment]);
+    getAssesments();
+  }, [selectedAssesment, selectedAssesment]);
   return (
-    <Box sx={{ flexGrow: 1, height: '100%' }}>
+    <Box sx={{ flexGrow: 1, height: '75vh' }}>
       <Grid container sx={{ height: '100%' }}>
         <Grid item xs={12}>
           <Box sx={{ mb: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center' }}>
@@ -145,24 +88,25 @@ export default function Assesments({ setDrawerSelectedItem, link }) {
           </Box>
         </Grid>
         <Grid item xs={4} sx={{ height: '100%' }}>
-          <Box sx={{ p: 0.7, display: 'flex', flexDirection: 'column', gap: 1, overflowY: 'scroll', height: '70vh', borderRadius: 1, backgroundColor: '#f4f5f7' }}>
-            {fakeAssesments.map((item) => (
+          <Box sx={{ p: 0.7, display: 'flex', flexDirection: 'column', gap: 1, overflowY: 'scroll', height: '100%', borderRadius: 1, backgroundColor: '#f4f5f7' }}>
+            {assesments.map((item) => (
               <AssesmentCard
                 key={item.id}
                 id={item.id}
-                semester={item.semester}
+                semester={item.name}
                 status={item.status}
                 setId={setSelectedAssesment}
                 isSelected={selectedAssesment === item.id}
+                numberOfEvaluatees={item.evaluations.length}
               />
             ))}
           </Box>
         </Grid>
-        <Grid item xs={8}>
-          <Box sx={{ p: 0.7, ml: 2, borderRadius: 1, backgroundColor: '#f4f5f7', height: '70vh' }}>
+        <Grid item xs={8} sx={{ height: '100%' }}>
+          <Box sx={{ p: 0.7, ml: 2, borderRadius: 1, backgroundColor: '#f4f5f7', height: '100%' }}>
             <AssesmentDetails
               assesmentDetails={
-                fakeAssesments.find((assesment) => assesment.id === selectedAssesment)
+                assesments.find((assesment) => assesment.id === selectedAssesment)
               }
             />
           </Box>
