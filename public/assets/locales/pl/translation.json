@@ -81,5 +81,6 @@
   "button_no": "Nie",
   "tooltip_save_changes": "Zapisz zmiany",
   "tooltip_delete_user": "Usuń użytkownika",
-  "title_logged_in_as": "Zalogowany jako"
+  "title_logged_in_as": "Zalogowany jako",
+  "btn_loading": "Ładowanie..."
 }

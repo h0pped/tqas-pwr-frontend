@@ -35,10 +35,12 @@ export default function Login({ handleFormClick }) {
   );
 
   const [isLoginError, setIsLoginError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { login } = useContext(UserContext);
 
   async function loginHandler() {
+    setIsLoading(true);
     try {
       const result = await fetch(`${config.server.url}/auth/signIn`, {
         method: 'POST',
@@ -55,6 +57,8 @@ export default function Login({ handleFormClick }) {
       }
     } catch (err) {
       setIsLoginError(true);
+    } finally {
+      setIsLoading(false);
     }
   }
   const handleClose = () => setIsLoginError(false);
@@ -120,10 +124,11 @@ export default function Login({ handleFormClick }) {
             <Button
               fullWidth
               variant="contained"
+              disabled={isLoading}
               onClick={handleSubmit}
               sx={{ mt: 3, mb: 2 }}
             >
-              {t('btn_login')}
+              {!isLoading ? t('btn_login') : t('btn_loading')}
             </Button>
             <Button
               fullWidth
