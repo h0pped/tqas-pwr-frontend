@@ -57,6 +57,7 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
     details: '',
     evaluateeId: '',
   });
+
   const { token } = useContext(UserContext);
 
   const sortUsersByEvaluationDate = (a, b) =>
@@ -92,12 +93,14 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
       });
       if (res.ok) {
         notifySuccess(t('evaluatee_adding_success'));
+        clearModalValues();
         onClose();
       }
     } catch (err) {
       notifyError(t('evaluatee_adding_error'));
     }
   };
+
   const deleteCourse = (index) => {
     const newCourses = [...courses];
     newCourses.splice(index, 1);
@@ -105,6 +108,7 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
     setIsEditingCourse(false);
     setCurrentlyEditedCourse(null);
   };
+
   const mapDate = (date) => {
     if (!date) {
       return 'No evaluation yet';
@@ -172,6 +176,22 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
     setEvaluateeFormValues((prev) => ({ ...prev, ...courses[index] }));
   };
 
+  const clearModalValues = () => {
+    setEvaluateeFormValues({
+      evaluatee: '',
+      courseCode: '',
+      courseName: '',
+      numberOfPeopleEnrolled: '',
+      details: '',
+      evaluateeId: '',
+    });
+    setCourses([]);
+    setIsEditingCourse(false);
+    setCurrentlyEditedCourse(null);
+    setEvaluatees([]);
+    setFetchUsers([]);
+  };
+
   useEffect(() => {
     const fetchEvaluatees = async () => {
       try {
@@ -227,6 +247,7 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
     width: '100%',
     minWidth: '100% !important',
   };
+
   const bottomButtonsStyle = {
     width: '100%',
     minWidth: '100%',
