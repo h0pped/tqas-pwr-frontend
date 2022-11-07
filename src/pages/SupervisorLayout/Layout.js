@@ -11,11 +11,12 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import ScheduleApproval from './ScheduleApproval/ScheduleApproval.js';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 
 import departmentLogo from '../../assets/images/departmentLogo.svg';
 
-const pages = [{ label: 'My assesments', path: 'myAssesments' }, { label: 'Schedule aproval', path: 'scheduleApproval' }];
+const pages = [{ label: 'My assesments', path: 'myAssesments' }, { label: 'Schedule aproval', path: 'scheduleApproval', component: <ScheduleApproval /> }];
 const settings = ['Logout'];
 
 const ResponsiveAppBar = () => {
@@ -128,7 +129,7 @@ const ResponsiveAppBar = () => {
           </Toolbar>
         </Container>
       </AppBar>
-      <Box sx={{ mt: 3 }}>
+      <Box sx={{ mt: 3, flexGrow: 1, pl: 3, pr: 3, height: '100%' }}>
         <Routes>
           {pages.map((page) => (
             <Route key={page.label} path={page.link} element={page.component} />
