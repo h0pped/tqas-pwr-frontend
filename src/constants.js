@@ -36,7 +36,7 @@ function generateListOfSemesters(currentDate) {
     const newWinterSem = `Winter ${parseInt(currentYear)}/${parseInt(currentYear) + 1}`;
     const newWinterSemDateFrom = `${currentYear}-10-01`;
     const newWinterSemDateTo = `${parseInt(currentYear) + 1}-02-27`;
-    const newSummerSem = `Semester ${parseInt(currentYear)}/${parseInt(currentYear) + 1}`;
+    const newSummerSem = `Summer ${parseInt(currentYear)}/${parseInt(currentYear) + 1}`;
     const newSummerSemDateFrom = `${parseInt(currentYear) + 1}-02-28`;
     const newSummerSemDateTo = `${parseInt(currentYear) + 1}-09-30`;
 

@@ -14,7 +14,9 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import moment from 'moment';
+import { ToastContainer, toast } from 'react-toastify';
 import { LinearProgress } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 import Add from '@mui/icons-material/Add';
 
@@ -28,11 +30,36 @@ import UserContext from '../../../context/UserContext/UserContext.js';
 export default function Assesments({ setDrawerSelectedItem, link }) {
   const { token } = useContext(UserContext);
 
+  const { t } = useTranslation();
+
+  const notifySuccess = (msg) => toast.success(`${t('success')} ${msg}`, {
+    position: 'top-center',
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: 'light',
+  });
+
+  const notifyError = (msg) => toast.error(`${t('error_dialog')} ${msg}`, {
+    position: 'top-center',
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: 'light',
+  });
+
   const [isCrateAssesmentDialogOpen, setCreateAssesmentDialogOpen] = useState(false);
   const [selectedAssesment, setSelectedAssesment] = useState(null);
   const [selectedSemesterValue, setSelectedSemesterValue] = useState(semesters.find((semester) => moment(new Date().toISOString().slice(0, 10)).isBetween(semester.dateFrom, semester.dateTo, undefined, '[]')));
 
   const [isAssesmentsLoading, setAssesmentsLoading] = useState(false);
+  const [isAssesmentsUpdated, setIsAssesmentsUpdated] = useState(false);
 
   const [assesments, setAssements] = useState([]);
 
@@ -44,10 +71,36 @@ export default function Assesments({ setDrawerSelectedItem, link }) {
     setCreateAssesmentDialogOpen(false);
   };
 
-  const handleCreateNewAssesment = () => {
+  async function handleCreateNewAssesment() {
     handleCloseCreateAssesmentDialog();
-    alert('Creating new assesment...');
-  };
+    setIsAssesmentsUpdated(false);
+    console.log(selectedSemesterValue);
+    try {
+      await fetch(
+        `${config.server.url}/evaluationsManagement/createAssessment`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: selectedSemesterValue.label,
+          }),
+        },
+      ).then((response) => {
+        if (response.ok) {
+          notifySuccess(t('success_user_created'));
+          setIsAssesmentsUpdated(true);
+        } else {
+          notifyError(t('error_user_not_created'));
+        }
+      });
+    } catch (error) {
+      notifyError(t('error_server'));
+    }
+  }
 
   const handleDialogSemesterValueChange = (event) => {
     setSelectedSemesterValue(event.target.value);
@@ -57,7 +110,7 @@ export default function Assesments({ setDrawerSelectedItem, link }) {
     setAssesmentsLoading(true);
     try {
       await fetch(
-        `${config.server.url}/assesmentData/getAssesments`,
+        `${config.server.url}/evaluationsManagement/getAssesments`,
         {
           method: 'GET',
           headers: {
@@ -68,7 +121,7 @@ export default function Assesments({ setDrawerSelectedItem, link }) {
         .then((data) => {
           console.log(data);
           setAssements(
-            data,
+            data.sort((a, b) => b.id - a.id),
           );
           setAssesmentsLoading(false);
         });
@@ -81,9 +134,10 @@ export default function Assesments({ setDrawerSelectedItem, link }) {
   useEffect(() => {
     setDrawerSelectedItem(link);
     getAssesments();
-  }, []);
+  }, [isAssesmentsUpdated]);
   return (
     <Box sx={{ flexGrow: 1, height: '75vh' }}>
+      <ToastContainer />
       <Grid container sx={{ height: '100%' }}>
         <Grid item xs={12}>
           <Box sx={{ mb: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center' }}>
@@ -137,7 +191,7 @@ export default function Assesments({ setDrawerSelectedItem, link }) {
                 label="Semester"
               >
                 {semesters.map((item) => (
-                  <MenuItem key={item} value={item}>{item.label}</MenuItem>
+                  <MenuItem key={item.label} value={item}>{item.label}</MenuItem>
                 ))}
               </Select>
             </FormControl>

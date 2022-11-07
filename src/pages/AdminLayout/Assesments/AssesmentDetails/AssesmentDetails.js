@@ -26,12 +26,14 @@ import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
+import { toast } from 'react-toastify';
 import Alert from '@mui/material/Alert';
 import Autocomplete from '@mui/material/Autocomplete';
 import { LinearProgress } from '@mui/material';
 import Fab from '@mui/material/Fab';
 import Link from '@mui/material/Link';
 import { Navigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { assesmentStatuses } from '../../../../constants.js';
 
 import config from '../../../../config/index.config.js';
@@ -41,8 +43,9 @@ export default function AssesmentDetails({ assesmentDetails }) {
   const [evaluatees, setEvaluatees] = useState([]);
   const [isEvaluateesTableLoading, setEvaluateesTableLoading] = useState(false);
   const [isSendForApprovalDialogOpen, setSendForApprovalDialogOpen] = useState(false);
-  const [selectedSupervisor, setSelectedSuprevisor] = useState(null);
   const [supervisors, setSupervisors] = useState([]);
+  const [selectedSupervisor, setSelectedSupervisor] = useState('');
+  const [selectedSupervisorId, setSelectedSupervisorId] = useState(null);
 
   const { token } = useContext(UserContext);
 
@@ -54,8 +57,50 @@ export default function AssesmentDetails({ assesmentDetails }) {
     setSendForApprovalDialogOpen(false);
   };
 
+  const { t } = useTranslation();
+
+  const notifySuccess = (msg) => toast.success(`${t('success')} ${msg}`, {
+    position: 'top-center',
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: 'light',
+  });
+
+  const notifyError = (msg) => toast.error(`${t('error_dialog')} ${msg}`, {
+    position: 'top-center',
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: 'light',
+  });
+
   const handleSendScheduleForApproval = () => {
-    alert('Sending....');
+    fetch(`${config.server.url}/evaluationsManagement/setAssessmentSupervisor`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: selectedSupervisor,
+          assessment_id: assesmentDetails.id,
+        }),
+      }).then((response) => {
+        if (response.ok) {
+          notifySuccess('Assesment was successfully sent for approval.');
+        } else {
+          notifyError('There was an error while trying to send this schedule for approval.');
+        }
+      });
   };
 
   function getSupervisors() {
@@ -74,18 +119,16 @@ export default function AssesmentDetails({ assesmentDetails }) {
         var users = [];
 
         data.forEach((user) => {
-          if (user.user_type === 'head' || user.user_type === 'dean') {
-            users.push(`${user.academic_title} ${user.first_name} ${user.last_name}`);
-          }
+          users.push(`${user.academic_title} ${user.first_name} ${user.last_name}`);
         });
-        setSupervisors(users);
+        setSupervisors(data);
       });
   }
 
   useEffect(() => {
     if (assesmentDetails !== undefined) {
       setEvaluateesTableLoading(true);
-      fetch(`${config.server.url}/assesmentData/getEvaluateesByAssesment`,
+      fetch(`${config.server.url}/evaluationsManagement/getEvaluateesByAssesment`,
         {
           method: 'POST',
           headers: {
@@ -285,30 +328,13 @@ export default function AssesmentDetails({ assesmentDetails }) {
           </DialogContentText>
           <Box sx={{ display: 'flex', gap: 1, mt: 1, flexDirection: 'column' }}>
             <Autocomplete
-              disablePortal
-              id="combo-box-demo"
               options={supervisors}
+              onChange={(event, value) => setSelectedSupervisor(value.id)}
+              getOptionLabel={(option) => `${option.academic_title} ${option.first_name} ${option.last_name}`}
+              id="combo-box-demo"
               sx={{ flex: 1 }}
               renderInput={(params) => <TextField {...params} label="Supervisor" />}
             />
-            {
-              supervisors.length === 0 && (
-                <Alert severity="warning">
-                  No users with role supervisor was found in the system!
-                  <br />
-                  Go to <Link href="#" onClick={<Navigate to="/users" />}>Manage users</Link> to manage user roles.
-                </Alert>
-              )
-            }
-            {
-              supervisors.length > 0 && (
-                <Alert severity="info">
-                  Only the users with role suprvisor are displayed!
-                  <br />
-                  Go to <Link href="#" onClick={<Navigate to="/users" />}>Manage users</Link> to manage user roles.
-                </Alert>
-              )
-            }
           </Box>
         </DialogContent>
         <DialogActions>
