@@ -81,7 +81,6 @@
   "tooltip_save_changes": "Zapisz zmiany",
   "tooltip_delete_user": "Usuń użytkownika",
   "title_logged_in_as": "Zalogowany jako",
-  "btn_loading": "Ładowanie...",
   "error_remove_wzhz_member": "Użytkownik został już usunięty z grupy.",
   "success_remove_wzhz_member": "Członek został usunięty.",
   "success_added_wzhz_member": "Członek został dodany.",
