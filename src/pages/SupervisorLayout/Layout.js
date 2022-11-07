@@ -20,19 +20,11 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
-import DescriptionIcon from '@mui/icons-material/Description';
 import LanguageSwitchV2 from '../../components/LanguageSwitch/LanguageSwitchV2.js';
-import Assesments from '../AdminLayout/Assesments/Assesments.js';
-import ManageEvaluationGroup from '../AdminLayout/ManageEvaluationGroup/ManageEvaluationGroup.js';
-import Protocols from '../AdminLayout/Protocols/Protocols.js';
-import ManageUsers from '../AdminLayout/ManageUsers/ManageUsers.js';
+import Assesments from './Assesements/Assesments.js';
 
 import UserContext from '../../context/UserContext/UserContext.js';
-
-import './layout.css';
 
 const drawerWidth = 240;
 
@@ -123,24 +115,6 @@ export default function Layout() {
       icon: <FactCheckIcon color={drawerSelectedItem === 'assesments' ? 'primary' : 'action'} />,
       link: 'assesments',
       component: <Assesments {...{ setDrawerSelectedItem, link: 'assesments' }} />,
-    },
-    {
-      title: t('drawer_item_title_wzhz'),
-      icon: <SupervisedUserCircleIcon color={drawerSelectedItem === 'wzhz-szhz' ? 'primary' : 'action'} />,
-      link: 'wzhz-szhz',
-      component: <ManageEvaluationGroup {...{ setDrawerSelectedItem, link: 'wzhz-szhz' }} />,
-    },
-    {
-      title: t('drawer_item_title_protocols'),
-      icon: <DescriptionIcon color={drawerSelectedItem === 'protocols' ? 'primary' : 'action'} />,
-      link: 'protocols',
-      component: <Protocols {...{ setDrawerSelectedItem, link: 'protocols' }} />,
-    },
-    {
-      title: t('drawer_item_title_users'),
-      icon: <GroupAddIcon color={drawerSelectedItem === 'users' ? 'primary' : 'action'} />,
-      link: 'users',
-      component: <ManageUsers {...{ setDrawerSelectedItem, link: 'users' }} />,
     },
   ];
 

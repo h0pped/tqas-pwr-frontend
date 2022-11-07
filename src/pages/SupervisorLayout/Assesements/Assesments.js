@@ -79,33 +79,29 @@ export default function Assesments({ setDrawerSelectedItem, link }) {
   }
 
   useEffect(() => {
-    setDrawerSelectedItem(link);
     getAssesments();
-  }, [selectedAssesment, selectedAssesment]);
+  }, [selectedAssesment]);
   return (
     <Box sx={{ flexGrow: 1, height: '75vh' }}>
       <Grid container sx={{ height: '100%' }}>
         <Grid item xs={12}>
-          <Box sx={{ mb: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center' }}>
-            <Typography variant="h5">Assesments</Typography>
-            <Button variant="contained" size="small" onClick={handleOpenCreateAssesmentDialog} endIcon={<Add />}>
-              New assesment
-            </Button>
-          </Box>
+          <Typography sx={{ mb: 2 }} variant="h5">Awaiting your approval</Typography>
         </Grid>
         <Grid item xs={4} sx={{ height: '100%' }}>
           <Box sx={{ p: 0.7, display: 'flex', flexDirection: 'column', gap: 1, overflowY: 'scroll', height: '100%', borderRadius: 1, backgroundColor: '#f4f5f7' }}>
             {isAssesmentsLoading && <LinearProgress />}
             {!isAssesmentsLoading && assesments.map((item) => (
-              <AssesmentCard
-                key={item.id}
-                id={item.id}
-                semester={item.name}
-                status={item.status}
-                setId={setSelectedAssesment}
-                isSelected={selectedAssesment === item.id}
-                numberOfEvaluatees={item.num_of_evaluatees}
-              />
+              item.status === 'Awaiting approval' && (
+                <AssesmentCard
+                  key={item.id}
+                  id={item.id}
+                  semester={item.name}
+                  status={item.status}
+                  setId={setSelectedAssesment}
+                  isSelected={selectedAssesment === item.id}
+                  numberOfEvaluatees={item.evaluations.length}
+                />
+              )
             ))}
           </Box>
         </Grid>

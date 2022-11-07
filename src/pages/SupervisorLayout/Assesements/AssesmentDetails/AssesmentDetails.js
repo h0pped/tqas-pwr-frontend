@@ -2,9 +2,6 @@ import { useEffect, useState, useContext } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
@@ -14,9 +11,9 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import Add from '@mui/icons-material/Add.js';
 import Tooltip from '@mui/material/Tooltip';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -25,13 +22,13 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
 import DeleteIcon from '@mui/icons-material/Delete';
-import SendIcon from '@mui/icons-material/Send';
 import Alert from '@mui/material/Alert';
 import Autocomplete from '@mui/material/Autocomplete';
 import { LinearProgress } from '@mui/material';
+import DoneIcon from '@mui/icons-material/Done';
+import CloseIcon from '@mui/icons-material/Close';
+
 import Fab from '@mui/material/Fab';
-import Link from '@mui/material/Link';
-import { Navigate } from 'react-router-dom';
 import { assesmentStatuses } from '../../../../constants.js';
 
 import config from '../../../../config/index.config.js';
@@ -41,8 +38,6 @@ export default function AssesmentDetails({ assesmentDetails }) {
   const [evaluatees, setEvaluatees] = useState([]);
   const [isEvaluateesTableLoading, setEvaluateesTableLoading] = useState(false);
   const [isSendForApprovalDialogOpen, setSendForApprovalDialogOpen] = useState(false);
-  const [selectedSupervisor, setSelectedSuprevisor] = useState(null);
-  const [supervisors, setSupervisors] = useState([]);
 
   const { token } = useContext(UserContext);
 
@@ -56,36 +51,13 @@ export default function AssesmentDetails({ assesmentDetails }) {
 
   const handleSendScheduleForApproval = () => {
     alert('Sending....');
-  };
-
-  function getSupervisors() {
-    fetch(
-      `${config.server.url}/userData/getUsers`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    ).then((response) => response.json())
-      .then((data) => {
-        data.sort((a, b) => a - b);
-
-        var users = [];
-
-        data.forEach((user) => {
-          if (user.user_type === 'head' || user.user_type === 'dean') {
-            users.push(`${user.academic_title} ${user.first_name} ${user.last_name}`);
-          }
-        });
-        setSupervisors(users);
-      });
   }
 
   useEffect(() => {
     if (assesmentDetails !== undefined) {
+      console.log(assesmentDetails.id);
       setEvaluateesTableLoading(true);
-      fetch(`${config.server.url}/assesmentData/getEvaluateesByAssesment`,
+      fetch(`${config.server.url}/assesmentData/getEvaluatees`,
         {
           method: 'POST',
           headers: {
@@ -100,9 +72,9 @@ export default function AssesmentDetails({ assesmentDetails }) {
         .then((data) => {
           setEvaluatees(data);
           setEvaluateesTableLoading(false);
+          console.log(data);
         });
     }
-    getSupervisors();
   }, [assesmentDetails]);
 
   function Row(props) {
@@ -128,7 +100,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
             {row.email}
           </TableCell>
           <TableCell component="th" scope="row">
-            {row.evaluatee.evaluations.length}
+            {row.evaluatee.evaluated_classes.length}
           </TableCell>
           <TableCell component="th" scope="row">
             <Tooltip title="Remove evaluatee" placement="top">
@@ -139,9 +111,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
                   color: '#39e9e9e',
                   '&:hover': { bgcolor: '#D9372A', color: '#FFFFFF' },
                 }}
-                //disabled={isDeleteLoading}
                 aria-label="delete"
-              // onClick={handleDeleteUser}
               >
                 <DeleteIcon />
               </Fab>
@@ -165,19 +135,19 @@ export default function AssesmentDetails({ assesmentDetails }) {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {row.evaluatee.evaluations.map((course) => (
-                      <TableRow key={course.course_code}>
+                    {row.evaluatee.evaluated_classes.map((course) => (
+                      <TableRow key={course.subject_code}>
                         <TableCell component="th" scope="row">
-                          {course.course_code}
+                          {course.subject_code}
                         </TableCell>
                         <TableCell component="th" scope="row">
-                          {course.course.course_name}
+                          {course.course_name}
                         </TableCell>
                         <TableCell component="th" scope="row">
                           TBA
                         </TableCell>
                         <TableCell component="th" scope="row">
-                          {course.details}
+                          {course.evaluations.map((occurence) => (`${occurence.details}\n`))}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -207,13 +177,18 @@ export default function AssesmentDetails({ assesmentDetails }) {
 
   return (
     <Box sx={{ p: 2, borderRadius: 0.5, backgroundColor: '#ffffff', boxShadow: 2, border: 'solid 1px rgba(235, 235, 235)', height: '100%' }}>
-      <Box sx={{ display: 'flex', width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Typography sx={{ mb: 1 }} variant="h5">
+      <Box sx={{ pt: 1, pb: 1, display: 'flex', width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
+        <Typography variant="h5">
           Assesment details
         </Typography>
-        <Button sx={{ mb: 1 }} variant="text" size="small" onClick={handleOpenSendForApprovalDialog} endIcon={<SendIcon />}>
-          Send for approval
-        </Button>
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
+          <Button variant="outlined" size="small" endIcon={<CloseIcon />}>
+            Decline schedule
+          </Button>
+          <Button variant="contained" size="small" endIcon={<DoneIcon />}>
+            Approve schedule
+          </Button>
+        </Box>
       </Box>
       <Divider sx={{ m: 0 }} variant="middle" />
       <Box sx={{ mt: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
@@ -222,18 +197,9 @@ export default function AssesmentDetails({ assesmentDetails }) {
             <Typography sx={{ width: '10%' }}>
               Status
             </Typography>
-            <FormControl>
-              <Select
-                value={assesmentDetails.status}
-                displayEmpty
-                inputProps={{ 'aria-label': 'Without label' }}
-                size="small"
-              >
-                {assesmentStatuses.map((status) => (
-                  <MenuItem value={status}>{status}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <Typography sx={{ fontWeight: 'bold' }}>
+              {assesmentDetails.status}
+            </Typography>
           </Box>
           <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 8 }}>
             <Typography sx={{ width: '10%' }}>
@@ -245,19 +211,16 @@ export default function AssesmentDetails({ assesmentDetails }) {
           </Box>
         </Box>
       </Box>
-      <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2, height: '55%' }}>
+      <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
         <Divider sx={{ m: 0 }} variant="middle" />
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography variant="h6">
             Evaluatees
           </Typography>
-          <Button variant="contained" size="small" endIcon={<Add />}>
-            Add evaluatee
-          </Button>
         </Box>
-        <Box sx={{ height: '100%' }}>
+        <Box>
           {isEvaluateesTableLoading && <LinearProgress />}
-          <TableContainer style={{ maxHeight: '100%', border: 'solid 2px rgba(235, 235, 235)', borderRadius: 2 }}>
+          <TableContainer component={Paper}>
             <Table aria-label="collapsible table">
               <TableHead>
                 <TableRow>
@@ -287,28 +250,11 @@ export default function AssesmentDetails({ assesmentDetails }) {
             <Autocomplete
               disablePortal
               id="combo-box-demo"
-              options={supervisors}
+              options={'Dr. hab. Bob Bob'}
               sx={{ flex: 1 }}
               renderInput={(params) => <TextField {...params} label="Supervisor" />}
             />
-            {
-              supervisors.length === 0 && (
-                <Alert severity="warning">
-                  No users with role supervisor was found in the system!
-                  <br />
-                  Go to <Link href="#" onClick={<Navigate to="/users" />}>Manage users</Link> to manage user roles.
-                </Alert>
-              )
-            }
-            {
-              supervisors.length > 0 && (
-                <Alert severity="info">
-                  Only the users with role suprvisor are displayed!
-                  <br />
-                  Go to <Link href="#" onClick={<Navigate to="/users" />}>Manage users</Link> to manage user roles.
-                </Alert>
-              )
-            }
+            <Alert severity="warning">No users with role supervisor was found in the system! <br /> Go to &apos;Manage users&apos; to manage user roles.</Alert>
           </Box>
         </DialogContent>
         <DialogActions>
