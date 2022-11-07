@@ -24,11 +24,16 @@ import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import DescriptionIcon from '@mui/icons-material/Description';
+import MenuItem from '@mui/material/MenuItem';
+import Avatar from '@mui/material/Avatar';
+import Menu from '@mui/material/Menu';
 import LanguageSwitchV2 from '../../components/LanguageSwitch/LanguageSwitchV2.js';
 import Assesments from '../AdminLayout/Assesments/Assesments.js';
 import ManageEvaluationGroup from '../AdminLayout/ManageEvaluationGroup/ManageEvaluationGroup.js';
 import Protocols from '../AdminLayout/Protocols/Protocols.js';
 import ManageUsers from '../AdminLayout/ManageUsers/ManageUsers.js';
+
+import departmentLogo from '../../assets/images/departmentLogo.svg';
 
 import UserContext from '../../context/UserContext/UserContext.js';
 
@@ -115,6 +120,17 @@ export default function Layout() {
     setOpen(false);
   };
 
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const settings = ['Logout'];
+
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
   const [drawerSelectedItem, setDrawerSelectedItem] = useState('evaluations');
 
   const drawerContentList = [
@@ -167,10 +183,44 @@ export default function Layout() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+          <img
+            src={departmentLogo}
+            alt="WIT Department Logo"
+            width="44px"
+          />
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, ml: 2 }}>
             {t('app_name')}
           </Typography>
           <LanguageSwitchV2 />
+          <Box sx={{ flexGrow: 0, pl: 2 }}>
+            <Tooltip title="Open settings">
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+              </IconButton>
+            </Tooltip>
+            <Menu
+              sx={{ mt: '45px' }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              {settings.map((setting) => (
+                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <Typography textAlign="center">{setting}</Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
@@ -211,17 +261,13 @@ export default function Layout() {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, pl: 3, pr: 3, height: '100%' }}>
         <DrawerHeader />
-        <Box>
-          <Typography sx={{ p: 2, flex: 1, textAlign: 'end' }}>
-            {t('title_logged_in_as')}
-            ...
-          </Typography>
+        <Box sx={{ mt: 3 }}>
+          <Routes>
+            {drawerContentList.map((item) => (
+              <Route key={item.title} path={item.link} element={item.component} />
+            ))}
+          </Routes>
         </Box>
-        <Routes>
-          {drawerContentList.map((item) => (
-            <Route key={item.title} path={item.link} element={item.component} />
-          ))}
-        </Routes>
       </Box>
     </Box>
   );
