@@ -45,7 +45,7 @@ const ResponsiveAppBar = () => {
             alt="WIT Department Logo"
             width="44px"
           />
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', gap: 2, md: 'none' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -86,7 +86,7 @@ const ResponsiveAppBar = () => {
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ my: 2, ml: 1, color: 'white', display: 'block' }}
               >
                 {page}
               </Button>
