@@ -14,7 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 
 import departmentLogo from '../../assets/images/departmentLogo.svg';
 
-const pages = ['My assesments', 'To approve'];
+const pages = ['My assesments', 'Schedule aproval'];
 const settings = ['Logout'];
 
 const ResponsiveAppBar = () => {
