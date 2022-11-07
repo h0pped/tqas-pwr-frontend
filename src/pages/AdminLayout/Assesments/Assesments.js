@@ -81,7 +81,7 @@ export default function Assesments({ setDrawerSelectedItem, link }) {
   useEffect(() => {
     setDrawerSelectedItem(link);
     getAssesments();
-  }, [selectedAssesment, selectedAssesment]);
+  }, []);
   return (
     <Box sx={{ flexGrow: 1, height: '75vh' }}>
       <Grid container sx={{ height: '100%' }}>
