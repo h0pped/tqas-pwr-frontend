@@ -12,6 +12,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useTranslation } from 'react-i18next';
 
 import validate from './PasswordResetValidationRules.js';
@@ -255,9 +256,9 @@ export default function PasswordResetComponent({ handleFormClick }) {
             onClick={handleSubmit}
             sx={{ mt: 3, mb: 2 }}
           >
-            {state !== 2
-              ? t('btn_act_acc_verify_email')
-              : t('btn_reset_password')}
+            {isLoading && <CircularProgress size={24} />}
+            {!isLoading && state !== 2 && t('btn_act_acc_verify_email')}
+            {!isLoading && state === 2 && t('btn_reset_password')}
           </Button>
           <Button
             fullWidth

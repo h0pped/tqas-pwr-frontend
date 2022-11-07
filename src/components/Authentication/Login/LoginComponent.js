@@ -14,6 +14,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Alert from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import UserContext from '../../../context/UserContext/UserContext.js';
 
@@ -128,7 +129,7 @@ export default function Login({ handleFormClick }) {
               onClick={handleSubmit}
               sx={{ mt: 3, mb: 2 }}
             >
-              {!isLoading ? t('btn_login') : t('btn_loading')}
+              {!isLoading ? t('btn_login') : <CircularProgress size={24} />}
             </Button>
             <Button
               fullWidth
