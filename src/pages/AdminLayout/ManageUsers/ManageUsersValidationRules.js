@@ -5,7 +5,7 @@ export default function validate(values) {
   const validEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
   if (!values.email) {
-    errors.email = 'login_validation_email_required';
+    errors.email = 'manage_users_required';
   } else {
     if (!validEmail.test(String(values.email))) {
       errors.email = 'login_validation_not_email';
@@ -19,8 +19,12 @@ export default function validate(values) {
     }
   }
 
-  if (!values.password) {
-    errors.password = 'login_validation_psw_required';
+  if (!values.firstName) {
+    errors.firstName = 'manage_users_required';
+  }
+
+  if (!values.lastName) {
+    errors.lastName = 'manage_users_required';
   }
 
   return errors;

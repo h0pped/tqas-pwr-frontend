@@ -10,7 +10,6 @@ import Alert from '@mui/material/Alert';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { useTranslation } from 'react-i18next';
@@ -18,9 +17,11 @@ import { useTranslation } from 'react-i18next';
 import validate from './PasswordResetValidationRules.js';
 import useForm from './useForm.js';
 
-const Transition = React.forwardRef(
-  (props, ref) => <Slide direction="down" ref={ref} {...props} />,
-);
+import config from '../../../config/index.config.js';
+
+const Transition = React.forwardRef((props, ref) => (
+  <Slide direction="down" ref={ref} {...props} />
+));
 
 export default function PasswordResetComponent({ handleFormClick }) {
   const { t } = useTranslation();
@@ -31,26 +32,131 @@ export default function PasswordResetComponent({ handleFormClick }) {
     verify,
     validate,
   );
+  const [dialogContent, setDialogContent] = useState({
+    title: t('success'),
+    severity: 'success',
+    content: t('acc_recovery_success'),
+  });
 
-  const [isOpen, setOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = React.useState(false);
 
   const handleClose = () => {
-    setOpen(false);
+    setIsOpen(false);
+  };
+  const handleRecoveryCodeSend = async () => {
+    const res = await fetch(
+      `${config.server.url}/auth/sendRecoveryPasswordCode`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: values.email,
+        }),
+      },
+    );
+    return res.status;
   };
 
-  function verify() {
-    if (state < 3) {
-      if (values.email && !errors.email) {
+  const verifyRecoveryCode = async () => {
+    const res = await fetch(`${config.server.url}/auth/verifyRecoveryCode`, {
+      method: 'POST',
+
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: values.email,
+        code: values.code,
+      }),
+    });
+    return res.status;
+  };
+
+  const passwordRecoveryHandler = async () => {
+    const res = await fetch(`${config.server.url}/auth/passwordRecovery`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: values.email,
+        code: values.code,
+        password: values.password,
+      }),
+    });
+    return res.status;
+  };
+  async function verify() {
+    if (state === 0 && values.email && !errors.email) {
+      const codeSendStatus = await handleRecoveryCodeSend();
+      if (codeSendStatus === 404) {
+        setDialogContent({
+          title: t('error_dialog'),
+          severity: 'error',
+          content: t('email_not_found'),
+        });
+        setIsOpen(true);
+      } else if (codeSendStatus === 500) {
+        setDialogContent({
+          title: t('error_dialog'),
+          severity: 'error',
+          content: t('server_error'),
+        });
+        setIsOpen(true);
+      } else if (codeSendStatus === 405) {
+        setDialogContent({
+          title: t('error_dialog'),
+          severity: 'error',
+          content: t('recovery_code_blocked'),
+        });
+        setIsOpen(true);
+      } else if (codeSendStatus === 200) {
         setState(1);
       }
-
-      if (values.code && !errors.code) {
+    } else if (state === 1 && values.code && !errors.code) {
+      const verifyCodeStatus = await verifyRecoveryCode();
+      if (verifyCodeStatus === 200) {
         setState(2);
+      } else if (verifyCodeStatus === 400) {
+        setDialogContent({
+          title: t('error_dialog'),
+          severity: 'error',
+          content: t('wrong_recovery_code'),
+        });
+        setIsOpen(true);
+      } else if (verifyCodeStatus === 405) {
+        setDialogContent({
+          title: t('error_dialog'),
+          severity: 'error',
+          content: t('recovery_code_blocked'),
+        });
+        setIsOpen(true);
       }
-      if (values.password && !errors.password) {
+    } else if (state === 2 && values.password && !errors.password) {
+      const status = await passwordRecoveryHandler();
+      if (status === 200) {
         setState(3);
-        setOpen(true);
+        setDialogContent({
+          title: t('success'),
+          severity: 'success',
+          content: t('acc_recovery_success'),
+        });
+      } else if (status === 404) {
+        setDialogContent({
+          title: t('error_dialog'),
+          severity: 'error',
+          content: t('acc_revovery_not_found'),
+        });
+      } else {
+        setDialogContent({
+          title: t('error_dialog'),
+          severity: 'error',
+          content: t('acc_revovery_error'),
+        });
       }
+      setIsOpen(true);
     }
   }
 
@@ -75,7 +181,7 @@ export default function PasswordResetComponent({ handleFormClick }) {
             arrow
           >
             <TextField
-              error={errors.email}
+              error={!!errors.email}
               helperText={t(errors.email)}
               margin="normal"
               required
@@ -96,7 +202,7 @@ export default function PasswordResetComponent({ handleFormClick }) {
             arrow
           >
             <TextField
-              error={state === 1 && errors.code}
+              error={state === 1 && !!errors.code}
               helperText={state === 1 ? t(errors.code) : ''}
               margin="normal"
               required
@@ -117,7 +223,7 @@ export default function PasswordResetComponent({ handleFormClick }) {
             arrow
           >
             <TextField
-              error={state === 2 && errors.password}
+              error={state === 2 && !!errors.password}
               helperText={state === 2 ? t(errors.password) : ''}
               margin="normal"
               required
@@ -161,11 +267,11 @@ export default function PasswordResetComponent({ handleFormClick }) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{t('success')}</DialogTitle>
+        <DialogTitle>{dialogContent.title}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            <Alert severity="success">{t('password_reset_success')}</Alert>
-          </DialogContentText>
+          <Alert severity={dialogContent.severity}>
+            {dialogContent.content}
+          </Alert>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>OK</Button>

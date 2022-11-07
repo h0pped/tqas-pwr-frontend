@@ -1,58 +1,49 @@
 {
-    "env":{
-       "browser":true,
-       "es2021":true
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": ["plugin:react/recommended", "airbnb","prettier"],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
     },
-    "extends":[
-       "plugin:react/recommended",
-       "airbnb"
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": ["react", "react-hooks"],
+  "rules": {
+    "no-use-before-define": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-props-no-spreading": "off",
+    "operator-linebreak": "off",
+    "object-curly-newline": [
+      "error",
+      {
+        "ObjectExpression": { "consistent": true, "multiline": true },
+        "ObjectPattern": { "consistent": true, "multiline": true },
+        "ImportDeclaration": "never",
+        "ExportDeclaration": { "multiline": true, "minProperties": 3 }
+      }
     ],
-    "parserOptions":{
-       "ecmaFeatures":{
-          "jsx":true
-       },
-       "ecmaVersion":12,
-       "sourceType":"module"
-    },
-    "plugins":[
-       "react",
-       "react-hooks"
+    "react/jsx-filename-extension": [
+      "warn",
+      {
+        "extensions": [".js", ".jsx"]
+      }
     ],
-    "rules":{
-       "no-use-before-define":"off",
-       "react/react-in-jsx-scope": "off",
-       "react/jsx-props-no-spreading": "off",
-       "object-curly-newline": [
-        "error",
-        {
-          "ObjectExpression": { "consistent": true, "multiline": true },
-          "ObjectPattern": { "consistent": true, "multiline": true },
-          "ImportDeclaration": "never",
-          "ExportDeclaration": { "multiline": true, "minProperties": 3 }
-
-        }
-      ],
-       "react/jsx-filename-extension":[
-          "warn",
-          {
-             "extensions":[
-                ".js",
-                ".jsx"
-             ]
-          }
-       ],
-       "import/extensions":[
-          "error",
-          "ignorePackages",
-          {
-             "ts":"never",
-             "tsx":"never"
-          }
-       ],
-       "no-shadow":"off",
-       "react-hooks/rules-of-hooks":"error",
-       "react-hooks/exhaustive-deps":"warn",
-       "import/prefer-default-export":"off",
-       "react/prop-types":"off"
-    }
- }
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+    "no-shadow": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "off",
+    "import/prefer-default-export": "off",
+    "react/prop-types": "off"
+  }
+}
