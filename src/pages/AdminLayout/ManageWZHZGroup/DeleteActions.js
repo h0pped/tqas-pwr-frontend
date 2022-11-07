@@ -1,8 +1,6 @@
-import React, { useContext, useState } from 'react';
-
+import { useContext, useState, forwardRef } from 'react';
 import Box from '@mui/material/Box';
 import DeleteIcon from '@mui/icons-material/Delete';
-import SaveIcon from '@mui/icons-material/Save';
 import Tooltip from '@mui/material/Tooltip';
 import CircularProgress from '@mui/material/CircularProgress';
 import Fab from '@mui/material/Fab';
@@ -13,32 +11,21 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import Slide from '@mui/material/Slide';
-
-import { useTranslation } from 'react-i18next';
-
 import { toast } from 'react-toastify';
-
+import { useTranslation } from 'react-i18next';
 import config from '../../../config/index.config.js';
-
 import UserContext from '../../../context/UserContext/UserContext.js';
+import 'react-toastify/dist/ReactToastify.css';
 
-const Transition = React.forwardRef((props, ref) => (
+const Transition = forwardRef((props, ref) => (
   <Slide direction="down" ref={ref} {...props} />
 ));
 
-export default function UsersActions({
-  params,
-  activeRowId,
-  setActiveRow,
-  setUpdated,
-}) {
+export default function DeleteAction({ params, setUpdated }) {
   const { t } = useTranslation();
-
-  const { token } = useContext(UserContext);
-
-  const [isEditLoading, setEditLoading] = useState(false);
   const [isDeleteLoading, setDeleteLoading] = useState(false);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const { token } = useContext(UserContext);
 
   const notifySuccess = (msg) => toast.success(`${t('success')} ${msg}`, {
     position: 'top-center',
@@ -75,76 +62,30 @@ export default function UsersActions({
   const handleDeleteDialogOptionYes = async () => {
     setDeleteDialogOpen(false);
     try {
-      await fetch(`${config.server.url}/userData/deleteUser`, {
-        method: 'POST',
+      await fetch(`${config.server.url}/wzhzData/removeMember`, {
+        method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          id: params.row.id,
+          id: params.row.wzhz.id,
         }),
       }).then((response) => {
         setDeleteLoading(false);
         if (response.ok) {
-          notifySuccess(t('success_user_deleted'));
-          setActiveRow(null);
+          notifySuccess(t('success_remove_wzhz_member'));
           setUpdated(true);
         } else {
-          notifyError(t('error_user_not_deleted'));
+          notifyError(t('error_remove_wzhz_member'));
         }
       });
     } catch (error) {
+      notifyError(t('error_server'));
       setDeleteLoading(false);
-      notifyError(t('error_server'));
     }
   };
-
-  const handleUpdateUser = async () => {
-    setEditLoading(true);
-
-    let lastEvalDateDDMMYYYY = null;
-
-    if (params.row.evaluatee.last_evaluated_date) {
-      const lastEvalDateYYYYMMDD = params.row.evaluatee.last_evaluated_date;
-      const dateParts = lastEvalDateYYYYMMDD.split('-');
-      lastEvalDateDDMMYYYY = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
-    }
-
-    try {
-      await fetch(`${config.server.url}/userData/updateUser`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          id: params.row.id,
-          first_name: params.row.first_name,
-          last_name: params.row.last_name,
-          email: params.row.email,
-          academic_title: params.row.academic_title,
-          user_type: params.row.user_type,
-          last_evaluated_date: lastEvalDateDDMMYYYY,
-        }),
-      }).then((response) => {
-        setEditLoading(false);
-        setActiveRow(null);
-        if (response.ok) {
-          notifySuccess(t('success_user_updated'));
-          setUpdated(true);
-        } else {
-          notifyError(t('error_user_not_updated'));
-        }
-      });
-    } catch (error) {
-      setEditLoading(false);
-      notifyError(t('error_server'));
-    }
-  };
-
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
       <Dialog
@@ -172,33 +113,7 @@ export default function UsersActions({
           m: 1,
           position: 'relative',
         }}
-      >
-        <Tooltip title={t('tooltip_save_changes')} placement="top">
-          <Fab
-            size="small"
-            color="primary"
-            disabled={params.id !== activeRowId || isEditLoading}
-            aria-label="save"
-            sx={{
-              backgroundColor: 'primary',
-              color: 'white',
-            }}
-            onClick={handleUpdateUser}
-          >
-            <SaveIcon />
-          </Fab>
-        </Tooltip>
-        {isEditLoading && (
-          <CircularProgress
-            sx={{
-              position: 'absolute',
-              top: -1,
-              left: 0,
-              zIndex: 1,
-            }}
-          />
-        )}
-      </Box>
+      />
       <Box
         sx={{
           m: 1,

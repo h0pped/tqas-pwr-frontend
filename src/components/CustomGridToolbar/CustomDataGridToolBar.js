@@ -4,13 +4,19 @@ import { GridToolbarContainer,
   GridToolbarColumnsButton,
   GridToolbarDensitySelector,
   GridToolbarQuickFilter,
-  GridToolbarFilterButton }
-  from '@mui/x-data-grid';
+  GridToolbarFilterButton } from '@mui/x-data-grid';
 
 const customDataGridToolbar = function CustomToolbar() {
   return (
     <GridToolbarContainer>
-      <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+      <Box
+        sx={{
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}
+      >
         <Box>
           <GridToolbarQuickFilter />
         </Box>

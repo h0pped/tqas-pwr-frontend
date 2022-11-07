@@ -44,7 +44,9 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
   const [selectedFileToImport, setSelectedFileToImport] = useState(null);
   const [roleInputValue, setRoleInputValue] = useState('evaluatee');
   const [academicTitleInputValue, setAcademicTitleInputValue] = useState('dr');
-  const [lastDateOfEvalInputValue, setLastDateOfEvalInputValue] = useState(null);
+  const [lastDateOfEvalInputValue, setLastDateOfEvalInputValue] = useState(
+    null,
+  );
 
   const [activeRowId, setActiveRow] = useState(null);
 
@@ -156,25 +158,22 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
   async function addUser() {
     setAddUserBtnLoading(true);
     try {
-      await fetch(
-        `${config.server.url}/userData/createUser`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            first_name: values.firstName,
-            last_name: values.lastName,
-            academic_title: academicTitleInputValue,
-            email: values.email.toLowerCase(),
-            user_type: roleInputValue,
-            last_evaluated_date: lastDateOfEvalInputValue,
-          }),
+      await fetch(`${config.server.url}/userData/createUser`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
         },
-      ).then((response) => {
+        body: JSON.stringify({
+          first_name: values.firstName,
+          last_name: values.lastName,
+          academic_title: academicTitleInputValue,
+          email: values.email.toLowerCase(),
+          user_type: roleInputValue,
+          last_evaluated_date: lastDateOfEvalInputValue,
+        }),
+      }).then((response) => {
         if (response.ok) {
           notifySuccess(t('success_user_created'));
           setUpdated(true);
@@ -192,19 +191,15 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
   async function getUsers() {
     setUsersTableLoading(true);
     try {
-      await fetch(
-        `${config.server.url}/userData/getUsers`,
-        {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      await fetch(`${config.server.url}/userData/getUsers`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      ).then((response) => response.json())
+      })
+        .then((response) => response.json())
         .then((data) => {
-          setUsers(
-            data.sort((a, b) => a - b),
-          );
+          setUsers(data.sort((a, b) => a - b));
           setUsersTableLoading(false);
         });
     } catch (error) {
@@ -213,8 +208,11 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
   }
 
   const importFile = async () => {
-    if (selectedFileToImport.type !== 'text/csv'
-      && selectedFileToImport.type !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+    if (
+      selectedFileToImport.type !== 'text/csv' &&
+      selectedFileToImport.type !==
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    ) {
       notifyError(t('error_filetype_csv_or_xlsx'));
     } else {
       setFileUploadIsLoading(true);
@@ -222,13 +220,10 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
       formData.append('files', selectedFileToImport);
 
       try {
-        await fetch(
-          `${config.server.url}/uploadUsers/appendUsers/`,
-          {
-            method: 'POST',
-            body: formData,
-          },
-        ).then((response) => {
+        await fetch(`${config.server.url}/uploadUsers/appendUsers/`, {
+          method: 'POST',
+          body: formData,
+        }).then((response) => {
           setFileUploadIsLoading(false);
           if (response.ok) {
             notifySuccess(t('success_file_uploaded'));
@@ -246,10 +241,26 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
   return (
     <Box sx={{ m: 0, p: 0, height: 400 }}>
       <ToastContainer />
-      <Box sx={{ pb: 3, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+      <Box
+        sx={{
+          pb: 3,
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}
+      >
         <Typography variant="h5">{t('admin_manage_users_title')}</Typography>
       </Box>
-      <Box sx={{ mb: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', gap: 1 }}>
+      <Box
+        sx={{
+          mb: 2,
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignContent: 'center',
+          gap: 1,
+        }}
+      >
         <TextField
           id="text-field-email"
           error={errors.email}
@@ -272,7 +283,9 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
           sx={{ minWidth: 100, flex: 1 }}
         >
           {academicTitlesList.map((title) => (
-            <MenuItem key={title} value={title}>{title}</MenuItem>
+            <MenuItem key={title} value={title}>
+              {title}
+            </MenuItem>
           ))}
         </TextField>
         <TextField
@@ -309,7 +322,9 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
           sx={{ minWidth: 100, flex: 1 }}
         >
           {userRolesList.map((role) => (
-            <MenuItem key={role.key} value={role.key}>{role.title}</MenuItem>
+            <MenuItem key={role.key} value={role.key}>
+              {role.title}
+            </MenuItem>
           ))}
         </TextField>
         <LocalizationProvider size="small" dateAdapter={AdapterDayjs}>
@@ -318,7 +333,9 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
             inputFormat="DD/MM/YYYY"
             value={lastDateOfEvalInputValue}
             onChange={handleLastDateOfEvalInputValueChange}
-            renderInput={(params) => <TextField type="date" size="small" {...params} />}
+            renderInput={(params) => (
+              <TextField type="date" size="small" {...params} />
+            )}
           />
         </LocalizationProvider>
         <Box sx={{ position: 'relative' }}>
@@ -353,13 +370,23 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
         pageSize={tablePageSize}
         loading={isUsersTableLoading}
         onPageSizeChange={(newPageSize) => setTablePageSize(newPageSize)}
-        components={{ Toolbar: customDataGridToolbar, LoadingOverlay: LinearProgress }}
+        components={{
+          Toolbar: customDataGridToolbar,
+          LoadingOverlay: LinearProgress,
+        }}
         onCellEditCommit={(params) => setActiveRow(params.id)}
       />
       <Box sx={{ pt: 1, pb: 1, display: 'flex', flexDirection: 'row' }}>
         <Box sx={{ p: 0.5, border: 'solid 1px #e0e0e0', borderRadius: '5px' }}>
-          <input multiple name="files" type="file" onChange={handleFileSelect} />
-          <Button size="small" onClick={importFile}>{t('button_import')}</Button>
+          <input
+            multiple
+            name="files"
+            type="file"
+            onChange={handleFileSelect}
+          />
+          <Button size="small" onClick={importFile}>
+            {t('button_import')}
+          </Button>
           {isFileUploadLoading && <LinearProgress />}
         </Box>
       </Box>
