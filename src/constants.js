@@ -61,4 +61,4 @@ function generateListOfSemesters(currentDate) {
   return semesters;
 }
 
-export var semesters = generateListOfSemesters(new Date().toISOString().slice(0, 10));
+export const semesters = generateListOfSemesters(new Date().toISOString().slice(0, 10));

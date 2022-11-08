@@ -121,7 +121,7 @@ export default function Layout() {
   };
 
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const settings = ['Logout'];
+  const settings = [t('logout')];
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -193,7 +193,7 @@ export default function Layout() {
           </Typography>
           <LanguageSwitchV2 />
           <Box sx={{ flexGrow: 0, pl: 2 }}>
-            <Tooltip title="Open settings">
+            <Tooltip title={t('profile')}>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
               </IconButton>

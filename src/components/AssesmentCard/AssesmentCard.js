@@ -1,10 +1,20 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
+import { useTranslation } from 'react-i18next';
 
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
-export default function AssesmentCard({ id, semester, status, setId, isSelected, numberOfEvaluatees }) {
+export default function AssesmentCard({
+  id,
+  semester,
+  status,
+  setId,
+  isSelected,
+  numberOfEvaluatees,
+}) {
+  const { t } = useTranslation();
+
   return (
     <Box
       onClick={() => { setId(id); }}
@@ -28,7 +38,7 @@ export default function AssesmentCard({ id, semester, status, setId, isSelected,
           <AssessmentIcon sx={{ color: '#D9372A', width: '100%', height: '100%' }} />
         </Box>
         <Box>
-          <Typography variant="body1" sx={{ fontWeight: 'bold', height: '1.5rem' }}>Assesment</Typography>
+          <Typography variant="body1" sx={{ fontWeight: 'bold', height: '1.5rem' }}>{t('assesment_card_assessment')}</Typography>
           <Typography sx={{ height: '1.5rem', fontSize: '1rem' }}>
             {semester}
           </Typography>
@@ -37,7 +47,7 @@ export default function AssesmentCard({ id, semester, status, setId, isSelected,
       <Box sx={{ mt: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
         <Chip sx={{ color: isSelected ? '#ffffff' : '#000000' }} size="small" label={status} />
         <Typography variant="subtitle1">
-          {`${numberOfEvaluatees} evaluatees`}
+          {`${numberOfEvaluatees} ${t('assessment_card_evaluatees')}`}
         </Typography>
       </Box>
     </Box>

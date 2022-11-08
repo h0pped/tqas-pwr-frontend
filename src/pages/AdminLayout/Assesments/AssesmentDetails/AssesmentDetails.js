@@ -94,13 +94,13 @@ export default function AssesmentDetails({ assesmentDetails }) {
             assessment_id: assesmentDetails.id,
           }),
         }).then((response) => {
-        setSendForApprovalDialogOpen(false);
-        if (response.ok) {
-          notifySuccess('Assesment was successfully sent for approval.');
-        } else {
-          notifyError('There was an error while trying to send this schedule for approval.');
-        }
-      });
+          setSendForApprovalDialogOpen(false);
+          if (response.ok) {
+            notifySuccess(t('assessment_successfully_sent_for_approval'));
+          } else {
+            notifyError(t('assessment_error_sending_for_approval'));
+          }
+        });
     } catch (error) {
       notifyError(t('error_server'));
     }
@@ -202,15 +202,15 @@ export default function AssesmentDetails({ assesmentDetails }) {
             <Collapse in={isTableRowOpen} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
                 <Typography variant="h6" gutterBottom component="div">
-                  Courses
+                  {t('courses')}
                 </Typography>
                 <Table size="small" aria-label="purchases">
                   <TableHead>
                     <TableRow>
-                      <TableCell>Course code</TableCell>
-                      <TableCell>Course name</TableCell>
-                      <TableCell>Enrolled students</TableCell>
-                      <TableCell>Details</TableCell>
+                      <TableCell>{t('course_code')}</TableCell>
+                      <TableCell>{t('course_name')}</TableCell>
+                      <TableCell>{t('enrolled_students')}</TableCell>
+                      <TableCell>{t('details')}</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -249,7 +249,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
         alignItems: 'center',
       }}
       >
-        <Typography variant="subtitle2" sx={{ color: '#848884' }}>Select assesment on the left to see details</Typography>
+        <Typography variant="subtitle2" sx={{ color: '#848884' }}>{t('select_assesment_on_left_to_see_details')}</Typography>
       </Box>
     );
   }
@@ -258,7 +258,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
     <Box sx={{ p: 2, borderRadius: 0.5, backgroundColor: '#ffffff', boxShadow: 2, border: 'solid 1px rgba(235, 235, 235)', height: '100%' }}>
       <Box sx={{ display: 'flex', width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
         <Typography sx={{ mb: 1 }} variant="h5">
-          Assesment details
+          {t('assessment_details')}
         </Typography>
         <Button
           sx={{ mb: 1 }}
@@ -268,12 +268,12 @@ export default function AssesmentDetails({ assesmentDetails }) {
           onClick={handleOpenSendForApprovalDialog}
           endIcon={<SendIcon />}
         >
-          Send for approval
+          {t('send_for_approval')}
         </Button>
       </Box>
       <Divider sx={{ m: 0 }} variant="middle" />
       <Box sx={{ mt: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-        <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}>
           <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 8 }}>
             <Typography sx={{ width: '10%' }}>
               Status
@@ -293,9 +293,9 @@ export default function AssesmentDetails({ assesmentDetails }) {
           </Box>
           <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 8 }}>
             <Typography sx={{ width: '10%' }}>
-              Semester
+              {t('semester')}
             </Typography>
-            <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', width: '50%' }}>
               {assesmentDetails.name}
             </Typography>
           </Box>
@@ -305,7 +305,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
         <Divider sx={{ m: 0 }} variant="middle" />
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography variant="h6">
-            Evaluatees
+            {t('evaluatees')}
           </Typography>
           <Button
             variant="contained"
@@ -313,7 +313,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
             size="small"
             endIcon={<Add />}
           >
-            Add evaluatee
+            {t('add_evaluatee')}
           </Button>
         </Box>
         <Box sx={{ height: '100%' }}>
@@ -323,10 +323,10 @@ export default function AssesmentDetails({ assesmentDetails }) {
               <TableHead>
                 <TableRow>
                   <TableCell />
-                  <TableCell>Evaluatee</TableCell>
-                  <TableCell>Email</TableCell>
-                  <TableCell>Number of courses</TableCell>
-                  <TableCell>Actions</TableCell>
+                  <TableCell>{t('evaluatee')}</TableCell>
+                  <TableCell>{t('label_email')}</TableCell>
+                  <TableCell>{t('number_of_courses')}</TableCell>
+                  <TableCell>{t('label_actions')}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -339,10 +339,10 @@ export default function AssesmentDetails({ assesmentDetails }) {
         </Box>
       </Box>
       <Dialog open={isSendForApprovalDialogOpen} onClose={handleCloseSendForApprovalDialog}>
-        <DialogTitle>Send schedule for approval</DialogTitle>
+        <DialogTitle>{t('send_schedule_for_approval')}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Select the person responsible for schedule:
+            {t('select_the_person_responsible_for_schedule')}
           </DialogContentText>
           <Box sx={{ display: 'flex', gap: 1, mt: 1, flexDirection: 'column' }}>
             <Autocomplete
@@ -351,13 +351,13 @@ export default function AssesmentDetails({ assesmentDetails }) {
               getOptionLabel={(option) => `${option.academic_title} ${option.first_name} ${option.last_name}`}
               id="combo-box-demo"
               sx={{ flex: 1 }}
-              renderInput={(params) => <TextField {...params} label="Supervisor" />}
+              renderInput={(params) => <TextField {...params} label={t('supervisor')} />}
             />
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" onClick={handleCloseSendForApprovalDialog}>Cancel</Button>
-          <Button variant="contained" onClick={handleSendScheduleForApproval}>Send</Button>
+          <Button variant="outlined" onClick={handleCloseSendForApprovalDialog}>{t('cancel')}</Button>
+          <Button variant="contained" onClick={handleSendScheduleForApproval}>{t('send')}</Button>
         </DialogActions>
       </Dialog>
     </Box>

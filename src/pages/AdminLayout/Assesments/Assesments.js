@@ -143,9 +143,9 @@ export default function Assesments({ setDrawerSelectedItem, link }) {
       <Grid container sx={{ height: '100%' }}>
         <Grid item xs={12}>
           <Box sx={{ mb: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center' }}>
-            <Typography variant="h5">Assesments</Typography>
+            <Typography variant="h5">{t('drawer_item_title_classes_eval')}</Typography>
             <Button variant="contained" size="small" onClick={handleOpenCreateAssesmentDialog} endIcon={<Add />}>
-              New assesment
+              {t('new_assesment')}
             </Button>
           </Box>
         </Grid>
@@ -176,17 +176,17 @@ export default function Assesments({ setDrawerSelectedItem, link }) {
         </Grid>
       </Grid>
       <Dialog open={isCrateAssesmentDialogOpen} onClose={handleCloseCreateAssesmentDialog}>
-        <DialogTitle>Create New Assesment</DialogTitle>
+        <DialogTitle>{t('create_new_assesment')}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Select semester of assemsent:
+            {t('select_semester')}
           </DialogContentText>
           <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
             <FormControl variant="standard" sx={{ mt: 1, width: '100%' }}>
-              <InputLabel id="demo-simple-select-standard-label">Semester</InputLabel>
+              <InputLabel id="semster-select">{t('semester')}</InputLabel>
               <Select
-                labelId="demo-simple-select-standard-label"
-                id="demo-simple-select-standard"
+                labelId="semster-select"
+                id="semster-select-standard"
                 value={selectedSemesterValue}
                 onChange={handleDialogSemesterValueChange}
                 size="small"
@@ -200,8 +200,8 @@ export default function Assesments({ setDrawerSelectedItem, link }) {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" onClick={handleCloseCreateAssesmentDialog}>Cancel</Button>
-          <Button variant="contained" onClick={handleCreateNewAssesment}>Create</Button>
+          <Button variant="outlined" onClick={handleCloseCreateAssesmentDialog}>{t('cancel')}</Button>
+          <Button variant="contained" onClick={handleCreateNewAssesment}>{t('create')}</Button>
         </DialogActions>
       </Dialog>
     </Box>
