@@ -33,19 +33,53 @@ export default function AssesmentCard({
         },
       }}
     >
-      <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1.5 }}>
-        <Box sx={{ p: 0.5, borderRadius: 2, backgroundColor: '#fdf0ef', width: '3rem', height: '3rem' }}>
-          <AssessmentIcon sx={{ color: '#D9372A', width: '100%', height: '100%' }} />
+      <Box
+        sx={{
+          display:
+            'flex',
+          flexDirection: 'row',
+          gap: 1.5,
+        }}
+      >
+        <Box sx={{
+          p: 0.5,
+          borderRadius: 2,
+          backgroundColor: '#fdf0ef',
+          width: '3rem',
+          height: '3rem',
+        }}
+        >
+          <AssessmentIcon
+            sx={{
+              color: '#D9372A',
+              width: '100%',
+              height: '100%',
+            }}
+          />
         </Box>
         <Box>
-          <Typography variant="body1" sx={{ fontWeight: 'bold', height: '1.5rem' }}>{t('assesment_card_assessment')}</Typography>
-          <Typography sx={{ height: '1.5rem', fontSize: '1rem' }}>
+          <Typography
+            variant="body1"
+            sx={{ fontWeight: 'bold', height: '1.5rem' }}
+          >
+            {t('assesment_card_assessment')}
+          </Typography>
+          <Typography
+            sx={{
+              height: '1.5rem',
+              fontSize: '1rem',
+            }}
+          >
             {semester}
           </Typography>
         </Box>
       </Box>
       <Box sx={{ mt: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Chip sx={{ color: isSelected ? '#ffffff' : '#000000' }} size="small" label={status} />
+        <Chip
+          sx={{ color: isSelected ? '#ffffff' : '#000000' }}
+          size="small"
+          label={status}
+        />
         <Typography variant="subtitle1">
           {`${numberOfEvaluatees} ${t('assessment_card_evaluatees')}`}
         </Typography>

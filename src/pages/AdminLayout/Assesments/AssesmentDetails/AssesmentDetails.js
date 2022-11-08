@@ -255,8 +255,24 @@ export default function AssesmentDetails({ assesmentDetails }) {
   }
 
   return (
-    <Box sx={{ p: 2, borderRadius: 0.5, backgroundColor: '#ffffff', boxShadow: 2, border: 'solid 1px rgba(235, 235, 235)', height: '100%' }}>
-      <Box sx={{ display: 'flex', width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
+    <Box
+      sx={{
+        p: 2,
+        borderRadius: 0.5,
+        backgroundColor: '#ffffff',
+        boxShadow: 2,
+        border: 'solid 1px rgba(235, 235, 235)',
+        height: '100%',
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          width: '100%',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}
+      >
         <Typography sx={{ mb: 1 }} variant="h5">
           {t('assessment_details')}
         </Typography>
@@ -272,9 +288,32 @@ export default function AssesmentDetails({ assesmentDetails }) {
         </Button>
       </Box>
       <Divider sx={{ m: 0 }} variant="middle" />
-      <Box sx={{ mt: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-        <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}>
-          <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+      <Box
+        sx={{
+          mt: 2,
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          width: '100%',
+        }}
+      >
+        <Box
+          sx={{
+            mt: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2,
+            width: '100%',
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 8,
+            }}
+          >
             <Typography sx={{ width: '10%' }}>
               Status
             </Typography>
@@ -291,7 +330,14 @@ export default function AssesmentDetails({ assesmentDetails }) {
               </Select>
             </FormControl>
           </Box>
-          <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 8,
+            }}
+          >
             <Typography sx={{ width: '10%' }}>
               {t('semester')}
             </Typography>
@@ -301,7 +347,15 @@ export default function AssesmentDetails({ assesmentDetails }) {
           </Box>
         </Box>
       </Box>
-      <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2, height: '55%' }}>
+      <Box
+        sx={{
+          mt: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          height: '55%',
+        }}
+      >
         <Divider sx={{ m: 0 }} variant="middle" />
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography variant="h6">
@@ -318,7 +372,13 @@ export default function AssesmentDetails({ assesmentDetails }) {
         </Box>
         <Box sx={{ height: '100%' }}>
           {isEvaluateesTableLoading && <LinearProgress />}
-          <TableContainer style={{ maxHeight: '100%', border: 'solid 2px rgba(235, 235, 235)', borderRadius: 2 }}>
+          <TableContainer
+            style={{
+              maxHeight: '100%',
+              border: 'solid 2px rgba(235, 235, 235)',
+              borderRadius: 2,
+            }}
+          >
             <Table aria-label="collapsible table">
               <TableHead>
                 <TableRow>
