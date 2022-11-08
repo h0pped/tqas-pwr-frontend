@@ -32,7 +32,7 @@ function generateListOfSemesters(currentDate) {
 
   const currentYear = currentDate.split('-')[0];
 
-  for (let step = 0; step < 3; step++) {
+  for (let step = 0; step < 3; step += 1) {
     const newWinterSem = `Winter ${Number(currentYear) + step}/${Number(currentYear) + 1 + step}`;
     const newWinterSemDateFrom = `${Number(currentYear) + step}-10-01`;
     const newWinterSemDateTo = `${Number(currentYear) + 1 + step}-02-27`;
