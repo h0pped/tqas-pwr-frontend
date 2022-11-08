@@ -28,12 +28,14 @@ import MenuItem from '@mui/material/MenuItem';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import LanguageSwitchV2 from '../../components/LanguageSwitch/LanguageSwitchV2.js';
-import ClassesEvaluation from './ClassesEvaluation/ClassesEvaluation.js';
-import ManageEvaluationGroup from './ManageEvaluationGroup/ManageEvaluationGroup.js';
 import Protocols from './Protocols/Protocols.js';
 import ManageUsers from './ManageUsers/ManageUsers.js';
+import Assessments from './Assessments/Assessments.js'
+import ManageWZHZGroup from './ManageWZHZGroup/ManageWZHZGroup.js'
 
 import UserContext from '../../context/UserContext/UserContext.js';
+
+import departmentLogo from '../../assets/images/departmentLogo.svg';
 
 import './layout.css';
 
@@ -129,14 +131,14 @@ export default function Layout() {
     setAnchorElUser(null);
   };
 
-  const [drawerSelectedItem, setDrawerSelectedItem] = useState('evaluations');
+  const [drawerSelectedItem, setDrawerSelectedItem] = useState('assessments');
 
   const drawerContentList = [
     {
       title: t('drawer_item_title_classes_eval'),
-      icon: <FactCheckIcon color={drawerSelectedItem === 'evaluations' ? 'primary' : 'action'} />,
+      icon: <FactCheckIcon color={drawerSelectedItem === 'assessments' ? 'primary' : 'action'} />,
       link: 'evaluations',
-      component: <ClassesEvaluation {...{ setDrawerSelectedItem, link: 'evaluations' }} />,
+      component: <Assessments {...{ setDrawerSelectedItem, link: 'assessments' }} />,
     },
     {
       title: t('drawer_item_title_wzhz'),

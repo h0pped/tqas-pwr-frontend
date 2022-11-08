@@ -28,7 +28,7 @@ import AssesmentDetails from './AssesmentDetails/AssesmentDetails.js';
 import config from '../../../config/index.config.js';
 import UserContext from '../../../context/UserContext/UserContext.js';
 
-export default function Assesments({ setDrawerSelectedItem, link }) {
+export default function Assessments({ setDrawerSelectedItem, link }) {
   const { token } = useContext(UserContext);
 
   const { t } = useTranslation();
