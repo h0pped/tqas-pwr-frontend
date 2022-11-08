@@ -21,6 +21,7 @@ import { useTranslation } from 'react-i18next';
 import Add from '@mui/icons-material/Add';
 
 import { semesters } from '../../../constants.js';
+
 import AssesmentCard from '../../../components/AssesmentCard/AssesmentCard.js';
 import AssesmentDetails from './AssesmentDetails/AssesmentDetails.js';
 
@@ -56,7 +57,9 @@ export default function Assesments({ setDrawerSelectedItem, link }) {
 
   const [isCrateAssesmentDialogOpen, setCreateAssesmentDialogOpen] = useState(false);
   const [selectedAssesment, setSelectedAssesment] = useState(null);
-  const [selectedSemesterValue, setSelectedSemesterValue] = useState(semesters.find((semester) => moment(new Date().toISOString().slice(0, 10)).isBetween(semester.dateFrom, semester.dateTo, undefined, '[]')));
+  const [selectedSemesterValue, setSelectedSemesterValue] = useState(
+    semesters.find((semester) => moment(new Date().toISOString().slice(0, 10)).isBetween(semester.dateFrom, semester.dateTo, undefined, '[]')),
+  );
 
   const [isAssesmentsLoading, setAssesmentsLoading] = useState(false);
   const [isAssesmentsUpdated, setIsAssesmentsUpdated] = useState(false);
@@ -71,12 +74,15 @@ export default function Assesments({ setDrawerSelectedItem, link }) {
     setCreateAssesmentDialogOpen(false);
   };
 
-  async function handleCreateNewAssesment() {
+  const handleDialogSemesterValueChange = (event) => {
+    setSelectedSemesterValue(event.target.value);
+  };
+
+  const handleCreateNewAssesment = () => {
     handleCloseCreateAssesmentDialog();
     setIsAssesmentsUpdated(false);
-    console.log(selectedSemesterValue);
     try {
-      await fetch(
+      fetch(
         `${config.server.url}/evaluationsManagement/createAssessment`,
         {
           method: 'POST',
@@ -100,10 +106,6 @@ export default function Assesments({ setDrawerSelectedItem, link }) {
     } catch (error) {
       notifyError(t('error_server'));
     }
-  }
-
-  const handleDialogSemesterValueChange = (event) => {
-    setSelectedSemesterValue(event.target.value);
   };
 
   async function getAssesments() {
@@ -119,15 +121,14 @@ export default function Assesments({ setDrawerSelectedItem, link }) {
         },
       ).then((response) => response.json())
         .then((data) => {
-          console.log(data);
           setAssements(
             data.sort((a, b) => b.id - a.id),
           );
           setAssesmentsLoading(false);
         });
     } catch (error) {
-      alert('Error');
       setAssesmentsLoading(false);
+      notifyError(t('error_server'));
     }
   }
 
@@ -135,6 +136,7 @@ export default function Assesments({ setDrawerSelectedItem, link }) {
     setDrawerSelectedItem(link);
     getAssesments();
   }, [isAssesmentsUpdated]);
+
   return (
     <Box sx={{ flexGrow: 1, height: '75vh' }}>
       <ToastContainer />

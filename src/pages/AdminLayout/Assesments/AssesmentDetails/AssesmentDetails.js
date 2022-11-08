@@ -27,12 +27,9 @@ import TextField from '@mui/material/TextField';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import { toast } from 'react-toastify';
-import Alert from '@mui/material/Alert';
 import Autocomplete from '@mui/material/Autocomplete';
 import { LinearProgress } from '@mui/material';
 import Fab from '@mui/material/Fab';
-import Link from '@mui/material/Link';
-import { Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { assesmentStatuses } from '../../../../constants.js';
 
@@ -40,12 +37,15 @@ import config from '../../../../config/index.config.js';
 import UserContext from '../../../../context/UserContext/UserContext.js';
 
 export default function AssesmentDetails({ assesmentDetails }) {
+  const { t } = useTranslation();
+
   const [evaluatees, setEvaluatees] = useState([]);
+  const [supervisors, setSupervisors] = useState([]);
+
+  const [selectedSupervisor, setSelectedSupervisor] = useState('');
+
   const [isEvaluateesTableLoading, setEvaluateesTableLoading] = useState(false);
   const [isSendForApprovalDialogOpen, setSendForApprovalDialogOpen] = useState(false);
-  const [supervisors, setSupervisors] = useState([]);
-  const [selectedSupervisor, setSelectedSupervisor] = useState('');
-  const [selectedSupervisorId, setSelectedSupervisorId] = useState(null);
 
   const { token } = useContext(UserContext);
 
@@ -56,8 +56,6 @@ export default function AssesmentDetails({ assesmentDetails }) {
   const handleCloseSendForApprovalDialog = () => {
     setSendForApprovalDialogOpen(false);
   };
-
-  const { t } = useTranslation();
 
   const notifySuccess = (msg) => toast.success(`${t('success')} ${msg}`, {
     position: 'top-center',
@@ -82,28 +80,34 @@ export default function AssesmentDetails({ assesmentDetails }) {
   });
 
   const handleSendScheduleForApproval = () => {
-    fetch(`${config.server.url}/evaluationsManagement/setAssessmentSupervisor`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_id: selectedSupervisor,
-          assessment_id: assesmentDetails.id,
-        }),
-      }).then((response) => {
+    try {
+      fetch(`${config.server.url}/evaluationsManagement/setAssessmentSupervisor`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user_id: selectedSupervisor,
+            assessment_id: assesmentDetails.id,
+          }),
+        }).then((response) => {
+        setSendForApprovalDialogOpen(false);
         if (response.ok) {
           notifySuccess('Assesment was successfully sent for approval.');
         } else {
           notifyError('There was an error while trying to send this schedule for approval.');
         }
       });
+    } catch (error) {
+      notifyError(t('error_server'));
+    }
   };
 
   function getSupervisors() {
+    const users = [];
     fetch(
       `${config.server.url}/userData/getUsers`,
       {
@@ -115,9 +119,6 @@ export default function AssesmentDetails({ assesmentDetails }) {
     ).then((response) => response.json())
       .then((data) => {
         data.sort((a, b) => a - b);
-
-        var users = [];
-
         data.forEach((user) => {
           users.push(`${user.academic_title} ${user.first_name} ${user.last_name}`);
         });
@@ -128,29 +129,35 @@ export default function AssesmentDetails({ assesmentDetails }) {
   useEffect(() => {
     if (assesmentDetails !== undefined) {
       setEvaluateesTableLoading(true);
-      fetch(`${config.server.url}/evaluationsManagement/getEvaluateesByAssesment`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            id: assesmentDetails.id,
-          }),
-        }).then((response) => response.json())
-        .then((data) => {
-          setEvaluatees(data);
-          setEvaluateesTableLoading(false);
-        });
+      try {
+        fetch(`${config.server.url}/evaluationsManagement/getEvaluateesByAssesment`,
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              id: assesmentDetails.id,
+            }),
+          }).then((response) => response.json())
+          .then((data) => {
+            setEvaluatees(data);
+            setEvaluateesTableLoading(false);
+          });
+      } catch (error) {
+        setEvaluateesTableLoading(false);
+        notifyError(t('error_server'));
+      }
     }
+
     getSupervisors();
   }, [assesmentDetails]);
 
   function Row(props) {
     const { row } = props;
-    const [open, setOpen] = useState(false);
+    const [isTableRowOpen, setTableRowOpen] = useState(false);
 
     return (
       <>
@@ -159,9 +166,9 @@ export default function AssesmentDetails({ assesmentDetails }) {
             <IconButton
               aria-label="expand row"
               size="small"
-              onClick={() => setOpen(!open)}
+              onClick={() => setTableRowOpen(!isTableRowOpen)}
             >
-              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+              {isTableRowOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>
           <TableCell component="th" scope="row">
@@ -182,9 +189,8 @@ export default function AssesmentDetails({ assesmentDetails }) {
                   color: '#39e9e9e',
                   '&:hover': { bgcolor: '#D9372A', color: '#FFFFFF' },
                 }}
-                //disabled={isDeleteLoading}
+                disabled={assesmentDetails.status !== 'Draft'}
                 aria-label="delete"
-              // onClick={handleDeleteUser}
               >
                 <DeleteIcon />
               </Fab>
@@ -193,7 +199,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
         </TableRow>
         <TableRow>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-            <Collapse in={open} timeout="auto" unmountOnExit>
+            <Collapse in={isTableRowOpen} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
                 <Typography variant="h6" gutterBottom component="div">
                   Courses
@@ -208,19 +214,19 @@ export default function AssesmentDetails({ assesmentDetails }) {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {row.evaluatee.evaluations.map((course) => (
-                      <TableRow key={course.course_code}>
+                    {row.evaluatee.evaluations.map((evaluation) => (
+                      <TableRow key={evaluation.course_code}>
                         <TableCell component="th" scope="row">
-                          {course.course_code}
+                          {evaluation.course_code}
                         </TableCell>
                         <TableCell component="th" scope="row">
-                          {course.course.course_name}
+                          {evaluation.course.course_name}
                         </TableCell>
                         <TableCell component="th" scope="row">
-                          TBA
+                          {evaluation.enrolled_students}
                         </TableCell>
                         <TableCell component="th" scope="row">
-                          {course.details}
+                          {evaluation.details}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -254,7 +260,14 @@ export default function AssesmentDetails({ assesmentDetails }) {
         <Typography sx={{ mb: 1 }} variant="h5">
           Assesment details
         </Typography>
-        <Button sx={{ mb: 1 }} variant="text" size="small" onClick={handleOpenSendForApprovalDialog} endIcon={<SendIcon />}>
+        <Button
+          sx={{ mb: 1 }}
+          disabled={assesmentDetails.status !== 'Draft'}
+          variant="text"
+          size="small"
+          onClick={handleOpenSendForApprovalDialog}
+          endIcon={<SendIcon />}
+        >
           Send for approval
         </Button>
       </Box>
@@ -294,7 +307,12 @@ export default function AssesmentDetails({ assesmentDetails }) {
           <Typography variant="h6">
             Evaluatees
           </Typography>
-          <Button variant="contained" size="small" endIcon={<Add />}>
+          <Button
+            variant="contained"
+            disabled={assesmentDetails.status !== 'Draft'}
+            size="small"
+            endIcon={<Add />}
+          >
             Add evaluatee
           </Button>
         </Box>
