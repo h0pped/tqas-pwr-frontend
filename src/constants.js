@@ -28,21 +28,20 @@ export const assesmentStatuses = [
 ];
 
 function generateListOfSemesters(currentDate) {
-  var semesters = [];
+  const semesters = [];
 
   const currentYear = currentDate.split('-')[0];
-  console.log(currentDate);
 
   for (let step = 0; step < 3; step++) {
-    var newWinterSem = `Winter ${parseInt(currentYear) + step}/${parseInt(currentYear) + 1 + step}`;
-    var newWinterSemDateFrom = `${parseInt(currentYear) + step}-10-01`;
-    var newWinterSemDateTo = `${parseInt(currentYear) + 1 + step}-02-27`;
+    const newWinterSem = `Winter ${Number(currentYear) + step}/${Number(currentYear) + 1 + step}`;
+    const newWinterSemDateFrom = `${Number(currentYear) + step}-10-01`;
+    const newWinterSemDateTo = `${Number(currentYear) + 1 + step}-02-27`;
 
-    var newSummerSem = `Summer ${parseInt(currentYear) + step}/${parseInt(currentYear) + 1 + step}`;
-    var newSummerSemDateFrom = `${parseInt(currentYear) + 1 + step}-02-28`;
-    var newSummerSemDateTo = `${parseInt(currentYear) + 1 + step}-09-30`;
+    const newSummerSem = `Summer ${Number(currentYear) + step}/${Number(currentYear) + 1 + step}`;
+    const newSummerSemDateFrom = `${Number(currentYear) + 1 + step}-02-28`;
+    const newSummerSemDateTo = `${Number(currentYear) + 1 + step}-09-30`;
 
-    var newWinterSemester = {
+    const newWinterSemester = {
       label: newWinterSem,
       dateFrom: newWinterSemDateFrom,
       dateTo: newWinterSemDateTo,
@@ -50,7 +49,7 @@ function generateListOfSemesters(currentDate) {
 
     semesters.push(newWinterSemester);
 
-    var newSummerSemester = {
+    const newSummerSemester = {
       label: newSummerSem,
       dateFrom: newSummerSemDateFrom,
       dateTo: newSummerSemDateTo,
@@ -58,7 +57,6 @@ function generateListOfSemesters(currentDate) {
     semesters.push(newSummerSemester);
   }
 
-  console.log(semesters);
   return semesters;
 }
 
