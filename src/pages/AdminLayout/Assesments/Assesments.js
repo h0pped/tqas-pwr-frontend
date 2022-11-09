@@ -34,7 +34,7 @@ export default function Assesments({ setDrawerSelectedItem, link }) {
 
   const [isAssesmentsLoading, setAssesmentsLoading] = useState(false);
 
-  const [assesments, setAssements] = useState([]);
+  const [assesments, setAssessments] = useState([]);
 
   const handleOpenCreateAssesmentDialog = () => {
     setCreateAssesmentDialogOpen(true);
@@ -67,7 +67,7 @@ export default function Assesments({ setDrawerSelectedItem, link }) {
       ).then((response) => response.json())
         .then((data) => {
           console.log(data);
-          setAssements(
+          setAssessments(
             data,
           );
           setAssesmentsLoading(false);
