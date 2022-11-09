@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
-export default function AssesmentCard({
+export default function AssessmentCard({
   id,
   semester,
   status,

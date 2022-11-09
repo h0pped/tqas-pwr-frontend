@@ -113,5 +113,7 @@
   "success_added_wzhz_member": "Członek został dodany.",
   "error_added_wzhz_member": "Użytkownik jest już członkiem grupy wzhz.",
   "error_select_user": "Wybierz użytkownika!",
-  "WZHZ_group": "Grupa WZHZ"
+  "WZHZ_group": "Grupa WZHZ",
+  "success_assessment_created": "Hospitacja została pomyślnie utworzona!",
+  "error_assessment_not_created": "Wystąpił błąd podczas tworzenia nowej hospitacji."
 }

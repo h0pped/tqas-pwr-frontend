@@ -97,10 +97,10 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
         },
       ).then((response) => {
         if (response.ok) {
-          notifySuccess(t('success_user_created'));
+          notifySuccess(t('success_assessment_created'));
           setIsAssessmentsUpdated(true);
         } else {
-          notifyError(t('error_user_not_created'));
+          notifyError(t('error_assessment_not_created'));
         }
       });
     } catch (error) {

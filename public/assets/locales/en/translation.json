@@ -114,5 +114,7 @@
   "supervisor": "Supervisor",
   "logout": "Logout",
   "profile": "Profile",
-  "WZHZ_group": "WZHZ Group"
+  "WZHZ_group": "WZHZ Group",
+  "success_assessment_created": "Assessment was successfully created!",
+  "error_assessment_not_created": "There was an error while creating new assessment."
 }

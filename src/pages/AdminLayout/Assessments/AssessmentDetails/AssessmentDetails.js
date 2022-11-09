@@ -31,7 +31,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { LinearProgress } from '@mui/material';
 import Fab from '@mui/material/Fab';
 import { useTranslation } from 'react-i18next';
-import { assessmentStatuses as assessmentStatuses } from '../../../../constants.js';
+import { assessmentStatuses } from '../../../../constants.js';
 
 import config from '../../../../config/index.config.js';
 import UserContext from '../../../../context/UserContext/UserContext.js';
