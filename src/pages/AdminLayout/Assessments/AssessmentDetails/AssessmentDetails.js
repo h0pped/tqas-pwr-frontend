@@ -130,7 +130,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
     if (assesmentDetails !== undefined) {
       setEvaluateesTableLoading(true);
       try {
-        fetch(`${config.server.url}/evaluationsManagement/getEvaluateesByAssesment?id=${assesmentDetails.id}`,
+        fetch(`${config.server.url}/evaluationsManagement/getEvaluateesByAssessment?id=${assesmentDetails.id}`,
           {
             method: 'GET',
             headers: {
@@ -140,7 +140,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
             },
           }).then((response) => response.json())
           .then((data) => {
-            setEvaluatees(data);
+            setEvaluatees(data.evaluatees);
             setEvaluateesTableLoading(false);
           });
       } catch (error) {
