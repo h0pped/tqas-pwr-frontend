@@ -130,17 +130,14 @@ export default function AssesmentDetails({ assesmentDetails }) {
     if (assesmentDetails !== undefined) {
       setEvaluateesTableLoading(true);
       try {
-        fetch(`${config.server.url}/evaluationsManagement/getEvaluateesByAssesment`,
+        fetch(`${config.server.url}/evaluationsManagement/getEvaluateesByAssesment?id=${assesmentDetails.id}`,
           {
-            method: 'POST',
+            method: 'GET',
             headers: {
               Authorization: `Bearer ${token}`,
               Accept: 'application/json',
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-              id: assesmentDetails.id,
-            }),
           }).then((response) => response.json())
           .then((data) => {
             setEvaluatees(data);

@@ -23,7 +23,7 @@ import Add from '@mui/icons-material/Add';
 import { semesters } from '../../../constants.js';
 
 import AssesmentCard from '../../../components/AssesmentCard/AssesmentCard.js';
-import AssesmentDetails from './AssesmentDetails/AssesmentDetails.js';
+import AssesmentDetails from './AssessmentDetails/AssessmentDetails.js';
 
 import config from '../../../config/index.config.js';
 import UserContext from '../../../context/UserContext/UserContext.js';
@@ -112,7 +112,7 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
     setAssesmentsLoading(true);
     try {
       await fetch(
-        `${config.server.url}/evaluationsManagement/getAssesments`,
+        `${config.server.url}/evaluationsManagement/getAssessments`,
         {
           method: 'GET',
           headers: {
