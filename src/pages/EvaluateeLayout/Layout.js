@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -11,19 +11,24 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+
+import { Routes, Route, useNavigate } from 'react-router-dom';
+
 import ScheduleApproval from './ScheduleApproval/ScheduleApproval.js';
-import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
+import MyAssessments from './MyAssessments/MyAssessments.js';
 
 import departmentLogo from '../../assets/images/departmentLogo.svg';
 
-const pages = [{ label: 'My assesments', path: 'myAssesments' }, { label: 'Schedule aproval', path: 'scheduleApproval', component: <ScheduleApproval /> }];
+const pages = [{ label: 'My assesments', link: 'my-assessments' }, { label: 'Schedule aproval', link: 'schedule-approval', component: <ScheduleApproval /> }];
 const settings = ['Logout'];
 
 const ResponsiveAppBar = () => {
   const navigate = useNavigate();
 
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [selectedPage, setSelectedPage] = useState('my-assessments');
+
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -38,6 +43,10 @@ const ResponsiveAppBar = () => {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handlePageChange = (pageURL) => {
+    navigate(pageURL);
   };
 
   return (
@@ -80,7 +89,13 @@ const ResponsiveAppBar = () => {
                 }}
               >
                 {pages.map((page) => (
-                  <MenuItem key={page.label} onClick={() => { handleCloseNavMenu(); navigate(page.path); }}>
+                  <MenuItem
+                    key={page.label}
+                    onClick={() => {
+                      handleCloseNavMenu();
+                      navigate(page.path);
+                    }}
+                  >
                     <Typography textAlign="center">{page.label}</Typography>
                   </MenuItem>
                 ))}
@@ -90,8 +105,10 @@ const ResponsiveAppBar = () => {
               {pages.map((page) => (
                 <Button
                   key={page.label}
-                  onClick={() => { handleCloseNavMenu(); navigate(page.path); }}
-                  sx={{ my: 2, ml: 1, color: 'white', display: 'block' }}
+                  disabled={selectedPage === page.link}
+                  variant={selectedPage === page.link ? 'contained' : 'text'}
+                  onClick={() => { handleCloseNavMenu(); handlePageChange(page.link); }}
+                  sx={{ my: 2, ml: 2, color: 'white', display: 'block' }}
                 >
                   {page.label}
                 </Button>
@@ -131,9 +148,8 @@ const ResponsiveAppBar = () => {
       </AppBar>
       <Box sx={{ mt: 3, flexGrow: 1, pl: 3, pr: 3, height: '100%' }}>
         <Routes>
-          {pages.map((page) => (
-            <Route key={page.label} path={page.link} element={page.component} />
-          ))}
+          <Route exact path="/schedule-approval" element={<ScheduleApproval {...{ setSelectedPage, link: 'schedule-approval' }} />} />
+          <Route exact path="/my-assessments" element={<MyAssessments {...{ setSelectedPage, link: 'my-assessments' }} />} />
         </Routes>
       </Box>
     </Box>
