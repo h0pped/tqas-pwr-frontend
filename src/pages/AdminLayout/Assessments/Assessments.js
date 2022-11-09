@@ -61,10 +61,10 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
     semesters.find((semester) => moment(new Date().toISOString().slice(0, 10)).isBetween(semester.dateFrom, semester.dateTo, undefined, '[]')),
   );
 
-  const [isAssesmentsLoading, setAssesmentsLoading] = useState(false);
-  const [isAssesmentsUpdated, setIsAssesmentsUpdated] = useState(false);
+  const [isAssessmentsLoading, setAssessmentsLoading] = useState(false);
+  const [isAssessmentsUpdated, setIsAssessmentsUpdated] = useState(false);
 
-  const [assesments, setAssements] = useState([]);
+  const [assessments, setAssessments] = useState([]);
 
   const handleOpenCreateAssesmentDialog = () => {
     setCreateAssesmentDialogOpen(true);
@@ -80,7 +80,7 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
 
   const handleCreateNewAssesment = () => {
     handleCloseCreateAssesmentDialog();
-    setIsAssesmentsUpdated(false);
+    setIsAssessmentsUpdated(false);
     try {
       fetch(
         `${config.server.url}/evaluationsManagement/createAssessment`,
@@ -98,7 +98,7 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
       ).then((response) => {
         if (response.ok) {
           notifySuccess(t('success_user_created'));
-          setIsAssesmentsUpdated(true);
+          setIsAssessmentsUpdated(true);
         } else {
           notifyError(t('error_user_not_created'));
         }
@@ -109,7 +109,7 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
   };
 
   async function getAssesments() {
-    setAssesmentsLoading(true);
+    setAssessmentsLoading(true);
     try {
       await fetch(
         `${config.server.url}/evaluationsManagement/getAssessments`,
@@ -121,13 +121,13 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
         },
       ).then((response) => response.json())
         .then((data) => {
-          setAssements(
+          setAssessments(
             data.assessments.sort((a, b) => b.id - a.id),
           );
-          setAssesmentsLoading(false);
+          setAssessmentsLoading(false);
         });
     } catch (error) {
-      setAssesmentsLoading(false);
+      setAssessmentsLoading(false);
       notifyError(t('error_server'));
     }
   }
@@ -135,7 +135,7 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
   useEffect(() => {
     setDrawerSelectedItem(link);
     getAssesments();
-  }, [isAssesmentsUpdated]);
+  }, [isAssessmentsUpdated]);
 
   return (
     <Box sx={{ flexGrow: 1, height: '75vh' }}>
@@ -151,8 +151,8 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
         </Grid>
         <Grid item xs={4} sx={{ height: '100%' }}>
           <Box sx={{ p: 0.7, display: 'flex', flexDirection: 'column', gap: 1, overflowY: 'scroll', height: '100%', borderRadius: 1, backgroundColor: '#f4f5f7' }}>
-            {isAssesmentsLoading && <LinearProgress />}
-            {!isAssesmentsLoading && assesments.map((item) => (
+            {isAssessmentsLoading && <LinearProgress />}
+            {!isAssessmentsLoading && assessments.map((item) => (
               <AssesmentCard
                 key={item.id}
                 id={item.id}
@@ -169,7 +169,7 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
           <Box sx={{ p: 0.7, ml: 2, borderRadius: 1, backgroundColor: '#f4f5f7', height: '100%' }}>
             <AssesmentDetails
               assesmentDetails={
-                assesments.find((assesment) => assesment.id === selectedAssesment)
+                assessments.find((assesment) => assesment.id === selectedAssesment)
               }
             />
           </Box>
