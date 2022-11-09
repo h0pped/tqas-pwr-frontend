@@ -31,12 +31,12 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { LinearProgress } from '@mui/material';
 import Fab from '@mui/material/Fab';
 import { useTranslation } from 'react-i18next';
-import { assesmentStatuses } from '../../../../constants.js';
+import { assessmentStatuses as assessmentStatuses } from '../../../../constants.js';
 
 import config from '../../../../config/index.config.js';
 import UserContext from '../../../../context/UserContext/UserContext.js';
 
-export default function AssesmentDetails({ assesmentDetails }) {
+export default function AssessmentDetails({ assessmentDetails }) {
   const { t } = useTranslation();
 
   const [evaluatees, setEvaluatees] = useState([]);
@@ -91,7 +91,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
           },
           body: JSON.stringify({
             user_id: selectedSupervisor,
-            assessment_id: assesmentDetails.id,
+            assessment_id: assessmentDetails.id,
           }),
         }).then((response) => {
           setSendForApprovalDialogOpen(false);
@@ -127,10 +127,10 @@ export default function AssesmentDetails({ assesmentDetails }) {
   }
 
   useEffect(() => {
-    if (assesmentDetails !== undefined) {
+    if (assessmentDetails !== undefined) {
       setEvaluateesTableLoading(true);
       try {
-        fetch(`${config.server.url}/evaluationsManagement/getEvaluateesByAssessment?id=${assesmentDetails.id}`,
+        fetch(`${config.server.url}/evaluationsManagement/getEvaluateesByAssessment?id=${assessmentDetails.id}`,
           {
             method: 'GET',
             headers: {
@@ -150,7 +150,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
     }
 
     getSupervisors();
-  }, [assesmentDetails]);
+  }, [assessmentDetails]);
 
   function Row(props) {
     const { row } = props;
@@ -186,7 +186,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
                   color: '#39e9e9e',
                   '&:hover': { bgcolor: '#D9372A', color: '#FFFFFF' },
                 }}
-                disabled={assesmentDetails.status !== 'Draft'}
+                disabled={assessmentDetails.status !== 'Draft'}
                 aria-label="delete"
               >
                 <DeleteIcon />
@@ -237,7 +237,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
     );
   }
 
-  if (assesmentDetails === undefined) {
+  if (assessmentDetails === undefined) {
     return (
       <Box sx={{
         height: '100%',
@@ -275,7 +275,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
         </Typography>
         <Button
           sx={{ mb: 1 }}
-          disabled={assesmentDetails.status !== 'Draft'}
+          disabled={assessmentDetails.status !== 'Draft'}
           variant="text"
           size="small"
           onClick={handleOpenSendForApprovalDialog}
@@ -316,12 +316,12 @@ export default function AssesmentDetails({ assesmentDetails }) {
             </Typography>
             <FormControl>
               <Select
-                value={assesmentDetails.status}
+                value={assessmentDetails.status}
                 displayEmpty
                 inputProps={{ 'aria-label': 'Without label' }}
                 size="small"
               >
-                {assesmentStatuses.map((status) => (
+                {assessmentStatuses.map((status) => (
                   <MenuItem value={status}>{status}</MenuItem>
                 ))}
               </Select>
@@ -339,7 +339,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
               {t('semester')}
             </Typography>
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold', width: '50%' }}>
-              {assesmentDetails.name}
+              {assessmentDetails.name}
             </Typography>
           </Box>
         </Box>
@@ -360,7 +360,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
           </Typography>
           <Button
             variant="contained"
-            disabled={assesmentDetails.status !== 'Draft'}
+            disabled={assessmentDetails.status !== 'Draft'}
             size="small"
             endIcon={<Add />}
           >

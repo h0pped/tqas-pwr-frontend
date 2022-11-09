@@ -22,8 +22,8 @@ import Add from '@mui/icons-material/Add';
 
 import { semesters } from '../../../constants.js';
 
-import AssesmentCard from '../../../components/AssesmentCard/AssesmentCard.js';
-import AssesmentDetails from './AssessmentDetails/AssessmentDetails.js';
+import AssessmentCard from '../../../components/AssessmentCard/AssessmentCard.js';
+import AssessmentDetails from './AssessmentDetails/AssessmentDetails.js';
 
 import config from '../../../config/index.config.js';
 import UserContext from '../../../context/UserContext/UserContext.js';
@@ -55,8 +55,8 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
     theme: 'light',
   });
 
-  const [isCrateAssesmentDialogOpen, setCreateAssesmentDialogOpen] = useState(false);
-  const [selectedAssesment, setSelectedAssesment] = useState(null);
+  const [isCrateAssessmentDialogOpen, setCreateAssessmentDialogOpen] = useState(false);
+  const [selectedAssessment, setSelectedAssessment] = useState(null);
   const [selectedSemesterValue, setSelectedSemesterValue] = useState(
     semesters.find((semester) => moment(new Date().toISOString().slice(0, 10)).isBetween(semester.dateFrom, semester.dateTo, undefined, '[]')),
   );
@@ -66,20 +66,20 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
 
   const [assessments, setAssessments] = useState([]);
 
-  const handleOpenCreateAssesmentDialog = () => {
-    setCreateAssesmentDialogOpen(true);
+  const handleOpenCreateAssessmentDialog = () => {
+    setCreateAssessmentDialogOpen(true);
   };
 
-  const handleCloseCreateAssesmentDialog = () => {
-    setCreateAssesmentDialogOpen(false);
+  const handleCloseCreateAssessmentDialog = () => {
+    setCreateAssessmentDialogOpen(false);
   };
 
   const handleDialogSemesterValueChange = (event) => {
     setSelectedSemesterValue(event.target.value);
   };
 
-  const handleCreateNewAssesment = () => {
-    handleCloseCreateAssesmentDialog();
+  const handleCreateNewAssessment = () => {
+    handleCloseCreateAssessmentDialog();
     setIsAssessmentsUpdated(false);
     try {
       fetch(
@@ -108,7 +108,7 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
     }
   };
 
-  async function getAssesments() {
+  async function getAssessments() {
     setAssessmentsLoading(true);
     try {
       await fetch(
@@ -134,7 +134,7 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
 
   useEffect(() => {
     setDrawerSelectedItem(link);
-    getAssesments();
+    getAssessments();
   }, [isAssessmentsUpdated]);
 
   return (
@@ -144,7 +144,7 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
         <Grid item xs={12}>
           <Box sx={{ mb: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center' }}>
             <Typography variant="h5">{t('drawer_item_title_classes_eval')}</Typography>
-            <Button variant="contained" size="small" onClick={handleOpenCreateAssesmentDialog} endIcon={<Add />}>
+            <Button variant="contained" size="small" onClick={handleOpenCreateAssessmentDialog} endIcon={<Add />}>
               {t('new_assesment')}
             </Button>
           </Box>
@@ -153,13 +153,13 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
           <Box sx={{ p: 0.7, display: 'flex', flexDirection: 'column', gap: 1, overflowY: 'scroll', height: '100%', borderRadius: 1, backgroundColor: '#f4f5f7' }}>
             {isAssessmentsLoading && <LinearProgress />}
             {!isAssessmentsLoading && assessments.map((item) => (
-              <AssesmentCard
+              <AssessmentCard
                 key={item.id}
                 id={item.id}
                 semester={item.name}
                 status={item.status}
-                setId={setSelectedAssesment}
-                isSelected={selectedAssesment === item.id}
+                setId={setSelectedAssessment}
+                isSelected={selectedAssessment === item.id}
                 numberOfEvaluatees={item.num_of_evaluatees}
               />
             ))}
@@ -167,15 +167,15 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
         </Grid>
         <Grid item xs={8} sx={{ height: '100%' }}>
           <Box sx={{ p: 0.7, ml: 2, borderRadius: 1, backgroundColor: '#f4f5f7', height: '100%' }}>
-            <AssesmentDetails
-              assesmentDetails={
-                assessments.find((assesment) => assesment.id === selectedAssesment)
+            <AssessmentDetails
+              assessmentDetails={
+                assessments.find((assesment) => assesment.id === selectedAssessment)
               }
             />
           </Box>
         </Grid>
       </Grid>
-      <Dialog open={isCrateAssesmentDialogOpen} onClose={handleCloseCreateAssesmentDialog}>
+      <Dialog open={isCrateAssessmentDialogOpen} onClose={handleCloseCreateAssessmentDialog}>
         <DialogTitle>{t('create_new_assesment')}</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -200,8 +200,8 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" onClick={handleCloseCreateAssesmentDialog}>{t('cancel')}</Button>
-          <Button variant="contained" onClick={handleCreateNewAssesment}>{t('create')}</Button>
+          <Button variant="outlined" onClick={handleCloseCreateAssessmentDialog}>{t('cancel')}</Button>
+          <Button variant="contained" onClick={handleCreateNewAssessment}>{t('create')}</Button>
         </DialogActions>
       </Dialog>
     </Box>

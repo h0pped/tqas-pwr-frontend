@@ -19,7 +19,7 @@ export const userRolesList = [
   { key: 'evaluatee', title: 'evaluatee' },
 ];
 
-export const assesmentStatuses = [
+export const assessmentStatuses = [
   'Draft',
   'Awaiting approval',
   'Ongoing',
