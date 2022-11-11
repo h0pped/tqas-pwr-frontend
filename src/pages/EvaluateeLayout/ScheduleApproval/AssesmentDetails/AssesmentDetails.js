@@ -35,11 +35,9 @@ export default function AssesmentDetails({ assesmentDetails }) {
   const { token } = useContext(UserContext);
 
   const [evaluatees, setEvaluatees] = useState([]);
-  const [evaluationTeams, setEvaluationTeams] = useState([]);
 
   const [isEvaluateesTableLoading, setEvaluateesTableLoading] = useState(false);
   const [isRejectDialogOpen, setRejectDialogOpen] = useState(false);
-  const [isEvaluationTeamsLoaded, setEvaluationTeamsLoaded] = useState(false);
 
   const handleOpenRejectDialog = () => {
     setRejectDialogOpen(true);
@@ -63,24 +61,6 @@ export default function AssesmentDetails({ assesmentDetails }) {
     progress: undefined,
     theme: 'light',
   });
-
-  function getEvaluationTeams() {
-    if (assesmentDetails !== undefined) {
-      fetch(
-        `${config.server.url}/evaluationsManagement/getEvaluationTeams?id=${assesmentDetails.id}`,
-        {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      ).then((response) => response.json())
-        .then((data) => {
-          setEvaluationTeams(data);
-          setEvaluationTeamsLoaded(true);
-        });
-    }
-  }
 
   function getEvaluatees() {
     if (assesmentDetails !== undefined) {
@@ -108,8 +88,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
 
   useEffect(() => {
     getEvaluatees();
-    getEvaluationTeams();
-  }, [assesmentDetails, isEvaluationTeamsLoaded]);
+  }, [assesmentDetails]);
 
   const StyledTableRow = styled(TableRow)(() => ({
     '&:nth-of-type(odd)': {
