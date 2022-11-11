@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -14,6 +15,7 @@ import config from '../../../config/index.config.js';
 const currentlyLoggedInUserId = 15;
 
 export default function ScheduleApproval({ setSelectedPage, link }) {
+  const { t } = useTranslation();
   const { token } = useContext(UserContext);
 
   const [isAssesmentsLoading, setAssessmentsLoading] = useState(false);
@@ -53,7 +55,7 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
       <Grid container sx={{ height: '100%' }}>
         <Grid item xs={12}>
           <Box sx={{ mb: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center' }}>
-            <Typography variant="h5">Awaiting your approval</Typography>
+            <Typography variant="h5">{t('awaiting_your_approval')}</Typography>
           </Box>
         </Grid>
         <Grid item xs={4} sx={{ height: '100%' }}>
