@@ -50,7 +50,7 @@ const ResponsiveAppBar = () => {
   };
 
   return (
-    <Box>
+    <Box sx={{ height: '100%' }}>
       <AppBar position="static">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
@@ -146,11 +146,13 @@ const ResponsiveAppBar = () => {
           </Toolbar>
         </Container>
       </AppBar>
-      <Box sx={{ mt: 3, flexGrow: 1, pl: 3, pr: 3, height: '100%' }}>
-        <Routes>
-          <Route exact path="/schedule-approval" element={<ScheduleApproval {...{ setSelectedPage, link: 'schedule-approval' }} />} />
-          <Route exact path="/my-assessments" element={<MyAssessments {...{ setSelectedPage, link: 'my-assessments' }} />} />
-        </Routes>
+      <Box component="main" sx={{ flexGrow: 1, pl: 3, pr: 3, height: '100%' }}>
+        <Box sx={{ mt: 3, flexGrow: 1, pl: 3, pr: 3, height: '100%' }}>
+          <Routes>
+            <Route exact path="/schedule-approval" element={<ScheduleApproval {...{ setSelectedPage, link: 'schedule-approval' }} />} />
+            <Route exact path="/my-assessments" element={<MyAssessments {...{ setSelectedPage, link: 'my-assessments' }} />} />
+          </Routes>
+        </Box>
       </Box>
     </Box>
   );

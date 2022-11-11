@@ -2,10 +2,8 @@ import { useEffect, useState, useContext } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
+import { styled } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import Table from '@mui/material/Table';
@@ -16,65 +14,44 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import Add from '@mui/icons-material/Add.js';
 import Tooltip from '@mui/material/Tooltip';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
-import TextField from '@mui/material/TextField';
-import DeleteIcon from '@mui/icons-material/Delete';
-import SendIcon from '@mui/icons-material/Send';
 import Alert from '@mui/material/Alert';
-import Autocomplete from '@mui/material/Autocomplete';
 import { LinearProgress } from '@mui/material';
-import Fab from '@mui/material/Fab';
-import Link from '@mui/material/Link';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import CancelIcon from '@mui/icons-material/Cancel';
-import { Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-import { assesmentStatuses } from '../../../../constants.js';
 import ClearIcon from '@mui/icons-material/Clear';
 import DoneIcon from '@mui/icons-material/Done';
-import AlertTitle from '@mui/material/AlertTitle';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import config from '../../../../config/index.config.js';
 import UserContext from '../../../../context/UserContext/UserContext.js';
 
 export default function AssesmentDetails({ assesmentDetails }) {
-  const [evaluatees, setEvaluatees] = useState([]);
-  const [isEvaluateesTableLoading, setEvaluateesTableLoading] = useState(false);
-  const [isSendForApprovalDialogOpen, setSendForApprovalDialogOpen] = useState(false);
-  const [supervisors, setSupervisors] = useState([]);
   const { t } = useTranslation();
-
   const { token } = useContext(UserContext);
 
-  const handleOpenSendForApprovalDialog = () => {
-    setSendForApprovalDialogOpen(true);
+  const [evaluatees, setEvaluatees] = useState([]);
+  const [evaluationTeams, setEvaluationTeams] = useState([]);
+
+  const [isEvaluateesTableLoading, setEvaluateesTableLoading] = useState(false);
+  const [isRejectDialogOpen, setRejectDialogOpen] = useState(false);
+  const [isEvaluationTeamsLoaded, setEvaluationTeamsLoaded] = useState(false);
+
+  const handleOpenRejectDialog = () => {
+    setRejectDialogOpen(true);
   };
 
-  const handleCloseSendForApprovalDialog = () => {
-    setSendForApprovalDialogOpen(false);
+  const handleCloseRejectDialog = () => {
+    setRejectDialogOpen(false);
   };
 
   const handleSendScheduleForApproval = () => {
     alert('Sending....');
   };
-
-  const notifySuccess = (msg) => toast.success(`${t('success')} ${msg}`, {
-    position: 'top-center',
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
 
   const notifyError = (msg) => toast.error(`${t('error_dialog')} ${msg}`, {
     position: 'top-center',
@@ -87,31 +64,25 @@ export default function AssesmentDetails({ assesmentDetails }) {
     theme: 'light',
   });
 
-  function getSupervisors() {
-    fetch(
-      `${config.server.url}/userData/getUsers`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
+  function getEvaluationTeams() {
+    if (assesmentDetails !== undefined) {
+      fetch(
+        `${config.server.url}/evaluationsManagement/getEvaluationTeams?id=${assesmentDetails.id}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      },
-    ).then((response) => response.json())
-      .then((data) => {
-        data.sort((a, b) => a - b);
-
-        var users = [];
-
-        data.forEach((user) => {
-          if (user.user_type === 'head' || user.user_type === 'dean') {
-            users.push(`${user.academic_title} ${user.first_name} ${user.last_name}`);
-          }
+      ).then((response) => response.json())
+        .then((data) => {
+          setEvaluationTeams(data);
+          setEvaluationTeamsLoaded(true);
         });
-        setSupervisors(users);
-      });
+    }
   }
 
-  useEffect(() => {
+  function getEvaluatees() {
     if (assesmentDetails !== undefined) {
       setEvaluateesTableLoading(true);
       try {
@@ -133,8 +104,21 @@ export default function AssesmentDetails({ assesmentDetails }) {
         notifyError(t('error_server'));
       }
     }
-    getSupervisors();
-  }, [assesmentDetails]);
+  }
+
+  useEffect(() => {
+    getEvaluatees();
+    getEvaluationTeams();
+  }, [assesmentDetails, isEvaluationTeamsLoaded]);
+
+  const StyledTableRow = styled(TableRow)(() => ({
+    '&:nth-of-type(odd)': {
+      backgroundColor: 'rgba(235, 235, 235, 0.53)',
+    },
+    '&:last-child td, &:last-child th': {
+      border: 0,
+    },
+  }));
 
   function Row(props) {
     const { row } = props;
@@ -162,7 +146,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
             {row.evaluatee.evaluations.length}
           </TableCell>
           <TableCell component="th" scope="row">
-            Assigned
+            {`${row.evaluation_team.length} member(s)`}
           </TableCell>
           <TableCell width="20%" component="th" scope="row">
             <Tooltip title="Remove evaluatee" placement="top">
@@ -179,12 +163,12 @@ export default function AssesmentDetails({ assesmentDetails }) {
                 </Typography>
                 <Table size="small" aria-label="purchases">
                   <TableHead>
-                    <TableRow>
+                    <StyledTableRow>
                       <TableCell>Course code</TableCell>
                       <TableCell>Course name</TableCell>
                       <TableCell>Enrolled students</TableCell>
                       <TableCell>Details</TableCell>
-                    </TableRow>
+                    </StyledTableRow>
                   </TableHead>
                   <TableBody>
                     {row.evaluatee.evaluations.map((course) => (
@@ -196,7 +180,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
                           {course.course.course_name}
                         </TableCell>
                         <TableCell component="th" scope="row">
-                          TBA
+                          {course.enrolled_students}
                         </TableCell>
                         <TableCell component="th" scope="row">
                           {course.details}
@@ -210,34 +194,44 @@ export default function AssesmentDetails({ assesmentDetails }) {
                 <Typography variant="h6" gutterBottom component="div">
                   Evaluation team
                 </Typography>
-                <Table size="small" aria-label="purchases">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Academic title</TableCell>
-                      <TableCell>First name</TableCell>
-                      <TableCell>Last name</TableCell>
-                      <TableCell>Email</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {row.evaluatee.evaluations.map((course) => (
-                      <TableRow key={course.course_code}>
-                        <TableCell component="th" scope="row">
-                          EXAMPLE
-                        </TableCell>
-                        <TableCell component="th" scope="row">
-                          EXAMPLE
-                        </TableCell>
-                        <TableCell component="th" scope="row">
-                          EXAMPLE
-                        </TableCell>
-                        <TableCell component="th" scope="row">
-                          EXAMPLE
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                {row.evaluation_team.length > 0 && (
+                  <Table size="small" aria-label="customized table">
+                    <TableHead>
+                      <StyledTableRow>
+                        <TableCell>Academic title</TableCell>
+                        <TableCell>First name</TableCell>
+                        <TableCell>Last name</TableCell>
+                        <TableCell>Email</TableCell>
+                      </StyledTableRow>
+                    </TableHead>
+                    <TableBody>
+                      {row.evaluation_team.map((member) => (
+                        <TableRow key={member.member_email}>
+                          <TableCell component="th" scope="row">
+                            {member.academic_title}
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            {member.first_name}
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            {member.last_name}
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            {member.member_email}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                )}
+                {row.evaluation_team.length === 0 && (
+                  <Alert severity="info">
+                    <Typography>
+                      No members were assigned to this evaluatee.
+                      Click &quot;Assign team&quot; to choose the evaluation team.
+                    </Typography>
+                  </Alert>
+                )}
               </Box>
             </Collapse>
           </TableCell>
@@ -267,10 +261,10 @@ export default function AssesmentDetails({ assesmentDetails }) {
           Assesment details
         </Typography>
         <Box sx={{ display: 'flex', gap: 1, flexDirection: 'row' }}>
-          <Button sx={{ mb: 1 }} variant="outlined" size="small" onClick={handleOpenSendForApprovalDialog} endIcon={<ClearIcon />}>
+          <Button sx={{ mb: 1 }} variant="outlined" size="small" onClick={handleOpenRejectDialog} endIcon={<ClearIcon />}>
             Reject schedule
           </Button>
-          <Button sx={{ mb: 1 }} variant="contained" size="small" onClick={handleOpenSendForApprovalDialog} endIcon={<DoneIcon />}>
+          <Button sx={{ mb: 1 }} variant="contained" size="small" endIcon={<DoneIcon />}>
             Approve schedule
           </Button>
         </Box>
@@ -296,7 +290,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
           </Box>
         </Box>
       </Box>
-      <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2, height: '55%' }}>
+      <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2, height: '50%' }}>
         <Divider sx={{ m: 0 }} variant="middle" />
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography variant="h6">
@@ -305,7 +299,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
         </Box>
         <Box sx={{ height: '100%' }}>
           {isEvaluateesTableLoading && <LinearProgress />}
-          <TableContainer style={{ maxHeight: '100%', border: 'solid 2px rgba(235, 235, 235)', borderRadius: 2 }}>
+          <TableContainer style={{ border: 'solid 2px rgba(235, 235, 235)', borderRadius: 2, height: '100%' }}>
             <Table aria-label="collapsible table">
               <TableHead>
                 <TableRow>
@@ -326,7 +320,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
           </TableContainer>
         </Box>
       </Box>
-      <Dialog open={isSendForApprovalDialogOpen} onClose={handleCloseSendForApprovalDialog}>
+      <Dialog open={isRejectDialogOpen} onClose={handleCloseRejectDialog}>
         <DialogTitle>Reject schedule</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -340,11 +334,13 @@ export default function AssesmentDetails({ assesmentDetails }) {
             />
           </Box>
           <Alert severity="info" sx={{ mt: 2 }}>
-            By rejecting this schedule,  the person responsible for preparing this schedule will be notified with your remarks, and will be asked to resubmit it once again.
+            By rejecting this schedule,
+            the person responsible for preparing this schedule will be notified with your remarks,
+            and will be asked to resubmit it once again.
           </Alert>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" onClick={handleCloseSendForApprovalDialog}>Cancel</Button>
+          <Button variant="outlined" onClick={handleCloseRejectDialog}>Cancel</Button>
           <Button variant="contained" onClick={handleSendScheduleForApproval}>Send</Button>
         </DialogActions>
       </Dialog>
