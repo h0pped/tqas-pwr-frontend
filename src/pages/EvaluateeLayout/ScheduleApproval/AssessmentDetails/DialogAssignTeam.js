@@ -19,10 +19,10 @@ import { TextField } from '@mui/material';
 import { toast } from 'react-toastify';
 import Autocomplete from '@mui/material/Autocomplete';
 import { DataGrid } from '@mui/x-data-grid';
-import config from '../../../config/index.config.js';
-import UserContext from '../../../context/UserContext/UserContext.js';
-import customDataGridToolbar from '../../../components/CustomGridToolbar/CustomDataGridToolBar.js';
-import DeleteAction from '../ManageWZHZGroup/DeleteActions.js';
+import config from '../../../../config/index.config.js';
+import UserContext from '../../../../context/UserContext/UserContext.js';
+import customDataGridToolbar from '../../../../components/CustomGridToolbar/CustomDataGridToolBar.js';
+import DeleteAction from '../../../AdminLayout/ManageWZHZGroup/DeleteActions.js';
 
 const Transition = forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
@@ -38,7 +38,7 @@ const Item = styled(Paper)(({ theme }) => ({
   height: 800,
 }));
 
-export default function AssignTeam({ setDrawerSelectedItem, link }) {
+export default function DialogAssignTeam({ setDrawerSelectedItem, link }) {
   const [open, setOpen] = useState(false);
   const [wzhzList, setWzhzList] = useState({ wzhzList: [] });
   const [outsideList, setOutsideList] = useState({ outsideList: [] });
@@ -167,7 +167,7 @@ export default function AssignTeam({ setDrawerSelectedItem, link }) {
           setOutsideList(data);
         });
     } catch (error) {
-      notfyError(t('error_server'));
+      notifyError(t('error_server'));
     }
   }
 
