@@ -19,7 +19,7 @@ export const userRolesList = [
   { key: 'evaluatee', title: 'evaluatee' },
 ];
 
-export const assesmentStatuses = [
+export const assessmentStatuses = [
   'Draft',
   'Awaiting approval',
   'Ongoing',
@@ -27,18 +27,18 @@ export const assesmentStatuses = [
   'Done',
 ];
 
-function generateListOfSemesters(currentDate) {
-  var semesters = [];
+function generateListOfSemesters(currentYearNumber) {
+  const semesters = [];
 
-  const currentYear = currentDate.split('-')[0];
 
-  for (let step = 0; step < 3; step++) {
-    const newWinterSem = `Winter ${parseInt(currentYear)}/${parseInt(currentYear) + 1}`;
-    const newWinterSemDateFrom = `${currentYear}-10-01`;
-    const newWinterSemDateTo = `${parseInt(currentYear) + 1}-02-27`;
-    const newSummerSem = `Semester ${parseInt(currentYear)}/${parseInt(currentYear) + 1}`;
-    const newSummerSemDateFrom = `${parseInt(currentYear) + 1}-02-28`;
-    const newSummerSemDateTo = `${parseInt(currentYear) + 1}-09-30`;
+  for (let step = 0; step < 3; step += 1) {
+    const newWinterSem = `Winter ${currentYearNumber + step}/${currentYearNumber + 1 + step}`;
+    const newWinterSemDateFrom = `${currentYearNumber + step}-10-01`;
+    const newWinterSemDateTo = `${currentYearNumber + 1 + step}-02-27`;
+
+    const newSummerSem = `Summer ${currentYearNumber + step}/${currentYearNumber + 1 + step}`;
+    const newSummerSemDateFrom = `${currentYearNumber + 1 + step}-02-28`;
+    const newSummerSemDateTo = `${currentYearNumber + 1 + step}-09-30`;
 
     const newWinterSemester = {
       label: newWinterSem,
@@ -56,8 +56,7 @@ function generateListOfSemesters(currentDate) {
     semesters.push(newSummerSemester);
   }
 
-  console.log(semesters);
   return semesters;
 }
 
-export const semesters = generateListOfSemesters(new Date().toISOString().slice(0, 10));
+export const semesters = generateListOfSemesters(new Date().getFullYear());

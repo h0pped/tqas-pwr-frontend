@@ -26,23 +26,26 @@ import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
-import Alert from '@mui/material/Alert';
+import { toast } from 'react-toastify';
 import Autocomplete from '@mui/material/Autocomplete';
 import { LinearProgress } from '@mui/material';
 import Fab from '@mui/material/Fab';
-import Link from '@mui/material/Link';
-import { Navigate } from 'react-router-dom';
-import { assesmentStatuses } from '../../../../constants.js';
+import { useTranslation } from 'react-i18next';
+import { assessmentStatuses } from '../../../../constants.js';
 
 import config from '../../../../config/index.config.js';
 import UserContext from '../../../../context/UserContext/UserContext.js';
 
-export default function AssesmentDetails({ assesmentDetails }) {
+export default function AssessmentDetails({ assessmentDetails }) {
+  const { t } = useTranslation();
+
   const [evaluatees, setEvaluatees] = useState([]);
+  const [supervisors, setSupervisors] = useState([]);
+
+  const [selectedSupervisor, setSelectedSupervisor] = useState('');
+
   const [isEvaluateesTableLoading, setEvaluateesTableLoading] = useState(false);
   const [isSendForApprovalDialogOpen, setSendForApprovalDialogOpen] = useState(false);
-  const [selectedSupervisor, setSelectedSuprevisor] = useState(null);
-  const [supervisors, setSupervisors] = useState([]);
 
   const { token } = useContext(UserContext);
 
@@ -54,11 +57,57 @@ export default function AssesmentDetails({ assesmentDetails }) {
     setSendForApprovalDialogOpen(false);
   };
 
+  const notifySuccess = (msg) => toast.success(`${t('success')} ${msg}`, {
+    position: 'top-center',
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: 'light',
+  });
+
+  const notifyError = (msg) => toast.error(`${t('error_dialog')} ${msg}`, {
+    position: 'top-center',
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: 'light',
+  });
+
   const handleSendScheduleForApproval = () => {
-    alert('Sending....');
+    try {
+      fetch(`${config.server.url}/evaluationsManagement/setAssessmentSupervisor`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user_id: selectedSupervisor,
+            assessment_id: assessmentDetails.id,
+          }),
+        }).then((response) => {
+          setSendForApprovalDialogOpen(false);
+          if (response.ok) {
+            notifySuccess(t('assessment_successfully_sent_for_approval'));
+          } else {
+            notifyError(t('assessment_error_sending_for_approval'));
+          }
+        });
+    } catch (error) {
+      notifyError(t('error_server'));
+    }
   };
 
   function getSupervisors() {
+    const users = [];
     fetch(
       `${config.server.url}/userData/getUsers`,
       {
@@ -70,44 +119,42 @@ export default function AssesmentDetails({ assesmentDetails }) {
     ).then((response) => response.json())
       .then((data) => {
         data.sort((a, b) => a - b);
-
-        var users = [];
-
         data.forEach((user) => {
-          if (user.user_type === 'head' || user.user_type === 'dean') {
-            users.push(`${user.academic_title} ${user.first_name} ${user.last_name}`);
-          }
+          users.push(`${user.academic_title} ${user.first_name} ${user.last_name}`);
         });
-        setSupervisors(users);
+        setSupervisors(data);
       });
   }
 
   useEffect(() => {
-    if (assesmentDetails !== undefined) {
+    if (assessmentDetails !== undefined) {
       setEvaluateesTableLoading(true);
-      fetch(`${config.server.url}/assesmentData/getEvaluateesByAssesment`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            id: assesmentDetails.id,
-          }),
-        }).then((response) => response.json())
-        .then((data) => {
-          setEvaluatees(data);
-          setEvaluateesTableLoading(false);
-        });
+      try {
+        fetch(`${config.server.url}/evaluationsManagement/getEvaluateesByAssessment?id=${assessmentDetails.id}`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+          }).then((response) => response.json())
+          .then((data) => {
+            setEvaluatees(data.evaluatees);
+            setEvaluateesTableLoading(false);
+          });
+      } catch (error) {
+        setEvaluateesTableLoading(false);
+        notifyError(t('error_server'));
+      }
     }
+
     getSupervisors();
-  }, [assesmentDetails]);
+  }, [assessmentDetails]);
 
   function Row(props) {
     const { row } = props;
-    const [open, setOpen] = useState(false);
+    const [isTableRowOpen, setTableRowOpen] = useState(false);
 
     return (
       <>
@@ -116,9 +163,9 @@ export default function AssesmentDetails({ assesmentDetails }) {
             <IconButton
               aria-label="expand row"
               size="small"
-              onClick={() => setOpen(!open)}
+              onClick={() => setTableRowOpen(!isTableRowOpen)}
             >
-              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+              {isTableRowOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>
           <TableCell component="th" scope="row">
@@ -139,9 +186,8 @@ export default function AssesmentDetails({ assesmentDetails }) {
                   color: '#39e9e9e',
                   '&:hover': { bgcolor: '#D9372A', color: '#FFFFFF' },
                 }}
-                //disabled={isDeleteLoading}
+                disabled={assessmentDetails.status !== 'Draft'}
                 aria-label="delete"
-              // onClick={handleDeleteUser}
               >
                 <DeleteIcon />
               </Fab>
@@ -150,34 +196,34 @@ export default function AssesmentDetails({ assesmentDetails }) {
         </TableRow>
         <TableRow>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-            <Collapse in={open} timeout="auto" unmountOnExit>
+            <Collapse in={isTableRowOpen} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
                 <Typography variant="h6" gutterBottom component="div">
-                  Courses
+                  {t('courses')}
                 </Typography>
                 <Table size="small" aria-label="purchases">
                   <TableHead>
                     <TableRow>
-                      <TableCell>Course code</TableCell>
-                      <TableCell>Course name</TableCell>
-                      <TableCell>Enrolled students</TableCell>
-                      <TableCell>Details</TableCell>
+                      <TableCell>{t('course_code')}</TableCell>
+                      <TableCell>{t('course_name')}</TableCell>
+                      <TableCell>{t('enrolled_students')}</TableCell>
+                      <TableCell>{t('details')}</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {row.evaluatee.evaluations.map((course) => (
-                      <TableRow key={course.course_code}>
+                    {row.evaluatee.evaluations.map((evaluation) => (
+                      <TableRow key={evaluation.course_code}>
                         <TableCell component="th" scope="row">
-                          {course.course_code}
+                          {evaluation.course_code}
                         </TableCell>
                         <TableCell component="th" scope="row">
-                          {course.course.course_name}
+                          {evaluation.course.course_name}
                         </TableCell>
                         <TableCell component="th" scope="row">
-                          TBA
+                          {evaluation.enrolled_students}
                         </TableCell>
                         <TableCell component="th" scope="row">
-                          {course.details}
+                          {evaluation.details}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -191,7 +237,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
     );
   }
 
-  if (assesmentDetails === undefined) {
+  if (assessmentDetails === undefined) {
     return (
       <Box sx={{
         height: '100%',
@@ -200,72 +246,144 @@ export default function AssesmentDetails({ assesmentDetails }) {
         alignItems: 'center',
       }}
       >
-        <Typography variant="subtitle2" sx={{ color: '#848884' }}>Select assesment on the left to see details</Typography>
+        <Typography variant="subtitle2" sx={{ color: '#848884' }}>{t('select_assesment_on_left_to_see_details')}</Typography>
       </Box>
     );
   }
 
   return (
-    <Box sx={{ p: 2, borderRadius: 0.5, backgroundColor: '#ffffff', boxShadow: 2, border: 'solid 1px rgba(235, 235, 235)', height: '100%' }}>
-      <Box sx={{ display: 'flex', width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
+    <Box
+      sx={{
+        p: 2,
+        borderRadius: 0.5,
+        backgroundColor: '#ffffff',
+        boxShadow: 2,
+        border: 'solid 1px rgba(235, 235, 235)',
+        height: '100%',
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          width: '100%',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}
+      >
         <Typography sx={{ mb: 1 }} variant="h5">
-          Assesment details
+          {t('assessment_details')}
         </Typography>
-        <Button sx={{ mb: 1 }} variant="text" size="small" onClick={handleOpenSendForApprovalDialog} endIcon={<SendIcon />}>
-          Send for approval
+        <Button
+          sx={{ mb: 1 }}
+          disabled={assessmentDetails.status !== 'Draft'}
+          variant="text"
+          size="small"
+          onClick={handleOpenSendForApprovalDialog}
+          endIcon={<SendIcon />}
+        >
+          {t('send_for_approval')}
         </Button>
       </Box>
       <Divider sx={{ m: 0 }} variant="middle" />
-      <Box sx={{ mt: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-        <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+      <Box
+        sx={{
+          mt: 2,
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          width: '100%',
+        }}
+      >
+        <Box
+          sx={{
+            mt: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2,
+            width: '100%',
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 8,
+            }}
+          >
             <Typography sx={{ width: '10%' }}>
               Status
             </Typography>
             <FormControl>
               <Select
-                value={assesmentDetails.status}
+                value={assessmentDetails.status}
                 displayEmpty
                 inputProps={{ 'aria-label': 'Without label' }}
                 size="small"
               >
-                {assesmentStatuses.map((status) => (
+                {assessmentStatuses.map((status) => (
                   <MenuItem value={status}>{status}</MenuItem>
                 ))}
               </Select>
             </FormControl>
           </Box>
-          <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 8,
+            }}
+          >
             <Typography sx={{ width: '10%' }}>
-              Semester
+              {t('semester')}
             </Typography>
-            <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-              {assesmentDetails.name}
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', width: '50%' }}>
+              {assessmentDetails.name}
             </Typography>
           </Box>
         </Box>
       </Box>
-      <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2, height: '55%' }}>
+      <Box
+        sx={{
+          mt: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          height: '55%',
+        }}
+      >
         <Divider sx={{ m: 0 }} variant="middle" />
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography variant="h6">
-            Evaluatees
+            {t('evaluatees')}
           </Typography>
-          <Button variant="contained" size="small" endIcon={<Add />}>
-            Add evaluatee
+          <Button
+            variant="contained"
+            disabled={assessmentDetails.status !== 'Draft'}
+            size="small"
+            endIcon={<Add />}
+          >
+            {t('add_evaluatee')}
           </Button>
         </Box>
         <Box sx={{ height: '100%' }}>
           {isEvaluateesTableLoading && <LinearProgress />}
-          <TableContainer style={{ maxHeight: '100%', border: 'solid 2px rgba(235, 235, 235)', borderRadius: 2 }}>
+          <TableContainer
+            style={{
+              maxHeight: '100%',
+              border: 'solid 2px rgba(235, 235, 235)',
+              borderRadius: 2,
+            }}
+          >
             <Table aria-label="collapsible table">
               <TableHead>
                 <TableRow>
                   <TableCell />
-                  <TableCell>Evaluatee</TableCell>
-                  <TableCell>Email</TableCell>
-                  <TableCell>Number of courses</TableCell>
-                  <TableCell>Actions</TableCell>
+                  <TableCell>{t('evaluatee')}</TableCell>
+                  <TableCell>{t('label_email')}</TableCell>
+                  <TableCell>{t('number_of_courses')}</TableCell>
+                  <TableCell>{t('label_actions')}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -278,42 +396,25 @@ export default function AssesmentDetails({ assesmentDetails }) {
         </Box>
       </Box>
       <Dialog open={isSendForApprovalDialogOpen} onClose={handleCloseSendForApprovalDialog}>
-        <DialogTitle>Send schedule for approval</DialogTitle>
+        <DialogTitle>{t('send_schedule_for_approval')}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Select the person responsible for schedule:
+            {t('select_the_person_responsible_for_schedule')}
           </DialogContentText>
           <Box sx={{ display: 'flex', gap: 1, mt: 1, flexDirection: 'column' }}>
             <Autocomplete
-              disablePortal
-              id="combo-box-demo"
               options={supervisors}
+              onChange={(event, value) => setSelectedSupervisor(value.id)}
+              getOptionLabel={(option) => `${option.academic_title} ${option.first_name} ${option.last_name}`}
+              id="combo-box-demo"
               sx={{ flex: 1 }}
-              renderInput={(params) => <TextField {...params} label="Supervisor" />}
+              renderInput={(params) => <TextField {...params} label={t('supervisor')} />}
             />
-            {
-              supervisors.length === 0 && (
-                <Alert severity="warning">
-                  No users with role supervisor was found in the system!
-                  <br />
-                  Go to <Link href="#" onClick={<Navigate to="/users" />}>Manage users</Link> to manage user roles.
-                </Alert>
-              )
-            }
-            {
-              supervisors.length > 0 && (
-                <Alert severity="info">
-                  Only the users with role suprvisor are displayed!
-                  <br />
-                  Go to <Link href="#" onClick={<Navigate to="/users" />}>Manage users</Link> to manage user roles.
-                </Alert>
-              )
-            }
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" onClick={handleCloseSendForApprovalDialog}>Cancel</Button>
-          <Button variant="contained" onClick={handleSendScheduleForApproval}>Send</Button>
+          <Button variant="outlined" onClick={handleCloseSendForApprovalDialog}>{t('cancel')}</Button>
+          <Button variant="contained" onClick={handleSendScheduleForApproval}>{t('send')}</Button>
         </DialogActions>
       </Dialog>
     </Box>

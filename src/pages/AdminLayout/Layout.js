@@ -24,13 +24,18 @@ import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import DescriptionIcon from '@mui/icons-material/Description';
+import MenuItem from '@mui/material/MenuItem';
+import Avatar from '@mui/material/Avatar';
+import Menu from '@mui/material/Menu';
 import LanguageSwitchV2 from '../../components/LanguageSwitch/LanguageSwitchV2.js';
-import Assesments from '../AdminLayout/Assesments/Assesments.js';
-import ManageEvaluationGroup from '../AdminLayout/ManageEvaluationGroup/ManageEvaluationGroup.js';
-import Protocols from '../AdminLayout/Protocols/Protocols.js';
-import ManageUsers from '../AdminLayout/ManageUsers/ManageUsers.js';
+import Protocols from './Protocols/Protocols.js';
+import ManageUsers from './ManageUsers/ManageUsers.js';
+import Assessments from './Assessments/Assessments.js'
+import ManageWZHZGroup from './ManageWZHZGroup/ManageWZHZGroup.js'
 
 import UserContext from '../../context/UserContext/UserContext.js';
+
+import departmentLogo from '../../assets/images/departmentLogo.svg';
 
 import './layout.css';
 
@@ -83,22 +88,22 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-    boxSizing: 'border-box',
-    ...(open && {
-      ...openedMixin(theme),
-      '& .MuiDrawer-paper': openedMixin(theme),
-    }),
-    ...(!open && {
-      ...closedMixin(theme),
-      '& .MuiDrawer-paper': closedMixin(theme),
-    }),
+const Drawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => prop !== 'open',
+})(({ theme, open }) => ({
+  width: drawerWidth,
+  flexShrink: 0,
+  whiteSpace: 'nowrap',
+  boxSizing: 'border-box',
+  ...(open && {
+    ...openedMixin(theme),
+    '& .MuiDrawer-paper': openedMixin(theme),
   }),
-);
+  ...(!open && {
+    ...closedMixin(theme),
+    '& .MuiDrawer-paper': closedMixin(theme),
+  }),
+}));
 
 export default function Layout() {
   const { t } = useTranslation();
@@ -115,30 +120,57 @@ export default function Layout() {
     setOpen(false);
   };
 
-  const [drawerSelectedItem, setDrawerSelectedItem] = useState('evaluations');
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const settings = [t('logout')];
+
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+  const [drawerSelectedItem, setDrawerSelectedItem] = useState('assessments');
 
   const drawerContentList = [
     {
       title: t('drawer_item_title_classes_eval'),
-      icon: <FactCheckIcon color={drawerSelectedItem === 'assesments' ? 'primary' : 'action'} />,
-      link: 'assesments',
-      component: <Assesments {...{ setDrawerSelectedItem, link: 'assesments' }} />,
+      icon: <FactCheckIcon color={drawerSelectedItem === 'assessments' ? 'primary' : 'action'} />,
+      link: 'assessments',
+      component: <Assessments {...{ setDrawerSelectedItem, link: 'assessments' }} />,
     },
     {
       title: t('drawer_item_title_wzhz'),
-      icon: <SupervisedUserCircleIcon color={drawerSelectedItem === 'wzhz-szhz' ? 'primary' : 'action'} />,
+      icon: (
+        <SupervisedUserCircleIcon
+          color={drawerSelectedItem === 'wzhz-szhz' ? 'primary' : 'action'}
+        />
+      ),
       link: 'wzhz-szhz',
-      component: <ManageEvaluationGroup {...{ setDrawerSelectedItem, link: 'wzhz-szhz' }} />,
+      component: (
+        <ManageWZHZGroup {...{ setDrawerSelectedItem, link: 'wzhz-szhz' }} />
+      ),
     },
     {
       title: t('drawer_item_title_protocols'),
-      icon: <DescriptionIcon color={drawerSelectedItem === 'protocols' ? 'primary' : 'action'} />,
+      icon: (
+        <DescriptionIcon
+          color={drawerSelectedItem === 'protocols' ? 'primary' : 'action'}
+        />
+      ),
       link: 'protocols',
-      component: <Protocols {...{ setDrawerSelectedItem, link: 'protocols' }} />,
+      component: (
+        <Protocols {...{ setDrawerSelectedItem, link: 'protocols' }} />
+      ),
     },
     {
       title: t('drawer_item_title_users'),
-      icon: <GroupAddIcon color={drawerSelectedItem === 'users' ? 'primary' : 'action'} />,
+      icon: (
+        <GroupAddIcon
+          color={drawerSelectedItem === 'users' ? 'primary' : 'action'}
+        />
+      ),
       link: 'users',
       component: <ManageUsers {...{ setDrawerSelectedItem, link: 'users' }} />,
     },
@@ -167,23 +199,69 @@ export default function Layout() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+          <img
+            src={departmentLogo}
+            alt="WIT Department Logo"
+            width="44px"
+          />
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, ml: 2 }}>
             {t('app_name')}
           </Typography>
           <LanguageSwitchV2 />
+          <Box sx={{ flexGrow: 0, pl: 2 }}>
+            <Tooltip title={t('profile')}>
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+              </IconButton>
+            </Tooltip>
+            <Menu
+              sx={{ mt: '45px' }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              {settings.map((setting) => (
+                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <Typography textAlign="center">{setting}</Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            {theme.direction === 'rtl' ? (
+              <ChevronRightIcon />
+            ) : (
+              <ChevronLeftIcon />
+            )}
           </IconButton>
         </DrawerHeader>
         <Divider />
         <List>
           {drawerContentList.map((item) => (
-            <Tooltip key={item.title} title={!open ? item.title : ''} placement="right">
-              <ListItem key={item.title} disablePadding sx={{ display: 'block' }}>
+            <Tooltip
+              key={item.title}
+              title={!open ? item.title : ''}
+              placement="right"
+            >
+              <ListItem
+                key={item.title}
+                disablePadding
+                sx={{ display: 'block' }}
+              >
                 <ListItemButton
                   sx={{
                     minHeight: 48,
@@ -202,7 +280,10 @@ export default function Layout() {
                   >
                     {item.icon}
                   </ListItemIcon>
-                  <ListItemText primary={item.title} sx={{ opacity: open ? 1 : 0 }} />
+                  <ListItemText
+                    primary={item.title}
+                    sx={{ opacity: open ? 1 : 0 }}
+                  />
                 </ListItemButton>
               </ListItem>
             </Tooltip>
@@ -211,17 +292,13 @@ export default function Layout() {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, pl: 3, pr: 3, height: '100%' }}>
         <DrawerHeader />
-        <Box>
-          <Typography sx={{ p: 2, flex: 1, textAlign: 'end' }}>
-            {t('title_logged_in_as')}
-            ...
-          </Typography>
+        <Box sx={{ mt: 3 }}>
+          <Routes>
+            {drawerContentList.map((item) => (
+              <Route key={item.title} path={item.link} element={item.component} />
+            ))}
+          </Routes>
         </Box>
-        <Routes>
-          {drawerContentList.map((item) => (
-            <Route key={item.title} path={item.link} element={item.component} />
-          ))}
-        </Routes>
       </Box>
     </Box>
   );

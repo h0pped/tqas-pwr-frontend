@@ -13,6 +13,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { useTranslation } from 'react-i18next';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import validate from './ActivateAccountValidationRules.js';
 import useForm from './useForm.js';
@@ -27,6 +28,7 @@ export default function ActivateAccountComponent({ handleFormClick }) {
   const { t } = useTranslation();
 
   const [state, setState] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const [dialogContent, setDialogContent] = useState({
     title: t('success'),
     severity: 'success',
@@ -44,6 +46,7 @@ export default function ActivateAccountComponent({ handleFormClick }) {
   };
 
   const handleCodeSend = async () => {
+    setIsLoading(true);
     const res = await fetch(`${config.server.url}/auth/sendCode`, {
       method: 'POST',
       headers: {
@@ -53,10 +56,12 @@ export default function ActivateAccountComponent({ handleFormClick }) {
         email: values.email,
       }),
     });
+    setIsLoading(false);
     return res.status;
   };
 
   const verifyActivationCode = async () => {
+    setIsLoading(true);
     const res = await fetch(`${config.server.url}/auth/verifyCode`, {
       method: 'POST',
 
@@ -68,10 +73,12 @@ export default function ActivateAccountComponent({ handleFormClick }) {
         code: values.code,
       }),
     });
+    setIsLoading(false);
     return res.status === 200;
   };
 
   const activateAccountHandler = async () => {
+    setIsLoading(true);
     const res = await fetch(`${config.server.url}/auth/activateAccount`, {
       method: 'POST',
       headers: {
@@ -83,6 +90,7 @@ export default function ActivateAccountComponent({ handleFormClick }) {
         password: values.password,
       }),
     });
+    setIsLoading(false);
     return res.status;
   };
   async function verify() {
@@ -163,7 +171,7 @@ export default function ActivateAccountComponent({ handleFormClick }) {
             arrow
           >
             <TextField
-              error={errors.email}
+              error={!!errors.email}
               helperText={t(errors.email)}
               margin="normal"
               required
@@ -184,7 +192,7 @@ export default function ActivateAccountComponent({ handleFormClick }) {
             arrow
           >
             <TextField
-              error={state === 1 && errors.code}
+              error={state === 1 && !!errors.code}
               helperText={state === 1 ? t(errors.code) : ''}
               margin="normal"
               required
@@ -205,7 +213,7 @@ export default function ActivateAccountComponent({ handleFormClick }) {
             arrow
           >
             <TextField
-              error={state === 2 && errors.password}
+              error={state === 2 && !!errors.password}
               helperText={state === 2 ? t(errors.password) : ''}
               margin="normal"
               required
@@ -225,12 +233,13 @@ export default function ActivateAccountComponent({ handleFormClick }) {
             type="submit"
             fullWidth
             variant="contained"
+            disabled={isLoading}
             onClick={handleSubmit}
             sx={{ mt: 3, mb: 2 }}
           >
-            {state !== 2
-              ? t('btn_act_acc_verify_email')
-              : t('btn_act_acc_activate')}
+            {isLoading && <CircularProgress size={24} />}
+            {!isLoading && state !== 2 && t('btn_act_acc_verify_email')}
+            {!isLoading && state === 2 && t('btn_act_acc_activate')}
           </Button>
           <Button
             fullWidth
