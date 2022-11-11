@@ -116,7 +116,7 @@
   "profile": "Profile",
   "WZHZ_group": "WZHZ Group",
   "success_assessment_created": "Assessment was successfully created!",
-  "error_assessment_not_created": "There was an error while creating new assessment."
+  "error_assessment_not_created": "There was an error while creating new assessment.",
   "title_logged_in_as": "Logged in as",
   "awaiting_your_approval": "Awaiting your approval"
 }
