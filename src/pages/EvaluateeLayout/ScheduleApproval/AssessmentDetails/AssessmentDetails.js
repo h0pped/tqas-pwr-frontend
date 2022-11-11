@@ -227,19 +227,43 @@ export default function AssesmentDetails({ assesmentDetails }) {
         alignItems: 'center',
       }}
       >
-        <Typography variant="subtitle2" sx={{ color: '#848884' }}>{t('select_assesment_on_left_to_see_details')}</Typography>
+        <Typography variant="subtitle2" sx={{ color: '#848884' }}>
+          {t('select_assesment_on_left_to_see_details')}
+        </Typography>
       </Box>
     );
   }
 
   return (
-    <Box sx={{ p: 2, borderRadius: 0.5, backgroundColor: '#ffffff', boxShadow: 2, border: 'solid 1px rgba(235, 235, 235)', height: '100%' }}>
-      <Box sx={{ display: 'flex', width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
+    <Box
+      sx={{
+        p: 2,
+        borderRadius: 0.5,
+        backgroundColor: '#ffffff',
+        boxShadow: 2,
+        border: 'solid 1px rgba(235, 235, 235)',
+        height: '100%'
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          width: '100%',
+          flexDirection: 'row',
+          justifyContent: 'space-between'
+        }}
+      >
         <Typography sx={{ mb: 1 }} variant="h5">
           {t('assessment_details')}
         </Typography>
         <Box sx={{ display: 'flex', gap: 1, flexDirection: 'row' }}>
-          <Button sx={{ mb: 1 }} variant="outlined" size="small" onClick={handleOpenRejectDialog} endIcon={<ClearIcon />}>
+          <Button
+            sx={{ mb: 1 }}
+            variant="outlined"
+            size="small"
+            onClick={handleOpenRejectDialog}
+            endIcon={<ClearIcon />}
+          >
             {t('reject_schedule')}
           </Button>
           <Button sx={{ mb: 1 }} variant="contained" size="small" endIcon={<DoneIcon />}>
@@ -248,9 +272,30 @@ export default function AssesmentDetails({ assesmentDetails }) {
         </Box>
       </Box>
       <Divider sx={{ m: 0 }} variant="middle" />
-      <Box sx={{ mt: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-        <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}>
-          <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 8, width: '100%' }}>
+      <Box
+        sx={{
+          mt: 2,
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          width: '100%'
+        }}>
+        <Box
+          sx={{
+            mt: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2,
+            width: '100%'
+          }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 8,
+              width: '100%'
+            }}>
             <Typography sx={{ width: '10%' }}>
               Status
             </Typography>
@@ -258,7 +303,14 @@ export default function AssesmentDetails({ assesmentDetails }) {
               {assesmentDetails.status}
             </Typography>
           </Box>
-          <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 8, width: '100%' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 8,
+              width: '100%'
+            }}>
             <Typography sx={{ width: '10%' }}>
               {t('semester')}
             </Typography>
@@ -277,7 +329,12 @@ export default function AssesmentDetails({ assesmentDetails }) {
         </Box>
         <Box sx={{ height: '100%' }}>
           {isEvaluateesTableLoading && <LinearProgress />}
-          <TableContainer style={{ border: 'solid 2px rgba(235, 235, 235)', borderRadius: 2, height: '100%' }}>
+          <TableContainer
+            style={{
+              border: 'solid 2px rgba(235, 235, 235)',
+              borderRadius: 2,
+              height: '100%'
+            }}>
             <Table aria-label="collapsible table">
               <TableHead>
                 <TableRow>

@@ -54,12 +54,30 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
     <Box sx={{ flexGrow: 1, height: '75vh' }}>
       <Grid container sx={{ height: '100%' }}>
         <Grid item xs={12}>
-          <Box sx={{ mb: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center' }}>
+          <Box
+            sx={{
+              mb: 2,
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignContent: 'center'
+            }}>
             <Typography variant="h5">{t('awaiting_your_approval')}</Typography>
           </Box>
         </Grid>
         <Grid item xs={4} sx={{ height: '100%' }}>
-          <Box sx={{ p: 0.7, display: 'flex', flexDirection: 'column', gap: 1, overflowY: 'scroll', height: '100%', borderRadius: 1, backgroundColor: '#f4f5f7' }}>
+          <Box
+            sx={{
+              p: 0.7,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 1,
+              overflowY: 'scroll',
+              height: '100%',
+              borderRadius: 1,
+              backgroundColor: '#f4f5f7'
+            }}
+          >
             {isAssesmentsLoading && <LinearProgress />}
             {!isAssesmentsLoading && assesments.map((item) => (
               <AssesmentCard
