@@ -38,7 +38,7 @@ const Item = styled(Paper)(({ theme }) => ({
   height: 800,
 }));
 
-export default function ClassesEvaluation({ setDrawerSelectedItem, link }) {
+export default function AssignTeam({ setDrawerSelectedItem, link }) {
   const [open, setOpen] = useState(false);
   const [wzhzList, setWzhzList] = useState({ wzhzList: [] });
   const [outsideList, setOutsideList] = useState({ outsideList: [] });
@@ -167,7 +167,7 @@ export default function ClassesEvaluation({ setDrawerSelectedItem, link }) {
           setOutsideList(data);
         });
     } catch (error) {
-      notifyError(t('error_server'));
+      notfyError(t('error_server'));
     }
   }
 
