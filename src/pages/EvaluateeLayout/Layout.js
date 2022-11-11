@@ -12,6 +12,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { Routes, Route, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import LanguageSwitchV2 from '../../components/LanguageSwitch/LanguageSwitchV2.js';
 
@@ -20,11 +21,16 @@ import MyAssessments from './MyAssessments/MyAssessments.js';
 
 import departmentLogo from '../../assets/images/departmentLogo.svg';
 
-const pages = [{ label: 'My assesments', link: 'my-assessments' }, { label: 'Schedule aproval', link: 'schedule-approval', component: <ScheduleApproval /> }];
-const settings = ['Logout'];
 
-const ResponsiveAppBar = () => {
+
+
+const Layout = () => {
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
+
+  const pages = [{ label: t('my_assessments'), link: 'my-assessments' }, { label: t('schedule_approval'), link: 'schedule-approval', component: <ScheduleApproval /> }];
+  const settings = ['Logout'];
 
   const [selectedPage, setSelectedPage] = useState('my-assessments');
 
@@ -159,4 +165,4 @@ const ResponsiveAppBar = () => {
     </Box>
   );
 };
-export default ResponsiveAppBar;
+export default Layout;

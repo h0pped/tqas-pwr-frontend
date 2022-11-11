@@ -125,5 +125,7 @@
   "info_by_rejecting_this_assessment": "By rejecting this schedule, the person responsible for preparing this schedule will be notified with your remarks, and will be asked to resubmit it once again.",
   "assign_team": "Assign team",
   "awaiting_your_approval": "Awaiting your approval",
-  "member": "member(s)"
+  "member": "member(s)",
+  "my_assessments": "My assessments",
+  "schedule_approval": "Schedule approval"
 }
