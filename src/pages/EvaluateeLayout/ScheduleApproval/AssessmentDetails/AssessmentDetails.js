@@ -30,7 +30,7 @@ import TextareaAutosize from '@mui/material/TextareaAutosize';
 import config from '../../../../config/index.config.js';
 import UserContext from '../../../../context/UserContext/UserContext.js';
 
-export default function AssesmentDetails({ assesmentDetails }) {
+export default function AssessmentDetails({ assessmentDetails }) {
   const { t } = useTranslation();
   const { token } = useContext(UserContext);
 
@@ -59,10 +59,10 @@ export default function AssesmentDetails({ assesmentDetails }) {
   });
 
   function getEvaluatees() {
-    if (assesmentDetails !== undefined) {
+    if (assessmentDetails !== undefined) {
       setEvaluateesTableLoading(true);
       try {
-        fetch(`${config.server.url}/evaluationsManagement/getEvaluateesByAssessment?id=${assesmentDetails.id}`,
+        fetch(`${config.server.url}/evaluationsManagement/getEvaluateesByAssessment?id=${assessmentDetails.id}`,
           {
             method: 'GET',
             headers: {
@@ -84,7 +84,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
 
   useEffect(() => {
     getEvaluatees();
-  }, [assesmentDetails]);
+  }, [assessmentDetails]);
 
   const StyledTableRow = styled(TableRow)(() => ({
     '&:nth-of-type(odd)': {
@@ -221,7 +221,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
     );
   }
 
-  if (assesmentDetails === undefined) {
+  if (assessmentDetails === undefined) {
     return (
       <Box sx={{
         height: '100%',
@@ -303,7 +303,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
               Status
             </Typography>
             <Typography sx={{ fontWeight: 'bold' }}>
-              {assesmentDetails.status}
+              {assessmentDetails.status}
             </Typography>
           </Box>
           <Box
@@ -318,7 +318,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
               {t('semester')}
             </Typography>
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-              {assesmentDetails.name}
+              {assessmentDetails.name}
             </Typography>
           </Box>
         </Box>

@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import LinearProgress from '@mui/material/LinearProgress';
 import AssessmentDetails from './AssessmentDetails/AssessmentDetails.js';
 
-import AssesmentCard from '../../../components/AssessmentCard/AssessmentCard.js';
+import AssessmentCard from '../../../components/AssessmentCard/AssessmentCard.js';
 
 import UserContext from '../../../context/UserContext/UserContext.js';
 
@@ -18,10 +18,10 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
   const { t } = useTranslation();
   const { token } = useContext(UserContext);
 
-  const [isAssesmentsLoading, setAssessmentsLoading] = useState(false);
+  const [isAssessmentsLoading, setAssessmentsLoading] = useState(false);
 
-  const [assesments, setAssessments] = useState([]);
-  const [selectedAssesment, setSelectedAssesment] = useState(null);
+  const [assessments, setAssessments] = useState([]);
+  const [selectedAssessment, setSelectedAssessment] = useState(null);
 
   async function getAssessments() {
     setAssessmentsLoading(true);
@@ -78,15 +78,15 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
               backgroundColor: '#f4f5f7'
             }}
           >
-            {isAssesmentsLoading && <LinearProgress />}
-            {!isAssesmentsLoading && assesments.map((item) => (
-              <AssesmentCard
+            {isAssessmentsLoading && <LinearProgress />}
+            {!isAssessmentsLoading && assessments.map((item) => (
+              <AssessmentCard
                 key={item.id}
                 id={item.id}
                 semester={item.name}
                 status={item.status}
-                setId={setSelectedAssesment}
-                isSelected={selectedAssesment === item.id}
+                setId={setSelectedAssessment}
+                isSelected={selectedAssessment === item.id}
                 numberOfEvaluatees={item.num_of_evaluatees}
               />
             ))}
@@ -95,8 +95,8 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
         <Grid item xs={8} sx={{ height: '100%' }}>
           <Box sx={{ p: 0.7, ml: 2, borderRadius: 1, backgroundColor: '#f4f5f7', height: '100%' }}>
             <AssessmentDetails
-              assesmentDetails={
-                assesments.find((assesment) => assesment.id === selectedAssesment)
+              assessmentDetails={
+                assessments.find((assessment) => assessment.id === selectedAssessment)
               }
             />
           </Box>
