@@ -115,5 +115,16 @@
   "error_select_user": "Wybierz użytkownika!",
   "WZHZ_group": "Grupa WZHZ",
   "success_assessment_created": "Hospitacja została pomyślnie utworzona!",
-  "error_assessment_not_created": "Wystąpił błąd podczas tworzenia nowej hospitacji."
+  "error_assessment_not_created": "Wystąpił błąd podczas tworzenia nowej hospitacji.",
+  "info_no_et": "Do tego/tej hospitującego/cej nie został przypisany zespol hospitowanija. Kliknij 'Przypisz zespół' zeby wybrać zespół hospitujący.",
+  "reject_schedule": "Reject schedule",
+  "approve_schedule": "Approve schedule",
+  "evaluation_team": "Zepol hospitujący",
+  "provide_the_reason_for_rejection": "Podaj powód odrzucenia:",
+  "info_by_rejecting_this_assessment": "W przypadku odrzucenia tego harmonogramu osoba odpowiedzialna za przygotowanie tego harmonogramu zostanie powiadomiona o Twoich uwagach i zostanie poproszona o ponowne przesłanie go.",
+  "assign_team": "Przypisz zespół",
+  "awaiting_your_approval": "Oczekujące na zatwierdzenie",
+  "member": "osoba",
+  "my_assessments": "Mmoje hospitacje",
+  "schedule_approval": "Zatwierdzanie harmonogramów"
 }

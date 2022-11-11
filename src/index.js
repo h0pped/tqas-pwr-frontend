@@ -13,6 +13,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 
 import App from './App.js';
 import AdminLayout from './pages/AdminLayout/Layout.js';
+import EvaluateeLayout from './pages/EvaluateeLayout/Layout.js';
 import reportWebVitals from './reportWebVitals.js';
 import Login from './pages/Login/Login.js';
 import { UserContextProvider } from './context/UserContext/UserContext.js';
@@ -69,6 +70,7 @@ root.render(
             <Route path="/" element={<Login />} />
             <Route path="/app" element={<App />} />
             <Route path="/home/*" element={<AdminLayout />} />
+            <Route path="/evaluatee/*" element={<EvaluateeLayout />} />
           </Routes>
         </BrowserRouter>
       </UserContextProvider>
