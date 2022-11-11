@@ -116,7 +116,7 @@
   "WZHZ_group": "Grupa WZHZ",
   "success_assessment_created": "Hospitacja została pomyślnie utworzona!",
   "error_assessment_not_created": "Wystąpił błąd podczas tworzenia nowej hospitacji.",
-  "info_no_et": "Do tego/tej hospitującego/cej nie został przypisany zespol hospitowanija. Kliknij „Przypisz zespół” zeby wybrać zespół hospitujący.",
+  "info_no_et": "Do tego/tej hospitującego/cej nie został przypisany zespol hospitowanija. Kliknij 'Przypisz zespół' zeby wybrać zespół hospitujący.",
   "reject_schedule": "Reject schedule",
   "approve_schedule": "Approve schedule",
   "evaluation_team": "Zepol hospitujący",

@@ -118,7 +118,7 @@
   "success_assessment_created": "Assessment was successfully created!",
   "error_assessment_not_created": "There was an error while creating new assessment.",
   "title_logged_in_as": "Logged in as",
-  "info_no_et": "No members were assigned to this evaluatee. Click &quot;Assign team&quot; to choose the evaluation team.",
+  "info_no_et": "No members were assigned to this evaluatee. Click 'Assign team' to choose the evaluation team.",
   "reject_schedule": "Reject schedule",
   "approve_schedule": "Approve schedule",
   "evaluation_team": "Provide the reason for rejection:",
