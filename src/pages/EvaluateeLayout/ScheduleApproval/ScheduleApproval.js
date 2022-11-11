@@ -4,9 +4,9 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import LinearProgress from '@mui/material/LinearProgress';
-import AssessmentDetails from './AssesmentDetails/AssesmentDetails.js';
+import AssessmentDetails from './AssessmentDetails/AssessmentDetails.js';
 
-import AssesmentCard from '../../../components/AssesmentCard/AssesmentCard.js';
+import AssesmentCard from '../../../components/AssessmentCard/AssessmentCard.js';
 
 import UserContext from '../../../context/UserContext/UserContext.js';
 
