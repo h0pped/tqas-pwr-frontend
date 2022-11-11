@@ -11,8 +11,9 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-
 import { Routes, Route, useNavigate } from 'react-router-dom';
+
+import LanguageSwitchV2 from '../../components/LanguageSwitch/LanguageSwitchV2.js';
 
 import ScheduleApproval from './ScheduleApproval/ScheduleApproval.js';
 import MyAssessments from './MyAssessments/MyAssessments.js';
@@ -114,7 +115,8 @@ const ResponsiveAppBar = () => {
                 </Button>
               ))}
             </Box>
-            <Box sx={{ flexGrow: 0 }}>
+            <Box sx={{ flexGrow: 0, display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+              <LanguageSwitchV2 />
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />

@@ -124,12 +124,12 @@ export default function AssesmentDetails({ assesmentDetails }) {
           <TableCell component="th" scope="row">
             {row.evaluatee.evaluations.length}
           </TableCell>
-          <TableCell component="th" scope="row">
+          <TableCell width="18%" component="th" scope="row">
             {`${row.evaluation_team.length} member(s)`}
           </TableCell>
-          <TableCell width="20%" component="th" scope="row">
+          <TableCell width="18%" component="th" scope="row">
             <Tooltip title="Remove evaluatee" placement="top">
-              <Button sx={{ width: '100%' }} size="small" variant="contained">Assign team</Button>
+              <Button sx={{ width: '100%' }} size="small" variant="contained">{t('assign_team')}</Button>
             </Tooltip>
           </TableCell>
         </TableRow>
@@ -138,15 +138,15 @@ export default function AssesmentDetails({ assesmentDetails }) {
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
                 <Typography variant="h6" gutterBottom component="div">
-                  Courses
+                  {t('courses')}
                 </Typography>
                 <Table size="small" aria-label="purchases">
                   <TableHead>
                     <StyledTableRow>
-                      <TableCell>Course code</TableCell>
-                      <TableCell>Course name</TableCell>
-                      <TableCell>Enrolled students</TableCell>
-                      <TableCell>Details</TableCell>
+                      <TableCell>{t('course_code')}</TableCell>
+                      <TableCell>{t('course_name')}</TableCell>
+                      <TableCell>{t('enrolled_students')}</TableCell>
+                      <TableCell>{t('details')}</TableCell>
                     </StyledTableRow>
                   </TableHead>
                   <TableBody>
@@ -171,16 +171,16 @@ export default function AssesmentDetails({ assesmentDetails }) {
               </Box>
               <Box sx={{ margin: 1 }}>
                 <Typography variant="h6" gutterBottom component="div">
-                  Evaluation team
+                  {t('evaluation_team')}
                 </Typography>
                 {row.evaluation_team.length > 0 && (
                   <Table size="small" aria-label="customized table">
                     <TableHead>
                       <StyledTableRow>
-                        <TableCell>Academic title</TableCell>
-                        <TableCell>First name</TableCell>
-                        <TableCell>Last name</TableCell>
-                        <TableCell>Email</TableCell>
+                        <TableCell>{t('label_academic_title')}</TableCell>
+                        <TableCell>{t('label_first_name')}</TableCell>
+                        <TableCell>{t('label_last_name')}</TableCell>
+                        <TableCell>{t('label_email')}</TableCell>
                       </StyledTableRow>
                     </TableHead>
                     <TableBody>
@@ -206,8 +206,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
                 {row.evaluation_team.length === 0 && (
                   <Alert severity="info">
                     <Typography>
-                      No members were assigned to this evaluatee.
-                      Click &quot;Assign team&quot; to choose the evaluation team.
+                      {t('info_no_et')}
                     </Typography>
                   </Alert>
                 )}
@@ -228,7 +227,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
         alignItems: 'center',
       }}
       >
-        <Typography variant="subtitle2" sx={{ color: '#848884' }}>Select assesment on the left to see details</Typography>
+        <Typography variant="subtitle2" sx={{ color: '#848884' }}>{t('select_assesment_on_left_to_see_details')}</Typography>
       </Box>
     );
   }
@@ -237,14 +236,14 @@ export default function AssesmentDetails({ assesmentDetails }) {
     <Box sx={{ p: 2, borderRadius: 0.5, backgroundColor: '#ffffff', boxShadow: 2, border: 'solid 1px rgba(235, 235, 235)', height: '100%' }}>
       <Box sx={{ display: 'flex', width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
         <Typography sx={{ mb: 1 }} variant="h5">
-          Assesment details
+          {t('assessment_details')}
         </Typography>
         <Box sx={{ display: 'flex', gap: 1, flexDirection: 'row' }}>
           <Button sx={{ mb: 1 }} variant="outlined" size="small" onClick={handleOpenRejectDialog} endIcon={<ClearIcon />}>
-            Reject schedule
+            {t('reject_schedule')}
           </Button>
           <Button sx={{ mb: 1 }} variant="contained" size="small" endIcon={<DoneIcon />}>
-            Approve schedule
+            {t('approve_schedule')}
           </Button>
         </Box>
       </Box>
@@ -261,7 +260,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
           </Box>
           <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 8, width: '100%' }}>
             <Typography sx={{ width: '10%' }}>
-              Semester
+              {t('semester')}
             </Typography>
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
               {assesmentDetails.name}
@@ -273,7 +272,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
         <Divider sx={{ m: 0 }} variant="middle" />
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography variant="h6">
-            Evaluatees
+            {t('evaluatees')}
           </Typography>
         </Box>
         <Box sx={{ height: '100%' }}>
@@ -283,11 +282,11 @@ export default function AssesmentDetails({ assesmentDetails }) {
               <TableHead>
                 <TableRow>
                   <TableCell />
-                  <TableCell>Evaluatee</TableCell>
-                  <TableCell>Email</TableCell>
-                  <TableCell>Number of courses</TableCell>
-                  <TableCell>Evaluation team</TableCell>
-                  <TableCell>Actions</TableCell>
+                  <TableCell>{t('evaluatee')}</TableCell>
+                  <TableCell>{t('label_email')}</TableCell>
+                  <TableCell>{t('courses')}</TableCell>
+                  <TableCell>{t('evaluation_team')}</TableCell>
+                  <TableCell>{t('label_actions')}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -300,10 +299,10 @@ export default function AssesmentDetails({ assesmentDetails }) {
         </Box>
       </Box>
       <Dialog open={isRejectDialogOpen} onClose={handleCloseRejectDialog}>
-        <DialogTitle>Reject schedule</DialogTitle>
+        <DialogTitle>{t('reject_schedule')}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Provide the reason for rejection:
+            {t('evaluation_team')}
           </DialogContentText>
           <Box sx={{ display: 'flex', gap: 1, mt: 1, flexDirection: 'column' }}>
             <TextareaAutosize
@@ -313,14 +312,12 @@ export default function AssesmentDetails({ assesmentDetails }) {
             />
           </Box>
           <Alert severity="info" sx={{ mt: 2 }}>
-            By rejecting this schedule,
-            the person responsible for preparing this schedule will be notified with your remarks,
-            and will be asked to resubmit it once again.
+            {t('info_by_rejecting_this_assessment')}
           </Alert>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" onClick={handleCloseRejectDialog}>Cancel</Button>
-          <Button variant="contained" onClick={handleSendScheduleForApproval}>Send</Button>
+          <Button variant="outlined" onClick={handleCloseRejectDialog}>{t('cancel')}</Button>
+          <Button variant="contained" onClick={handleSendScheduleForApproval}>{t('send')}</Button>
         </DialogActions>
       </Dialog>
     </Box>
