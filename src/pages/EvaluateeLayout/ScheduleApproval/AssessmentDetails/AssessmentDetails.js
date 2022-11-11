@@ -47,10 +47,6 @@ export default function AssesmentDetails({ assesmentDetails }) {
     setRejectDialogOpen(false);
   };
 
-  const handleSendScheduleForApproval = () => {
-    alert('Sending....');
-  };
-
   const notifyError = (msg) => toast.error(`${t('error_dialog')} ${msg}`, {
     position: 'top-center',
     autoClose: 5000,
@@ -381,7 +377,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
         </DialogContent>
         <DialogActions>
           <Button variant="outlined" onClick={handleCloseRejectDialog}>{t('cancel')}</Button>
-          <Button variant="contained" onClick={handleSendScheduleForApproval}>{t('send')}</Button>
+          <Button variant="contained">{t('send')}</Button>
         </DialogActions>
       </Dialog>
     </Box>
