@@ -123,5 +123,6 @@
   "provide_the_reason_for_rejection": "Podaj powód odrzucenia:",
   "info_by_rejecting_this_assessment": "W przypadku odrzucenia tego harmonogramu osoba odpowiedzialna za przygotowanie tego harmonogramu zostanie powiadomiona o Twoich uwagach i zostanie poproszona o ponowne przesłanie go.",
   "assign_team": "Przypisz zespół",
-  "awaiting_your_approval": "Oczekujące na zatwierdzenie"
+  "awaiting_your_approval": "Oczekujące na zatwierdzenie",
+  "member": "osoba"
 }

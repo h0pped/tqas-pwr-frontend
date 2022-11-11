@@ -121,7 +121,7 @@ export default function AssesmentDetails({ assesmentDetails }) {
             {row.evaluatee.evaluations.length}
           </TableCell>
           <TableCell width="18%" component="th" scope="row">
-            {`${row.evaluation_team.length} member(s)`}
+            {`${row.evaluation_team.length} ${t('member')}`}
           </TableCell>
           <TableCell width="18%" component="th" scope="row">
             <Tooltip title="Remove evaluatee" placement="top">
