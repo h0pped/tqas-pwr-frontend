@@ -159,7 +159,14 @@ export default function AssesmentDetails({ assesmentDetails }) {
                           {course.course.course_name}
                         </TableCell>
                         <TableCell component="th" scope="row">
-                          {course.enrolled_students}
+                          {course.enrolled_students && (
+                            course.enrolled_students
+                          )
+                          }
+                          {!course.enrolled_students && (
+                            "---"
+                          )
+                          }
                         </TableCell>
                         <TableCell component="th" scope="row">
                           {course.details}
