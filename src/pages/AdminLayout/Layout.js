@@ -110,7 +110,7 @@ export default function Layout() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
-  const { token, role, firstName, lastName } = useContext(UserContext);
+  const { token, role } = useContext(UserContext);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -141,17 +141,7 @@ export default function Layout() {
           color={drawerSelectedItem === 'evaluations' ? 'primary' : 'action'}
         />
       ),
-      link: 'evaluations',
-      component: (
-        <ClassesEvaluation
-          {...{ setDrawerSelectedItem, link: 'evaluations' }}
-        />
-      ),
-      icon: (
-        <FactCheckIcon
-          color={drawerSelectedItem === 'assessments' ? 'primary' : 'action'}
-        />
-      ),
+
       link: 'assessments',
       component: (
         <Assessments {...{ setDrawerSelectedItem, link: 'assessments' }} />

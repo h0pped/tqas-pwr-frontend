@@ -131,5 +131,10 @@
   "awaiting_your_approval": "Awaiting your approval",
   "member": "member(s)",
   "my_assessments": "My assessments",
-  "schedule_approval": "Schedule approval"
+  "schedule_approval": "Schedule approval",
+  "save": "Save",
+  "select_evaluatee": "Select Evaluatee",
+  "details_label": "Place and date of didactic classes",
+  "add_course": "Add course",
+  "edit_course": "Edit course"
 }

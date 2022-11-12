@@ -131,5 +131,10 @@
   "awaiting_your_approval": "Oczekujące na zatwierdzenie",
   "member": "osoba",
   "my_assessments": "Mmoje hospitacje",
-  "schedule_approval": "Zatwierdzanie harmonogramów"
+  "schedule_approval": "Zatwierdzanie harmonogramów",
+  "save": "Zapisz",
+  "select_evaluatee": "Wybierz hospitującego",
+  "details_label": "Miejsce i termin zajęć dydaktycznych",
+  "add_course": "Dodaj kurs",
+  "edit_course": "Edytuj kurs"
 }

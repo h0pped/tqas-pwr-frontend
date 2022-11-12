@@ -36,7 +36,13 @@ const yearsMap = {
   default: 'More than 5 years ago',
 };
 
-const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
+const AddEvaluateeModal = ({
+  isOpen,
+  onClose,
+  notifySuccess,
+  notifyError,
+  assessment,
+}) => {
   const { t } = useTranslation();
   const [evaluatees, setEvaluatees] = useState([]);
   const [fetchedUsers, setFetchUsers] = useState([]);
@@ -48,6 +54,8 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
 
   const [isEditingCourse, setIsEditingCourse] = useState(false);
   const [currentlyEditedCourse, setCurrentlyEditedCourse] = useState(null);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const [evaluateeFormValues, setEvaluateeFormValues] = useState({
     evaluatee: '',
@@ -96,21 +104,42 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
     }`;
 
   const addEvaluateeHandler = async () => {
-    try {
-      const res = await fetch(`${config.server.url}/evaluatee/addEvaluatee`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+    setIsLoading(true);
+    const body = {};
+    body[evaluateeFormValues.evaluateeId] = [];
+    courses.forEach((course) => {
+      body[evaluateeFormValues.evaluateeId].push({
+        course_code: course.courseCode,
+        course_name: course.courseName,
+        enrolled_students: course.numberOfPeopleEnrolled,
+        details: course.details,
+        assessment_id: assessment.toString(),
       });
+    });
+
+    try {
+      const res = await fetch(
+        `${config.server.url}/evaluationsManagement/createListOfClasses`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(body),
+        }
+      );
       if (res.ok) {
         notifySuccess(t('evaluatee_adding_success'));
         clearModalValues();
         onClose();
+      } else {
+        notifyError(t('evaluatee_adding_error'));
       }
     } catch (err) {
       notifyError(t('evaluatee_adding_error'));
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -127,18 +156,10 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
     evaluateeFormValues.numberOfPeopleEnrolled &&
     evaluateeFormValues.details;
 
-  const isModalFullfilledCheck = () => {
-    console.log(
-      evaluateeFormValues.evaluatee,
-      evaluateeFormValues.evaluateeId,
-      courses
-    );
-    return (
-      evaluateeFormValues.evaluatee &&
-      evaluateeFormValues.evaluateeId &&
-      courses.length > 0
-    );
-  };
+  const isModalFullfilledCheck = () =>
+    evaluateeFormValues.evaluatee &&
+    evaluateeFormValues.evaluateeId &&
+    courses.length > 0;
 
   const mapDate = (date) => {
     if (!date) {
@@ -301,7 +322,7 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
               <TextField
                 {...params}
                 key={params.id}
-                label="Select Evaluatee"
+                label={t('select_evaluatee')}
                 name="evaluatee"
                 onChange={handleEvaluateeFormValues}
                 value={evaluateeFormValues.evaluatee}
@@ -315,7 +336,7 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
           <Box sx={{ display: 'flex', gap: 1 }}>
             <TextField
               id="outlined-input"
-              label="Course Name"
+              label={t('course_name')}
               name="courseName"
               value={evaluateeFormValues.courseName}
               onChange={handleEvaluateeFormValues}
@@ -324,7 +345,7 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
 
             <TextField
               id="outlined-input"
-              label="Course code"
+              label={t('course_code')}
               name="courseCode"
               value={evaluateeFormValues.courseCode}
               onChange={handleEvaluateeFormValues}
@@ -334,7 +355,7 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
 
           <TextField
             id="outlined-input"
-            label="Number of enrolled"
+            label={t('enrolled_students')}
             name="numberOfPeopleEnrolled"
             value={evaluateeFormValues.numberOfPeopleEnrolled}
             onChange={handleEvaluateeFormValues}
@@ -342,7 +363,7 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
           />
           <TextField
             id="outlined-multiline-flexible"
-            label="Place and date of didactic classes"
+            label={t('details_label')}
             multiline
             name="details"
             value={evaluateeFormValues.details}
@@ -357,7 +378,7 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
             variant="outlined"
             disabled={!isFormFullfilled}
           >
-            {!isEditingCourse ? 'Add course' : 'Edit Course'}
+            {!isEditingCourse ? t('add_course') : t('edit_course')}
           </Button>
         </Box>
 
@@ -374,18 +395,18 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
               <Table sx={{ width: '100%' }} aria-label="simple table">
                 <TableHead sx={{ width: '100%' }}>
                   <TableRow sx={{ display: 'flex' }}>
-                    <TableCell sx={{ flex: 1 }}>Course code</TableCell>
+                    <TableCell sx={{ flex: 1 }}>{t('course_code')}</TableCell>
                     <TableCell align="left" sx={{ flex: 1.5 }}>
-                      Course name
+                      {t('course_name')}
                     </TableCell>
                     <TableCell align="left" sx={{ flex: 1.5 }}>
-                      Number of people enrolled
+                      {t('enrolled_students')}
                     </TableCell>
                     <TableCell align="left" sx={{ flex: 4 }}>
-                      Details
+                      {t('details')}
                     </TableCell>
                     <TableCell align="left" sx={{ flex: 1 }}>
-                      Actions
+                      {t('label_actions')}
                     </TableCell>
                   </TableRow>
                 </TableHead>
@@ -452,17 +473,22 @@ const AddEvaluateeModal = ({ isOpen, onClose, notifySuccess, notifyError }) => {
           </Box>
         )}
         <Box sx={bottomButtonsStyle}>
-          <Button onClick={onClose} size="large" variant="outlined">
-            Cancel
+          <Button
+            onClick={onClose}
+            size="large"
+            variant="outlined"
+            disabled={isLoading}
+          >
+            {t('cancel')}
           </Button>
           <Button
             onClick={addEvaluateeHandler}
             size="large"
             variant="contained"
             sx={{ backgroundColor: '#d9372a', color: 'white' }}
-            disabled={!isModalFullfilled}
+            disabled={!isModalFullfilled || isLoading}
           >
-            Save
+            {t('save')}
           </Button>
         </Box>
       </Box>
