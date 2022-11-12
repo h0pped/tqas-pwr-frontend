@@ -126,5 +126,6 @@
   "awaiting_your_approval": "Oczekujące na zatwierdzenie",
   "member": "osoba",
   "my_assessments": "Mmoje hospitacje",
-  "schedule_approval": "Zatwierdzanie harmonogramów"
+  "schedule_approval": "Zatwierdzanie harmonogramów",
+  "provide_reason_for_rejection": "Podaj powód odrzucenia:"
 }
