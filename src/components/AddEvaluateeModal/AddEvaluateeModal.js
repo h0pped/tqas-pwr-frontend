@@ -156,10 +156,13 @@ const AddEvaluateeModal = ({
     evaluateeFormValues.numberOfPeopleEnrolled &&
     evaluateeFormValues.details;
 
-  const isModalFullfilledCheck = () =>
-    evaluateeFormValues.evaluatee &&
-    evaluateeFormValues.evaluateeId &&
-    courses.length > 0;
+  const isModalFullfilledCheck = () => {
+    return (
+      evaluateeFormValues.evaluatee &&
+      evaluateeFormValues.evaluateeId &&
+      courses.length > 0
+    );
+  };
 
   const mapDate = (date) => {
     if (!date) {

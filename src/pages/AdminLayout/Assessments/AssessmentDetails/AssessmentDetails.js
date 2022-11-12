@@ -150,7 +150,7 @@ export default function AssessmentDetails({
           }
         )
           .then((response) => response.json())
-          .then((evaluatees) => {
+          .then(({ evaluatees }) => {
             setEvaluatees(evaluatees);
             setEvaluateesTableLoading(false);
           });

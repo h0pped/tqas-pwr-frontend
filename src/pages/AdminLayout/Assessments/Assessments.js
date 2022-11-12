@@ -132,7 +132,7 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
       })
         .then((response) => response.json())
         .then((data) => {
-          setAssessments(data.sort((a, b) => b.id - a.id));
+          setAssessments(data.assessments.sort((a, b) => b.id - a.id));
           setAssessmentsLoading(false);
         });
     } catch (error) {
