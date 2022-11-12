@@ -17,12 +17,18 @@ export default function AssessmentCard({
 
   return (
     <Box
-      onClick={() => { setId(id); }}
+      onClick={() => {
+        setId(id);
+      }}
       sx={{
         p: 2,
         backgroundColor: '#ffffff',
-        background: isSelected ? 'linear-gradient(45deg, rgba(217,55,42,1) 0%, rgba(255,128,118,1) 70%, rgba(217,55,42,1) 100%)' : null,
-        border: isSelected ? 'solid 0.5px #D9372A' : 'solid 0.5px rgba(235, 235, 235)',
+        background: isSelected
+          ? 'linear-gradient(45deg, rgba(217,55,42,1) 0%, rgba(255,128,118,1) 70%, rgba(217,55,42,1) 100%)'
+          : null,
+        border: isSelected
+          ? 'solid 0.5px #D9372A'
+          : 'solid 0.5px rgba(235, 235, 235)',
         color: isSelected ? '#ffffff' : '#000000',
         borderRadius: 0.5,
         boxShadow: 2,
@@ -35,19 +41,19 @@ export default function AssessmentCard({
     >
       <Box
         sx={{
-          display:
-            'flex',
+          display: 'flex',
           flexDirection: 'row',
           gap: 1.5,
         }}
       >
-        <Box sx={{
-          p: 0.5,
-          borderRadius: 2,
-          backgroundColor: '#fdf0ef',
-          width: '3rem',
-          height: '3rem',
-        }}
+        <Box
+          sx={{
+            p: 0.5,
+            borderRadius: 2,
+            backgroundColor: '#fdf0ef',
+            width: '3rem',
+            height: '3rem',
+          }}
         >
           <AssessmentIcon
             sx={{
@@ -74,7 +80,14 @@ export default function AssessmentCard({
           </Typography>
         </Box>
       </Box>
-      <Box sx={{ mt: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+      <Box
+        sx={{
+          mt: 2,
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}
+      >
         <Chip
           sx={{ color: isSelected ? '#ffffff' : '#000000' }}
           size="small"
