@@ -12,6 +12,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useTranslation } from 'react-i18next';
 
 import validate from './PasswordResetValidationRules.js';
@@ -27,11 +28,13 @@ export default function PasswordResetComponent({ handleFormClick }) {
   const { t } = useTranslation();
 
   const [state, setState] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { values, handleChange, errors, handleSubmit } = useForm(
     verify,
     validate
   );
+
   const [dialogContent, setDialogContent] = useState({
     title: t('success'),
     severity: 'success',
@@ -44,6 +47,7 @@ export default function PasswordResetComponent({ handleFormClick }) {
     setIsOpen(false);
   };
   const handleRecoveryCodeSend = async () => {
+    setIsLoading(true);
     const res = await fetch(
       `${config.server.url}/auth/sendRecoveryPasswordCode`,
       {
@@ -56,10 +60,12 @@ export default function PasswordResetComponent({ handleFormClick }) {
         }),
       }
     );
+    setIsLoading(false);
     return res.status;
   };
 
   const verifyRecoveryCode = async () => {
+    setIsLoading(true);
     const res = await fetch(`${config.server.url}/auth/verifyRecoveryCode`, {
       method: 'POST',
 
@@ -71,10 +77,12 @@ export default function PasswordResetComponent({ handleFormClick }) {
         code: values.code,
       }),
     });
-    return res.status === 200;
+    setIsLoading(false);
+    return res.status;
   };
 
   const passwordRecoveryHandler = async () => {
+    setIsLoading(true);
     const res = await fetch(`${config.server.url}/auth/passwordRecovery`, {
       method: 'POST',
       headers: {
@@ -86,6 +94,7 @@ export default function PasswordResetComponent({ handleFormClick }) {
         password: values.password,
       }),
     });
+    setIsLoading(false);
     return res.status;
   };
   async function verify() {
@@ -105,17 +114,32 @@ export default function PasswordResetComponent({ handleFormClick }) {
           content: t('server_error'),
         });
         setIsOpen(true);
+      } else if (codeSendStatus === 405) {
+        setDialogContent({
+          title: t('error_dialog'),
+          severity: 'error',
+          content: t('recovery_code_blocked'),
+        });
+        setIsOpen(true);
       } else if (codeSendStatus === 200) {
         setState(1);
       }
     } else if (state === 1 && values.code && !errors.code) {
-      if (await verifyRecoveryCode()) {
+      const verifyCodeStatus = await verifyRecoveryCode();
+      if (verifyCodeStatus === 200) {
         setState(2);
-      } else {
+      } else if (verifyCodeStatus === 400) {
         setDialogContent({
           title: t('error_dialog'),
           severity: 'error',
           content: t('wrong_recovery_code'),
+        });
+        setIsOpen(true);
+      } else if (verifyCodeStatus === 405) {
+        setDialogContent({
+          title: t('error_dialog'),
+          severity: 'error',
+          content: t('recovery_code_blocked'),
         });
         setIsOpen(true);
       }
@@ -228,12 +252,13 @@ export default function PasswordResetComponent({ handleFormClick }) {
             type="submit"
             fullWidth
             variant="contained"
+            disabled={isLoading}
             onClick={handleSubmit}
             sx={{ mt: 3, mb: 2 }}
           >
-            {state !== 2
-              ? t('btn_act_acc_verify_email')
-              : t('btn_reset_password')}
+            {isLoading && <CircularProgress size={24} />}
+            {!isLoading && state !== 2 && t('btn_act_acc_verify_email')}
+            {!isLoading && state === 2 && t('btn_reset_password')}
           </Button>
           <Button
             fullWidth

@@ -102,7 +102,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
     },
     {
       field: 'email',
-      headerName: t('label_first_name'),
+      headerName: t('label_email'),
       minWidth: 200,
       flex: 2,
     },
@@ -241,7 +241,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
   };
 
   return (
-    <Box sx={{ m: 0, p: 0, height: 400 }}>
+    <Box sx={{ m: 0, p: 0 }}>
       <ToastContainer />
       <Box
         sx={{
@@ -371,6 +371,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
         rowsPerPageOptions={[5, 25, 50]}
         pageSize={tablePageSize}
         loading={isUsersTableLoading}
+        autoHeight
         onPageSizeChange={(newPageSize) => setTablePageSize(newPageSize)}
         components={{
           Toolbar: customDataGridToolbar,
