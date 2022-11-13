@@ -61,6 +61,9 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
 
   const [isCrateAssessmentDialogOpen, setCreateAssessmentDialogOpen] =
     useState(false);
+
+  const [isAddEvaluateeDialogOpen, setAddEvaluateeDialogOpen] = useState(false);
+
   const [selectedAssessment, setSelectedAssessment] = useState(null);
   const [selectedSemesterValue, setSelectedSemesterValue] = useState(
     semesters.find((semester) =>
