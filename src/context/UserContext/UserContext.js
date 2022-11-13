@@ -19,7 +19,7 @@ export const UserContextProvider = ({ children }) => {
   const [firstName, setFirstName] = useState(getTokenInfo().first_name);
   const [lastName, setLastName] = useState(getTokenInfo().last_name);
   const [role, setRole] = useState(getTokenInfo().role);
-  const [id, setId] = useState(getTokenInfo().id)
+  const [id, setId] = useState(getTokenInfo().id);
 
   const loginHandler = (jwt) => {
     saveToken(jwt);

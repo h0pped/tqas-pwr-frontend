@@ -19,7 +19,6 @@ import UserContext from '../../../context/UserContext/UserContext.js';
 
 import config from '../../../config/index.config.js';
 
-
 const Transition = forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
 ));

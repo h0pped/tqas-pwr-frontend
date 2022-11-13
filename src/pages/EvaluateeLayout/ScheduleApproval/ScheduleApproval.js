@@ -12,7 +12,6 @@ import UserContext from '../../../context/UserContext/UserContext.js';
 
 import config from '../../../config/index.config.js';
 
-
 export default function ScheduleApproval({ setSelectedPage, link }) {
   const { t } = useTranslation();
   const { token, id } = useContext(UserContext);
