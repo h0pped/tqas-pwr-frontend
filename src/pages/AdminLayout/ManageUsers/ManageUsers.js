@@ -44,7 +44,9 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
   const [selectedFileToImport, setSelectedFileToImport] = useState(null);
   const [roleInputValue, setRoleInputValue] = useState('evaluatee');
   const [academicTitleInputValue, setAcademicTitleInputValue] = useState('dr');
-  const [lastDateOfEvalInputValue, setLastDateOfEvalInputValue] = useState(null);
+  const [lastDateOfEvalInputValue, setLastDateOfEvalInputValue] = useState(
+    null
+  );
 
   const [activeRowId, setActiveRow] = useState(null);
 

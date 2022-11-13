@@ -49,8 +49,8 @@ export default function Evaluations({ setSelectedPage, link }) {
         }
       )
         .then((response) => response.json())
-        .then((data) => {
-          setProtocols(data.protocols);
+        .then(({ protocols }) => {
+          setProtocols(protocols);
           setProtocolsLoading(false);
         });
     } catch (error) {

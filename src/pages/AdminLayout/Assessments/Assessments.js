@@ -59,7 +59,9 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
       theme: 'light',
     });
 
-  const [isCrateAssessmentDialogOpen, setCreateAssessmentDialogOpen] = useState(false);
+  const [isCrateAssessmentDialogOpen, setCreateAssessmentDialogOpen] = useState(
+    false
+  );
 
   const [isAddEvaluateeDialogOpen, setAddEvaluateeDialogOpen] = useState(false);
 
@@ -217,6 +219,7 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
             }}
           >
             <AssessmentDetails
+              onAddEvalueatee={() => setAddEvaluateeDialogOpen(true)}
               assessmentDetails={assessments.find(
                 (assesment) => assesment.id === selectedAssessment
               )}
