@@ -30,7 +30,7 @@ import TextareaAutosize from '@mui/material/TextareaAutosize';
 import config from '../../../../config/index.config.js';
 import UserContext from '../../../../context/UserContext/UserContext.js';
 
-export default function AssessmentDetails({ assessmentDetails }) {
+export default function AssessmentDetails({ assessmentDetails, onAssignTeam }) {
   const { t } = useTranslation();
   const { token } = useContext(UserContext);
 
@@ -45,6 +45,10 @@ export default function AssessmentDetails({ assessmentDetails }) {
 
   const handleCloseRejectDialog = () => {
     setRejectDialogOpen(false);
+  };
+
+  const handleOpenAssignTeamDialog = () => {
+    onAssignTeam();
   };
 
   const notifyError = (msg) =>
@@ -129,7 +133,12 @@ export default function AssessmentDetails({ assessmentDetails }) {
           </TableCell>
           <TableCell width="18%" component="th" scope="row">
             <Tooltip title="Remove evaluatee" placement="top">
-              <Button sx={{ width: '100%' }} size="small" variant="contained">
+              <Button
+                sx={{ width: '100%' }}
+                size="small"
+                variant="contained"
+                onClick={handleOpenAssignTeamDialog}
+              >
                 {t('assign_team')}
               </Button>
             </Tooltip>
