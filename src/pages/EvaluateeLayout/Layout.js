@@ -22,9 +22,6 @@ import Evaluations from './Protocols/Protocols.js';
 
 import departmentLogo from '../../assets/images/departmentLogo.svg';
 
-
-
-
 const Layout = () => {
   const navigate = useNavigate();
 
@@ -75,11 +72,7 @@ const Layout = () => {
       <AppBar position="static">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <img
-              src={departmentLogo}
-              alt="WIT Department Logo"
-              width="44px"
-            />
+            <img src={departmentLogo} alt="WIT Department Logo" width="44px" />
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
               <IconButton
                 size="large"
@@ -128,14 +121,25 @@ const Layout = () => {
                   key={page.label}
                   disabled={selectedPage === page.link}
                   variant={selectedPage === page.link ? 'contained' : 'text'}
-                  onClick={() => { handleCloseNavMenu(); handlePageChange(page.link); }}
+                  onClick={() => {
+                    handleCloseNavMenu();
+                    handlePageChange(page.link);
+                  }}
                   sx={{ my: 2, ml: 2, color: 'white', display: 'block' }}
                 >
                   {page.label}
                 </Button>
               ))}
             </Box>
-            <Box sx={{ flexGrow: 0, display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+            <Box
+              sx={{
+                flexGrow: 0,
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 2,
+              }}
+            >
               <LanguageSwitchV2 />
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -171,9 +175,25 @@ const Layout = () => {
       <Box component="main" sx={{ flexGrow: 1, pl: 3, pr: 3, height: '100%' }}>
         <Box sx={{ mt: 3, flexGrow: 1, pl: 3, pr: 3, height: '100%' }}>
           <Routes>
-            <Route exact path="/schedule-approval" element={<ScheduleApproval {...{ setSelectedPage, link: 'schedule-approval' }} />} />
-            <Route exact path="/my-assessments" element={<MyAssessments {...{ setSelectedPage, link: 'my-assessments' }} />} />
-            <Route exact path="/protocols" element={<Evaluations {...{ setSelectedPage, link: 'protocols' }} />} />
+            <Route
+              exact
+              path="/schedule-approval"
+              element={
+                <ScheduleApproval
+                  {...{ setSelectedPage, link: 'schedule-approval' }}
+                />
+              }
+            />
+            <Route
+              exact
+              path="/my-assessments"
+              element={
+                <MyAssessments
+                  {...{ setSelectedPage, link: 'my-assessments' }}
+                />
+              }
+            />
+           <Route exact path="/protocols" element={<Evaluations {...{ setSelectedPage, link: 'protocols' }} />} />
           </Routes>
         </Box>
       </Box>
