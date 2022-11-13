@@ -67,7 +67,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
 
   const { values, handleChange, errors, handleSubmitNewUser } = useForm(
     addUser,
-    validate,
+    validate
   );
 
   const notifySuccess = (msg) =>

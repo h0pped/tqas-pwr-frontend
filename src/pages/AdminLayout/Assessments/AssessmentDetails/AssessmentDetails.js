@@ -36,9 +36,11 @@ import { assessmentStatuses } from '../../../../constants.js';
 import config from '../../../../config/index.config.js';
 import UserContext from '../../../../context/UserContext/UserContext.js';
 
-export default function AssessmentDetails({ assessmentDetails }) {
+export default function AssessmentDetails({
+  assessmentDetails,
+  onAddEvalueatee,
+}) {
   const { t } = useTranslation();
-
   const [evaluatees, setEvaluatees] = useState([]);
   const [supervisors, setSupervisors] = useState([]);
 
@@ -159,6 +161,10 @@ export default function AssessmentDetails({ assessmentDetails }) {
 
     getSupervisors();
   }, [assessmentDetails]);
+
+  const handleOpenAddEvaluateeDialog = () => {
+    onAddEvalueatee();
+  };
 
   function Row(props) {
     const { row } = props;
@@ -375,6 +381,7 @@ export default function AssessmentDetails({ assessmentDetails }) {
             disabled={assessmentDetails.status !== 'Draft'}
             size="small"
             endIcon={<Add />}
+            onClick={handleOpenAddEvaluateeDialog}
           >
             {t('add_evaluatee')}
           </Button>

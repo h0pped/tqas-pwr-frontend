@@ -19,6 +19,13 @@ export const userRolesList = [
   { key: 'evaluatee', title: 'evaluatee' },
 ];
 
+export const WEEKDAYS = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+];
 export const assessmentStatuses = [
   'Draft',
   'Awaiting approval',

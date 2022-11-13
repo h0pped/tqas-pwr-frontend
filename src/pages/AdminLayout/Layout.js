@@ -110,7 +110,7 @@ export default function Layout() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
-  const { token } = useContext(UserContext);
+  const { token, role } = useContext(UserContext);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -181,6 +181,18 @@ export default function Layout() {
       component: <ManageUsers {...{ setDrawerSelectedItem, link: 'users' }} />,
     },
   ];
+  if (role === 'admin') {
+    drawerContentList.push({
+      title: t('drawer_item_title_users'),
+      icon: (
+        <GroupAddIcon
+          color={drawerSelectedItem === 'users' ? 'primary' : 'action'}
+        />
+      ),
+      link: 'users',
+      component: <ManageUsers {...{ setDrawerSelectedItem, link: 'users' }} />,
+    });
+  }
 
   const navigate = useNavigate();
 

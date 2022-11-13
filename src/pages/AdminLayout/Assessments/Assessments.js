@@ -25,6 +25,8 @@ import { semesters } from '../../../constants.js';
 import AssessmentCard from '../../../components/AssessmentCard/AssessmentCard.js';
 import AssessmentDetails from './AssessmentDetails/AssessmentDetails.js';
 
+import AddEvaluateeModal from '../../../components/AddEvaluateeModal/AddEvaluateeModal.js';
+
 import config from '../../../config/index.config.js';
 import UserContext from '../../../context/UserContext/UserContext.js';
 
@@ -143,6 +145,13 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
   return (
     <Box sx={{ flexGrow: 1, height: '75vh' }}>
       <ToastContainer />
+      <AddEvaluateeModal
+        isOpen={isAddEvaluateeDialogOpen}
+        onClose={() => setAddEvaluateeDialogOpen(false)}
+        notifySuccess={notifySuccess}
+        notifyError={notifyError}
+        assessment={selectedAssessment}
+      />
       <Grid container sx={{ height: '100%' }}>
         <Grid item xs={12}>
           <Box
