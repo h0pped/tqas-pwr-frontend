@@ -89,7 +89,10 @@ export default function Evaluations({ setSelectedPage, link }) {
                             }}
                         >
                             {isProtocolsLoading && <LinearProgress />}
-                            {protocols.length === 0 && <Typography variant="subtitle2" sx={{ color: '#848884' }}>{t('no_protocols_found')}</Typography>}
+                            {protocols.length === 0 &&
+                                <Typography variant="subtitle2" sx={{ color: '#848884' }}>
+                                    {t('no_protocols_found')}
+                                </Typography>}
                             {protocols.length > 0 && protocols.map((protocol) => (
                                 <ProtocolCard
                                     key={protocol.id}

@@ -23,7 +23,7 @@ export default function ProtocolCard({
                 color: '#000000',
                 borderRadius: 0.5,
                 minHeight: '13rem',
-                maxHeight: '16rem',
+                maxHeight: '18rem',
                 minWidth: '20rem',
                 flex: 1,
                 boxShadow: 2,
@@ -75,8 +75,23 @@ export default function ProtocolCard({
                     </Typography>
                 </Box>
             </Box>
-            <Chip sx={{ mt: 2}} icon={<CalendarMonthIcon />} label={protocol.semester_of_assessment} variant="outlined" />
-            <Box sx={{ mt: 2, p: 1, display: 'flex', flexDirection: 'column', height: '100%', backgroundColor: '#F8F8F8', borderRadius: 1, }}>
+            <Chip
+                sx={{ mt: 2 }}
+                icon={<CalendarMonthIcon />}
+                label={protocol.semester_of_assessment}
+                variant="outlined"
+            />
+            <Box
+                sx={{
+                    mt: 2,
+                    p: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: '100%',
+                    backgroundColor: '#F8F8F8',
+                    borderRadius: 1,
+                }}
+            >
                 <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Box>
                         <Typography variant='button'>{protocol.evaluation_course_name}</Typography>
@@ -86,7 +101,7 @@ export default function ProtocolCard({
                     </Box>
                 </Box>
                 <Divider />
-                <Box sx={{mt: 2}}>
+                <Box sx={{ mt: 2 }}>
                     <Typography variant="body2">
                         {t('enrolled_students')}: {protocol.evaluation_enrolled_students}
                     </Typography>
