@@ -30,13 +30,16 @@ export const assessmentStatuses = [
 function generateListOfSemesters(currentYearNumber) {
   const semesters = [];
 
-
   for (let step = 0; step < 3; step += 1) {
-    const newWinterSem = `Winter ${currentYearNumber + step}/${currentYearNumber + 1 + step}`;
+    const newWinterSem = `Winter ${currentYearNumber + step}/${
+      currentYearNumber + 1 + step
+    }`;
     const newWinterSemDateFrom = `${currentYearNumber + step}-10-01`;
     const newWinterSemDateTo = `${currentYearNumber + 1 + step}-02-27`;
 
-    const newSummerSem = `Summer ${currentYearNumber + step}/${currentYearNumber + 1 + step}`;
+    const newSummerSem = `Summer ${currentYearNumber + step}/${
+      currentYearNumber + 1 + step
+    }`;
     const newSummerSemDateFrom = `${currentYearNumber + 1 + step}-02-28`;
     const newSummerSemDateTo = `${currentYearNumber + 1 + step}-09-30`;
 

@@ -30,8 +30,8 @@ import Menu from '@mui/material/Menu';
 import LanguageSwitchV2 from '../../components/LanguageSwitch/LanguageSwitchV2.js';
 import Protocols from './Protocols/Protocols.js';
 import ManageUsers from './ManageUsers/ManageUsers.js';
-import Assessments from './Assessments/Assessments.js'
-import ManageWZHZGroup from './ManageWZHZGroup/ManageWZHZGroup.js'
+import Assessments from './Assessments/Assessments.js';
+import ManageWZHZGroup from './ManageWZHZGroup/ManageWZHZGroup.js';
 
 import UserContext from '../../context/UserContext/UserContext.js';
 
@@ -136,9 +136,15 @@ export default function Layout() {
   const drawerContentList = [
     {
       title: t('drawer_item_title_classes_eval'),
-      icon: <FactCheckIcon color={drawerSelectedItem === 'assessments' ? 'primary' : 'action'} />,
+      icon: (
+        <FactCheckIcon
+          color={drawerSelectedItem === 'assessments' ? 'primary' : 'action'}
+        />
+      ),
       link: 'assessments',
-      component: <Assessments {...{ setDrawerSelectedItem, link: 'assessments' }} />,
+      component: (
+        <Assessments {...{ setDrawerSelectedItem, link: 'assessments' }} />
+      ),
     },
     {
       title: t('drawer_item_title_wzhz'),
@@ -199,12 +205,13 @@ export default function Layout() {
           >
             <MenuIcon />
           </IconButton>
-          <img
-            src={departmentLogo}
-            alt="WIT Department Logo"
-            width="44px"
-          />
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, ml: 2 }}>
+          <img src={departmentLogo} alt="WIT Department Logo" width="44px" />
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ flexGrow: 1, ml: 2 }}
+          >
             {t('app_name')}
           </Typography>
           <LanguageSwitchV2 />
@@ -295,7 +302,11 @@ export default function Layout() {
         <Box sx={{ mt: 3 }}>
           <Routes>
             {drawerContentList.map((item) => (
-              <Route key={item.title} path={item.link} element={item.component} />
+              <Route
+                key={item.title}
+                path={item.link}
+                element={item.component}
+              />
             ))}
           </Routes>
         </Box>

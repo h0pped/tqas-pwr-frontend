@@ -34,11 +34,10 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
             Authorization: `Bearer ${token}`,
           },
         },
-      ).then((response) => response.json())
+      )
+        .then((response) => response.json())
         .then((data) => {
-          setAssessments(
-            data.assessments,
-          );
+          setAssessments(data.assessments);
           setAssessmentsLoading(false);
         });
     } catch (error) {
@@ -60,8 +59,9 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
               display: 'flex',
               flexDirection: 'row',
               justifyContent: 'space-between',
-              alignContent: 'center'
-            }}>
+              alignContent: 'center',
+            }}
+          >
             <Typography variant="h5">{t('awaiting_your_approval')}</Typography>
           </Box>
         </Grid>
@@ -75,29 +75,38 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
               overflowY: 'scroll',
               height: '100%',
               borderRadius: 1,
-              backgroundColor: '#f4f5f7'
+              backgroundColor: '#f4f5f7',
             }}
           >
             {isAssessmentsLoading && <LinearProgress />}
-            {!isAssessmentsLoading && assessments.map((item) => (
-              <AssessmentCard
-                key={item.id}
-                id={item.id}
-                semester={item.name}
-                status={item.status}
-                setId={setSelectedAssessment}
-                isSelected={selectedAssessment === item.id}
-                numberOfEvaluatees={item.num_of_evaluatees}
-              />
-            ))}
+            {!isAssessmentsLoading &&
+              assessments.map((item) => (
+                <AssessmentCard
+                  key={item.id}
+                  id={item.id}
+                  semester={item.name}
+                  status={item.status}
+                  setId={setSelectedAssessment}
+                  isSelected={selectedAssessment === item.id}
+                  numberOfEvaluatees={item.num_of_evaluatees}
+                />
+              ))}
           </Box>
         </Grid>
         <Grid item xs={8} sx={{ height: '100%' }}>
-          <Box sx={{ p: 0.7, ml: 2, borderRadius: 1, backgroundColor: '#f4f5f7', height: '100%' }}>
+          <Box
+            sx={{
+              p: 0.7,
+              ml: 2,
+              borderRadius: 1,
+              backgroundColor: '#f4f5f7',
+              height: '100%',
+            }}
+          >
             <AssessmentDetails
-              assessmentDetails={
-                assessments.find((assessment) => assessment.id === selectedAssessment)
-              }
+              assessmentDetails={assessments.find(
+                (assessment) => assessment.id === selectedAssessment,
+              )}
             />
           </Box>
         </Grid>

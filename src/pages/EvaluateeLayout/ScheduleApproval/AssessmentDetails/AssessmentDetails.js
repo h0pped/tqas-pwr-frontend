@@ -47,22 +47,24 @@ export default function AssessmentDetails({ assessmentDetails }) {
     setRejectDialogOpen(false);
   };
 
-  const notifyError = (msg) => toast.error(`${t('error_dialog')} ${msg}`, {
-    position: 'top-center',
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
+  const notifyError = (msg) =>
+    toast.error(`${t('error_dialog')} ${msg}`, {
+      position: 'top-center',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+    });
 
   function getEvaluatees() {
     if (assessmentDetails !== undefined) {
       setEvaluateesTableLoading(true);
       try {
-        fetch(`${config.server.url}/evaluationsManagement/getEvaluateesByAssessment?id=${assessmentDetails.id}`,
+        fetch(
+          `${config.server.url}/evaluationsManagement/getEvaluateesByAssessment?id=${assessmentDetails.id}`,
           {
             method: 'GET',
             headers: {
@@ -70,7 +72,9 @@ export default function AssessmentDetails({ assessmentDetails }) {
               Accept: 'application/json',
               'Content-Type': 'application/json',
             },
-          }).then((response) => response.json())
+          },
+        )
+          .then((response) => response.json())
           .then((data) => {
             setEvaluatees(data.evaluatees);
             setEvaluateesTableLoading(false);
@@ -125,7 +129,9 @@ export default function AssessmentDetails({ assessmentDetails }) {
           </TableCell>
           <TableCell width="18%" component="th" scope="row">
             <Tooltip title="Remove evaluatee" placement="top">
-              <Button sx={{ width: '100%' }} size="small" variant="contained">{t('assign_team')}</Button>
+              <Button sx={{ width: '100%' }} size="small" variant="contained">
+                {t('assign_team')}
+              </Button>
             </Tooltip>
           </TableCell>
         </TableRow>
@@ -155,14 +161,8 @@ export default function AssessmentDetails({ assessmentDetails }) {
                           {course.course.course_name}
                         </TableCell>
                         <TableCell component="th" scope="row">
-                          {course.enrolled_students && (
-                            course.enrolled_students
-                          )
-                          }
-                          {!course.enrolled_students && (
-                            "---"
-                          )
-                          }
+                          {course.enrolled_students && course.enrolled_students}
+                          {!course.enrolled_students && '---'}
                         </TableCell>
                         <TableCell component="th" scope="row">
                           {course.details}
@@ -208,9 +208,7 @@ export default function AssessmentDetails({ assessmentDetails }) {
                 )}
                 {row.evaluation_team.length === 0 && (
                   <Alert severity="info">
-                    <Typography>
-                      {t('info_no_et')}
-                    </Typography>
+                    <Typography>{t('info_no_et')}</Typography>
                   </Alert>
                 )}
               </Box>
@@ -223,12 +221,13 @@ export default function AssessmentDetails({ assessmentDetails }) {
 
   if (assessmentDetails === undefined) {
     return (
-      <Box sx={{
-        height: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
+      <Box
+        sx={{
+          height: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
       >
         <Typography variant="subtitle2" sx={{ color: '#848884' }}>
           {t('select_assesment_on_left_to_see_details')}
@@ -245,7 +244,7 @@ export default function AssessmentDetails({ assessmentDetails }) {
         backgroundColor: '#ffffff',
         boxShadow: 2,
         border: 'solid 1px rgba(235, 235, 235)',
-        height: '100%'
+        height: '100%',
       }}
     >
       <Box
@@ -253,7 +252,7 @@ export default function AssessmentDetails({ assessmentDetails }) {
           display: 'flex',
           width: '100%',
           flexDirection: 'row',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
         }}
       >
         <Typography sx={{ mb: 1 }} variant="h5">
@@ -269,7 +268,12 @@ export default function AssessmentDetails({ assessmentDetails }) {
           >
             {t('reject_schedule')}
           </Button>
-          <Button sx={{ mb: 1 }} variant="contained" size="small" endIcon={<DoneIcon />}>
+          <Button
+            sx={{ mb: 1 }}
+            variant="contained"
+            size="small"
+            endIcon={<DoneIcon />}
+          >
             {t('approve_schedule')}
           </Button>
         </Box>
@@ -281,27 +285,28 @@ export default function AssessmentDetails({ assessmentDetails }) {
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'space-between',
-          width: '100%'
-        }}>
+          width: '100%',
+        }}
+      >
         <Box
           sx={{
             mt: 2,
             display: 'flex',
             flexDirection: 'column',
             gap: 2,
-            width: '100%'
-          }}>
+            width: '100%',
+          }}
+        >
           <Box
             sx={{
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
               gap: 8,
-              width: '100%'
-            }}>
-            <Typography sx={{ width: '10%' }}>
-              Status
-            </Typography>
+              width: '100%',
+            }}
+          >
+            <Typography sx={{ width: '10%' }}>Status</Typography>
             <Typography sx={{ fontWeight: 'bold' }}>
               {assessmentDetails.status}
             </Typography>
@@ -312,23 +317,28 @@ export default function AssessmentDetails({ assessmentDetails }) {
               flexDirection: 'row',
               alignItems: 'center',
               gap: 8,
-              width: '100%'
-            }}>
-            <Typography sx={{ width: '10%' }}>
-              {t('semester')}
-            </Typography>
+              width: '100%',
+            }}
+          >
+            <Typography sx={{ width: '10%' }}>{t('semester')}</Typography>
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
               {assessmentDetails.name}
             </Typography>
           </Box>
         </Box>
       </Box>
-      <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2, height: '50%' }}>
+      <Box
+        sx={{
+          mt: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          height: '50%',
+        }}
+      >
         <Divider sx={{ m: 0 }} variant="middle" />
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Typography variant="h6">
-            {t('evaluatees')}
-          </Typography>
+          <Typography variant="h6">{t('evaluatees')}</Typography>
         </Box>
         <Box sx={{ height: '100%' }}>
           {isEvaluateesTableLoading && <LinearProgress />}
@@ -336,8 +346,9 @@ export default function AssessmentDetails({ assessmentDetails }) {
             style={{
               border: 'solid 2px rgba(235, 235, 235)',
               borderRadius: 2,
-              height: '100%'
-            }}>
+              height: '100%',
+            }}
+          >
             <Table aria-label="collapsible table">
               <TableHead>
                 <TableRow>
@@ -361,9 +372,7 @@ export default function AssessmentDetails({ assessmentDetails }) {
       <Dialog open={isRejectDialogOpen} onClose={handleCloseRejectDialog}>
         <DialogTitle>{t('reject_schedule')}</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            {t('provide_reason')}
-          </DialogContentText>
+          <DialogContentText>{t('provide_reason')}</DialogContentText>
           <Box sx={{ display: 'flex', gap: 1, mt: 1, flexDirection: 'column' }}>
             <TextareaAutosize
               aria-label="minimum height"
@@ -376,7 +385,9 @@ export default function AssessmentDetails({ assessmentDetails }) {
           </Alert>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" onClick={handleCloseRejectDialog}>{t('cancel')}</Button>
+          <Button variant="outlined" onClick={handleCloseRejectDialog}>
+            {t('cancel')}
+          </Button>
           <Button variant="contained">{t('send')}</Button>
         </DialogActions>
       </Dialog>

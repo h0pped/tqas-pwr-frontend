@@ -44,9 +44,8 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
   const [selectedFileToImport, setSelectedFileToImport] = useState(null);
   const [roleInputValue, setRoleInputValue] = useState('evaluatee');
   const [academicTitleInputValue, setAcademicTitleInputValue] = useState('dr');
-  const [lastDateOfEvalInputValue, setLastDateOfEvalInputValue] = useState(
-    null,
-  );
+  const [lastDateOfEvalInputValue, setLastDateOfEvalInputValue] =
+    useState(null);
 
   const [activeRowId, setActiveRow] = useState(null);
 
@@ -71,27 +70,29 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
     validate,
   );
 
-  const notifySuccess = (msg) => toast.success(`${t('success')} ${msg}`, {
-    position: 'top-center',
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
+  const notifySuccess = (msg) =>
+    toast.success(`${t('success')} ${msg}`, {
+      position: 'top-center',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+    });
 
-  const notifyError = (msg) => toast.error(`${t('error_dialog')} ${msg}`, {
-    position: 'top-center',
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
+  const notifyError = (msg) =>
+    toast.error(`${t('error_dialog')} ${msg}`, {
+      position: 'top-center',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+    });
 
   const usersTableColumnsDef = [
     {
