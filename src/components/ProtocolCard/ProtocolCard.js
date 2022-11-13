@@ -4,6 +4,8 @@ import Chip from '@mui/material/Chip';
 import { useTranslation } from 'react-i18next';
 
 import ArticleIcon from '@mui/icons-material/Article';
+import { Divider } from '@mui/material';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 export default function ProtocolCard({
     protocol,
@@ -21,8 +23,9 @@ export default function ProtocolCard({
                 border: 'solid 0.5px rgba(235, 235, 235)',
                 color: '#000000',
                 borderRadius: 0.5,
-                height: '13rem',
-                width: '30%',
+                minHeight: '13rem',
+                minWidth: '20rem',
+                flex: 1,
                 boxShadow: 2,
                 display: 'flex',
                 flexDirection: 'column',
@@ -72,7 +75,8 @@ export default function ProtocolCard({
                     </Typography>
                 </Box>
             </Box>
-            <Box sx={{ mt: 2, p: 1, display: 'flex', flexDirection: 'column', backgroundColor: '#F8F8F8', borderRadius: 1, }}>
+            <Chip sx={{ mt: 2}} icon={<CalendarMonthIcon />} label={protocol.semester_of_assessment} variant="outlined" />
+            <Box sx={{ mt: 2, p: 1, display: 'flex', flexDirection: 'column', height: '100%', backgroundColor: '#F8F8F8', borderRadius: 1, }}>
                 <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Box>
                         <Typography variant='button'>{protocol.evaluation_course_name}</Typography>
@@ -81,7 +85,8 @@ export default function ProtocolCard({
                         <Typography variant='overline'>{protocol.evaluation_course_code}</Typography>
                     </Box>
                 </Box>
-                <Box>
+                <Divider />
+                <Box sx={{mt: 2}}>
                     <Typography variant="body2">
                         Students: {protocol.evaluation_enrolled_students}
                     </Typography>
