@@ -32,9 +32,8 @@ const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
   [theme.breakpoints.up('md')]: {
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    width: `calc (1000px)`,
   },
-  color: theme.palette.text.secondary,
   height: 800,
 }));
 
