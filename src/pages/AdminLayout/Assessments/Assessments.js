@@ -59,8 +59,7 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
       theme: 'light',
     });
 
-  const [isCrateAssessmentDialogOpen, setCreateAssessmentDialogOpen] =
-    useState(false);
+  const [isCrateAssessmentDialogOpen, setCreateAssessmentDialogOpen] = useState(false);
 
   const [isAddEvaluateeDialogOpen, setAddEvaluateeDialogOpen] = useState(false);
 

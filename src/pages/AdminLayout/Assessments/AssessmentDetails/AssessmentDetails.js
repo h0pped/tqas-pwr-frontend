@@ -47,8 +47,7 @@ export default function AssessmentDetails({
   const [selectedSupervisor, setSelectedSupervisor] = useState('');
 
   const [isEvaluateesTableLoading, setEvaluateesTableLoading] = useState(false);
-  const [isSendForApprovalDialogOpen, setSendForApprovalDialogOpen] =
-    useState(false);
+  const [isSendForApprovalDialogOpen, setSendForApprovalDialogOpen] = useState(false);
 
   const { token } = useContext(UserContext);
 
