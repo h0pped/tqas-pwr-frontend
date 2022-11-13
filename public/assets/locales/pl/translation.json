@@ -136,5 +136,9 @@
   "select_evaluatee": "Wybierz hospitującego",
   "details_label": "Miejsce i termin zajęć dydaktycznych",
   "add_course": "Dodaj kurs",
-  "edit_course": "Edytuj kurs"
+  "edit_course": "Edytuj kurs",
+  "team_of_evaluation": "Zespół oceniający",
+  "assign": "Przydzielać",
+  "course_details": "Szczegóły Kursu",
+  "assign_evaluation_team": "Przypisz zespół oceniający"
 }

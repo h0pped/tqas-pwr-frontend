@@ -138,6 +138,7 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
             }}
           >
             <AssessmentDetails
+              onAssignTeam={() => setAssignTeamDialogOpen(true)}
               assessmentDetails={assessments.find(
                 (assessment) => assessment.id === selectedAssessment
               )}

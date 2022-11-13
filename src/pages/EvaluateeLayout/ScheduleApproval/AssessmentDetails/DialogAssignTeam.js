@@ -166,6 +166,7 @@ export default function DialogAssignTeam({ isOpen, onClose }) {
     getWzhzList();
     getOutsideList();
   }, []);
+
   return (
     <Dialog
       fullScreen

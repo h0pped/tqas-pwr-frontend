@@ -136,5 +136,9 @@
   "select_evaluatee": "Select Evaluatee",
   "details_label": "Place and date of didactic classes",
   "add_course": "Add course",
-  "edit_course": "Edit course"
+  "edit_course": "Edit course",
+  "team_of_evaluation": "Evaluation Team",
+  "assign": "Assign",
+  "course_details": "Course Details",
+  "assign_evaluation_team": "Assign Evaluation Team"
 }
