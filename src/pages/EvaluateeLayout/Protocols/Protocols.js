@@ -19,7 +19,6 @@ import UserContext from '../../../context/UserContext/UserContext.js';
 
 import config from '../../../config/index.config.js';
 
-const currentlyLoggedInUserId = 24;
 
 const Transition = forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
@@ -27,7 +26,7 @@ const Transition = forwardRef((props, ref) => (
 
 export default function Evaluations({ setSelectedPage, link }) {
   const { t } = useTranslation();
-  const { token } = useContext(UserContext);
+  const { token, id } = useContext(UserContext);
   const [protocols, setProtocols] = useState([]);
   const [isProtocolFormOpen, setProtocolFormOpen] = useState(false);
 
@@ -53,7 +52,7 @@ export default function Evaluations({ setSelectedPage, link }) {
     setProtocolsLoading(true);
     try {
       await fetch(
-        `${config.server.url}/protocols/getProtocolsByETMember?id=${currentlyLoggedInUserId}`,
+        `${config.server.url}/protocols/getProtocolsByETMember?id=${id}`,
         {
           method: 'GET',
           headers: {

@@ -12,11 +12,10 @@ import UserContext from '../../../context/UserContext/UserContext.js';
 
 import config from '../../../config/index.config.js';
 
-const currentlyLoggedInUserId = 15;
 
 export default function ScheduleApproval({ setSelectedPage, link }) {
   const { t } = useTranslation();
-  const { token } = useContext(UserContext);
+  const { token, id } = useContext(UserContext);
 
   const [isAssessmentsLoading, setAssessmentsLoading] = useState(false);
 
@@ -27,7 +26,7 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
     setAssessmentsLoading(true);
     try {
       await fetch(
-        `${config.server.url}/evaluationsManagement/getAssessmentsBySupervisor?id=${currentlyLoggedInUserId}`,
+        `${config.server.url}/evaluationsManagement/getAssessmentsBySupervisor?id=${id}`,
         {
           method: 'GET',
           headers: {
