@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import LinearProgress from '@mui/material/LinearProgress';
+import { ToastContainer, toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 
 import ProtocolCard from '../../../components/ProtocolCard/ProtocolCard.js';
@@ -32,6 +33,18 @@ export default function Evaluations({ setSelectedPage, link }) {
 
   const [isProtocolsLoading, setProtocolsLoading] = useState(false);
 
+  const notifyError = (msg) =>
+    toast.error(`${t('error_dialog')} ${msg}`, {
+      position: 'top-center',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+    });
+
   const handleClose = () => {
     setProtocolFormOpen(false);
   };
@@ -51,9 +64,10 @@ export default function Evaluations({ setSelectedPage, link }) {
         .then((response) => response.json())
         .then(({ protocols }) => {
           setProtocols(protocols);
-          setProtocolsLoading(false);
         });
     } catch (error) {
+      notifyError(t('error_server'));
+    } finally {
       setProtocolsLoading(false);
     }
   }
@@ -65,6 +79,7 @@ export default function Evaluations({ setSelectedPage, link }) {
 
   return (
     <Box>
+      <ToastContainer />
       <Grid container spacing={2}>
         <Grid item xs={12} sx={{ height: '100%' }}>
           <Box
