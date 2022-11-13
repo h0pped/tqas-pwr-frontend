@@ -9,14 +9,13 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 export default function ProtocolCard({
     protocol,
-    setId,
     setOpenProtcolForm
 }) {
-    //const { t } = useTranslation();
+    const { t } = useTranslation();
 
     return (
         <Box
-            onClick={() => { setId(protocol.id); setOpenProtcolForm(true) }}
+            onClick={() => { setOpenProtcolForm(true) }}
             sx={{
                 p: 2,
                 backgroundColor: '#ffffff',
@@ -24,6 +23,7 @@ export default function ProtocolCard({
                 color: '#000000',
                 borderRadius: 0.5,
                 minHeight: '13rem',
+                maxHeight: '16rem',
                 minWidth: '20rem',
                 flex: 1,
                 boxShadow: 2,
@@ -63,7 +63,7 @@ export default function ProtocolCard({
                         variant="body1"
                         sx={{ fontWeight: 'bold', height: '1.5rem' }}
                     >
-                        Protocol #{protocol.protocol_id}
+                        {t('protocol')} #{protocol.protocol_id}
                     </Typography>
                     <Typography
                         sx={{
@@ -71,7 +71,7 @@ export default function ProtocolCard({
                             fontSize: '1rem',
                         }}
                     >
-                        Evaluatee: {`${protocol.evaluatee_academic_title} ${protocol.evaluatee_first_name} ${protocol.evaluatee_last_name}`}
+                        {t('evaluatee')}: {`${protocol.evaluatee_academic_title} ${protocol.evaluatee_first_name} ${protocol.evaluatee_last_name}`}
                     </Typography>
                 </Box>
             </Box>
@@ -88,12 +88,12 @@ export default function ProtocolCard({
                 <Divider />
                 <Box sx={{mt: 2}}>
                     <Typography variant="body2">
-                        Students: {protocol.evaluation_enrolled_students}
+                        {t('enrolled_students')}: {protocol.evaluation_enrolled_students}
                     </Typography>
                 </Box>
                 <Box>
                     <Typography variant="body2">
-                        Details: {protocol.evaluation_details}
+                        {t('details')}: {protocol.evaluation_details}
                     </Typography>
                 </Box>
             </Box>

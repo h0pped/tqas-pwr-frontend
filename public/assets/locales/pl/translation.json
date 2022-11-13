@@ -120,11 +120,16 @@
   "reject_schedule": "Reject schedule",
   "approve_schedule": "Approve schedule",
   "evaluation_team": "Zepol hospitujący",
+  "provide_reason": "Podaj przyczynę odrzucenia:",
   "provide_the_reason_for_rejection": "Podaj powód odrzucenia:",
   "info_by_rejecting_this_assessment": "W przypadku odrzucenia tego harmonogramu osoba odpowiedzialna za przygotowanie tego harmonogramu zostanie powiadomiona o Twoich uwagach i zostanie poproszona o ponowne przesłanie go.",
   "assign_team": "Przypisz zespół",
   "awaiting_your_approval": "Oczekujące na zatwierdzenie",
   "member": "osoba",
-  "my_assessments": "Mmoje hospitacje",
-  "schedule_approval": "Zatwierdzanie harmonogramów"
+  "my_assessments": "Moje hospitacje",
+  "schedule_approval": "Zatwierdzanie harmonogramów",
+  "protocol": "Protokół",
+  "evaluation_protocols": "Protokóły z hospitacji zajęć",
+  "submit": "Ukończ",
+  "no_protocols_found": "Nie znaleziono protokołów"
 }
