@@ -26,7 +26,6 @@ export const UserContextProvider = ({ children }) => {
     setToken(jwt);
     const base64 = jwt.split('.')[1].replace('-', '+').replace('_', '/');
     const jsonParsedTokenInfo = JSON.parse(window.atob(base64));
-    console.log(JSON.stringify(jsonParsedTokenInfo));
     setFirstName(jsonParsedTokenInfo.first_name);
     setLastName(jsonParsedTokenInfo.last_name);
     setRole(jsonParsedTokenInfo.role);
