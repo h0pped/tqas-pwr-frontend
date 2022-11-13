@@ -60,7 +60,7 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        },
+        }
       )
         .then((response) => response.json())
         .then((data) => {
@@ -140,7 +140,7 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
             <AssessmentDetails
               onAssignTeam={() => setAssignTeamDialogOpen(true)}
               assessmentDetails={assessments.find(
-                (assessment) => assessment.id === selectedAssessment,
+                (assessment) => assessment.id === selectedAssessment
               )}
             />
           </Box>

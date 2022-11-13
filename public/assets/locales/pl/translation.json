@@ -80,6 +80,11 @@
   "button_no": "Nie",
   "tooltip_save_changes": "Zapisz zmiany",
   "tooltip_delete_user": "Usuń użytkownika",
+  "title_logged_in_as": "Zalogowany jako",
+  "evaluatee_adding_error": "Błąd podczas dodawania. Proszę spróbuj ponownie.",
+  "evaluatee_adding_success": "Oceniany został pomyślnie dodany.",
+  "fetching_evaluatees_error": "Błąd podczas pobierania dannych. Proszę spróbuj ponownie.",
+  "no_evaluatees_found": "Nie znaleziono ocenianych.",
   "assesment_card_assessment": "Hospitacja",
   "assessment_card_evaluatees": "hospitujący",
   "new_assesment": "Stwórz hospitacją",
@@ -127,8 +132,9 @@
   "member": "osoba",
   "my_assessments": "Mmoje hospitacje",
   "schedule_approval": "Zatwierdzanie harmonogramów",
-  "team_of_evaluation": "Zespół oceniający",
-  "assign": "Przydzielać",
-  "course_details": "Szczegóły Kursu",
-  "assign_evaluation_team": "Przypisz zespół oceniający"
+  "save": "Zapisz",
+  "select_evaluatee": "Wybierz hospitującego",
+  "details_label": "Miejsce i termin zajęć dydaktycznych",
+  "add_course": "Dodaj kurs",
+  "edit_course": "Edytuj kurs"
 }

@@ -50,10 +50,6 @@ export default function AssessmentDetails({ assessmentDetails, onAssignTeam }) {
     setRejectDialogOpen(false);
   };
 
-  const handleOpenAssignTeamDialog = () => {
-    onAssignTeam();
-  };
-
   const notifyError = (msg) =>
     toast.error(`${t('error_dialog')} ${msg}`, {
       position: 'top-center',
@@ -79,7 +75,7 @@ export default function AssessmentDetails({ assessmentDetails, onAssignTeam }) {
               Accept: 'application/json',
               'Content-Type': 'application/json',
             },
-          },
+          }
         )
           .then((response) => response.json())
           .then((data) => {
@@ -136,12 +132,7 @@ export default function AssessmentDetails({ assessmentDetails, onAssignTeam }) {
           </TableCell>
           <TableCell width="18%" component="th" scope="row">
             <Tooltip title="Remove evaluatee" placement="top">
-              <Button
-                sx={{ width: '100%' }}
-                size="small"
-                variant="contained"
-                onClick={handleOpenAssignTeamDialog}
-              >
+              <Button sx={{ width: '100%' }} size="small" variant="contained">
                 {t('assign_team')}
               </Button>
             </Tooltip>
