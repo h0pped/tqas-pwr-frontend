@@ -31,7 +31,7 @@ import config from '../../../../config/index.config.js';
 import UserContext from '../../../../context/UserContext/UserContext.js';
 import DialogAssignTeam from './DialogAssignTeam.js';
 
-export default function AssessmentDetails({ assessmentDetails }) {
+export default function AssessmentDetails({ assessmentDetails, onAssignTeam }) {
   const { t } = useTranslation();
   const { token } = useContext(UserContext);
 
@@ -40,12 +40,18 @@ export default function AssessmentDetails({ assessmentDetails }) {
   const [isEvaluateesTableLoading, setEvaluateesTableLoading] = useState(false);
   const [isRejectDialogOpen, setRejectDialogOpen] = useState(false);
 
+  const [isAssignTeamDialogOpen, setAssignTeamDialogOpen] = useState(false);
+
   const handleOpenRejectDialog = () => {
     setRejectDialogOpen(true);
   };
 
   const handleCloseRejectDialog = () => {
     setRejectDialogOpen(false);
+  };
+
+  const handleOpenAssignTeamDialog = () => {
+    onAssignTeam();
   };
 
   const notifyError = (msg) =>
@@ -130,8 +136,12 @@ export default function AssessmentDetails({ assessmentDetails }) {
           </TableCell>
           <TableCell width="18%" component="th" scope="row">
             <Tooltip title="Remove evaluatee" placement="top">
-              <Button sx={{ width: '100%' }} size="small" variant="contained">
-                <DialogAssignTeam />
+              <Button
+                sx={{ width: '100%' }}
+                size="small"
+                variant="contained"
+                onClick={handleOpenAssignTeamDialog}
+              >
                 {t('assign_team')}
               </Button>
             </Tooltip>
@@ -393,6 +403,10 @@ export default function AssessmentDetails({ assessmentDetails }) {
           <Button variant="contained">{t('send')}</Button>
         </DialogActions>
       </Dialog>
+      <DialogAssignTeam
+        isOpen={isAssignTeamDialogOpen}
+        setOpen={setAssignTeamDialogOpen}
+      />
     </Box>
   );
 }

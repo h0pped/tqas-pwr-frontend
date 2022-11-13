@@ -38,21 +38,12 @@ const Item = styled(Paper)(({ theme }) => ({
   height: 800,
 }));
 
-export default function DialogAssignTeam({ setDrawerSelectedItem, link }) {
-  const [open, setOpen] = useState(false);
+export default function DialogAssignTeam({ isOpen, onClose }) {
   const [wzhzList, setWzhzList] = useState({ wzhzList: [] });
   const [outsideList, setOutsideList] = useState({ outsideList: [] });
   const { token } = useContext(UserContext);
   const { t } = useTranslation();
   const [setSelectedUser] = useState(null);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   function getFullName(params) {
     return ` ${params.row.academic_title || ''} ${
@@ -172,211 +163,205 @@ export default function DialogAssignTeam({ setDrawerSelectedItem, link }) {
   }
 
   useEffect(() => {
-    setDrawerSelectedItem(link);
     getWzhzList();
     getOutsideList();
   }, []);
   return (
-    <Item>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Open fullScreen Dialog
-      </Button>
-      <Dialog
-        fullScreen
-        open={open}
-        onClose={handleClose}
-        TransitionComponent={Transition}
+    <Dialog
+      fullScreen
+      open={isOpen}
+      onClose={onClose}
+      TransitionComponent={Transition}
+    >
+      <AppBar sx={{ position: 'relative' }}>
+        <Toolbar>
+          <IconButton
+            edge="start"
+            color="inherit"
+            onClick={onClose}
+            aria-label="close"
+          >
+            <CloseIcon />
+          </IconButton>
+          <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+            {t('team_of_evaluation')}
+          </Typography>
+          <Button autoFocus color="inherit" onClick={onClose}>
+            {t('assign')}
+          </Button>
+        </Toolbar>
+      </AppBar>
+      <Box
+        sx={{
+          m: 0,
+          p: 0,
+          height: 400,
+        }}
       >
-        <AppBar sx={{ position: 'relative' }}>
-          <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={handleClose}
-              aria-label="close"
-            >
-              <CloseIcon />
-            </IconButton>
-            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              Evaluation Team
-            </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
-              Assign
-            </Button>
-          </Toolbar>
-        </AppBar>
-        <Box
-          sx={{
-            m: 0,
-            p: 0,
-            height: 400,
-          }}
-        >
-          <Grid container spacing={6}>
-            <Grid item xs={3.7} sx={{ height: 400 }}>
-              <Item>
-                <Typography variant="h6" align="center">
-                  Course Details
-                </Typography>
-                <Card sx={{ minWidth: 275 }}>
-                  <CardContent>
-                    <Typography
-                      sx={{ fontSize: 14 }}
-                      color="text.secondary"
-                      gutterBottom
-                    >
-                      MA0293029
-                    </Typography>
-                    <Typography variant="h5" component="div">
-                      Math Analysis I
-                    </Typography>
-                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                      Enrolled: 14/15/15/13
-                    </Typography>
-                    <Typography variant="body2">
-                      pn.9:15-11:00 D-2.s333 <br />
-                      pn.9:15-11:00 D-2.s333 <br />
-                      pn.9:15-11:00 D-2.s333 <br />
-                      pn.9:15-11:00 D-2.s333 <br />
-                    </Typography>
-                  </CardContent>
-                </Card>
-                <Card sx={{ mt: 5, minWidth: 275 }}>
-                  <CardContent>
-                    <Typography
-                      sx={{ fontSize: 14 }}
-                      color="text.secondary"
-                      gutterBottom
-                    >
-                      OP0293029
-                    </Typography>
-                    <Typography variant="h5" component="div">
-                      Operating System
-                    </Typography>
-                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                      Enrolled: 14/15/15/13
-                    </Typography>
-                    <Typography variant="body2">
-                      pn.13:15-15:00 D-2.s333 <br />
-                      pn.13:15-15:00 D-2.s333 <br />
-                      pn.13:15-15:00 D-2.s333 <br />
-                      pn.13:15-15:00 D-2.s333 <br />
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Item>
-            </Grid>
-            <Grid item xs={8.3}>
-              <Item>
-                <Typography variant="h6" align="center">
-                  Assign Evaluation Team
-                </Typography>
-                <Box
+        <Grid container spacing={6}>
+          <Grid item xs={3.7} sx={{ height: 400 }}>
+            <Item>
+              <Typography variant="h6" align="center">
+                {t('course_details')}
+              </Typography>
+              <Card sx={{ minWidth: 275 }}>
+                <CardContent>
+                  <Typography
+                    sx={{ fontSize: 14 }}
+                    color="text.secondary"
+                    gutterBottom
+                  >
+                    MA0293029
+                  </Typography>
+                  <Typography variant="h5" component="div">
+                    Math Analysis I
+                  </Typography>
+                  <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                    Enrolled: 14/15/15/13
+                  </Typography>
+                  <Typography variant="body2">
+                    pn.9:15-11:00 D-2.s333 <br />
+                    pn.9:15-11:00 D-2.s333 <br />
+                    pn.9:15-11:00 D-2.s333 <br />
+                    pn.9:15-11:00 D-2.s333 <br />
+                  </Typography>
+                </CardContent>
+              </Card>
+              <Card sx={{ mt: 5, minWidth: 275 }}>
+                <CardContent>
+                  <Typography
+                    sx={{ fontSize: 14 }}
+                    color="text.secondary"
+                    gutterBottom
+                  >
+                    OP0293029
+                  </Typography>
+                  <Typography variant="h5" component="div">
+                    Operating System
+                  </Typography>
+                  <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                    Enrolled: 14/15/15/13
+                  </Typography>
+                  <Typography variant="body2">
+                    pn.13:15-15:00 D-2.s333 <br />
+                    pn.13:15-15:00 D-2.s333 <br />
+                    pn.13:15-15:00 D-2.s333 <br />
+                    pn.13:15-15:00 D-2.s333 <br />
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Item>
+          </Grid>
+          <Grid item xs={8.3}>
+            <Item>
+              <Typography variant="h6" align="center">
+                {t('assign_evaluation_team')}
+              </Typography>
+              <Box
+                sx={{
+                  mt: 7,
+                  ml: 4,
+                  mb: 2,
+                  width: {
+                    xs: '200px',
+                    sm: '300px',
+                    md: '500px',
+                    lg: '800px',
+                    xl: '980px',
+                  },
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignContent: 'center',
+                  gap: 1,
+                }}
+              >
+                <Autocomplete
+                  disablePortal
+                  id="combo-box-demo"
+                  size="small"
+                  options={wzhzList}
+                  onChange={(event, value) => setSelectedUser(value.id)}
+                  getOptionLabel={(option) =>
+                    `${option.academic_title} ${option.first_name} ${option.last_name} `
+                  }
                   sx={{
-                    mt: 7,
-                    ml: 4,
-                    mb: 2,
+                    flex: 1,
+                  }}
+                  renderInput={(params) => (
+                    <TextField {...params} label="WZHZ List" />
+                  )}
+                />
+                <Button
+                  size="24px"
+                  variant="contained"
+                  sx={{
                     width: {
-                      xs: '200px',
-                      sm: '300px',
-                      md: '500px',
-                      lg: '800px',
-                      xl: '980px',
+                      xs: '10px',
+                      sm: '20px',
+                      md: '30px',
+                      lg: '50px',
+                      xl: '60px',
                     },
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignContent: 'center',
-                    gap: 1,
+                    mr: 5,
                   }}
                 >
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    size="small"
-                    options={wzhzList}
-                    onChange={(event, value) => setSelectedUser(value.id)}
-                    getOptionLabel={(option) =>
-                      `${option.academic_title} ${option.first_name} ${option.last_name} `
-                    }
-                    sx={{
-                      flex: 1,
-                    }}
-                    renderInput={(params) => (
-                      <TextField {...params} label="WZHZ List" />
-                    )}
-                  />
-                  <Button
-                    size="24px"
-                    variant="contained"
-                    sx={{
-                      width: {
-                        xs: '10px',
-                        sm: '20px',
-                        md: '30px',
-                        lg: '50px',
-                        xl: '60px',
-                      },
-                      mr: 5,
-                    }}
-                  >
-                    ADD
-                  </Button>
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    size="small"
-                    options={outsideList}
-                    onChange={(event, value) => setSelectedUser(value.id)}
-                    getOptionLabel={(option) =>
-                      `${option.academic_title} ${option.first_name} ${option.last_name} `
-                    }
-                    sx={{
-                      flex: 1,
-                    }}
-                    renderInput={(params) => (
-                      <TextField {...params} label="User" />
-                    )}
-                  />
-                  <Button
-                    size="24px"
-                    variant="contained"
-                    sx={{
-                      width: {
-                        xs: '10px',
-                        sm: '20px',
-                        md: '30px',
-                        lg: '50px',
-                        xl: '60px',
-                      },
-                    }}
-                  >
-                    ADD
-                  </Button>
-                </Box>
-                <Typography variant="h6" sx={{ mt: 10, ml: 1 }} align="left">
-                  Evaluation Team
-                </Typography>
-                <Box sx={{ height: 400, width: '100%' }}>
-                  <DataGrid
-                    rows={initialsRows}
-                    columns={columns}
-                    components={{
-                      Toolbar: customDataGridToolbar,
-                      LoadingOverlay: LinearProgress,
-                    }}
-                    componentsProps={{
-                      toolbar: {
-                        showQuickFilter: true,
-                        quickFilterProps: { debounceMs: 500 },
-                      },
-                    }}
-                  />
-                </Box>
-              </Item>
-            </Grid>
+                  {t('button_add')}
+                </Button>
+                <Autocomplete
+                  disablePortal
+                  id="combo-box-demo"
+                  size="small"
+                  options={outsideList}
+                  onChange={(event, value) => setSelectedUser(value.id)}
+                  getOptionLabel={(option) =>
+                    `${option.academic_title} ${option.first_name} ${option.last_name} `
+                  }
+                  sx={{
+                    flex: 1,
+                  }}
+                  renderInput={(params) => (
+                    <TextField {...params} label="User" />
+                  )}
+                />
+                <Button
+                  size="24px"
+                  variant="contained"
+                  sx={{
+                    width: {
+                      xs: '10px',
+                      sm: '20px',
+                      md: '30px',
+                      lg: '50px',
+                      xl: '60px',
+                    },
+                  }}
+                >
+                  {t('button_add')}
+                </Button>
+              </Box>
+              <Typography variant="h6" sx={{ mt: 10, ml: 1 }} align="left">
+                {t('team_of_evaluation')}
+              </Typography>
+              <Box sx={{ height: 400, width: '100%' }}>
+                <DataGrid
+                  rows={initialsRows}
+                  columns={columns}
+                  components={{
+                    Toolbar: customDataGridToolbar,
+                    LoadingOverlay: LinearProgress,
+                  }}
+                  componentsProps={{
+                    toolbar: {
+                      showQuickFilter: true,
+                      quickFilterProps: { debounceMs: 500 },
+                    },
+                  }}
+                />
+              </Box>
+            </Item>
           </Grid>
-        </Box>
-      </Dialog>
-    </Item>
+        </Grid>
+      </Box>
+    </Dialog>
   );
 }

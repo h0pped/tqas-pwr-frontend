@@ -126,5 +126,9 @@
   "awaiting_your_approval": "Oczekujące na zatwierdzenie",
   "member": "osoba",
   "my_assessments": "Mmoje hospitacje",
-  "schedule_approval": "Zatwierdzanie harmonogramów"
+  "schedule_approval": "Zatwierdzanie harmonogramów",
+  "team_of_evaluation": "Zespół oceniający",
+  "assign": "Przydzielać",
+  "course_details": "Szczegóły Kursu",
+  "assign_evaluation_team": "Przypisz zespół oceniający"
 }

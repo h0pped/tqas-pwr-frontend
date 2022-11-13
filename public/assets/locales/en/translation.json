@@ -127,5 +127,9 @@
   "awaiting_your_approval": "Awaiting your approval",
   "member": "member(s)",
   "my_assessments": "My assessments",
-  "schedule_approval": "Schedule approval"
+  "schedule_approval": "Schedule approval",
+  "team_of_evaluation": "Evaluation Team",
+  "assign": "Assign",
+  "course_details": "Course Details",
+  "assign_evaluation_team": "Assign Evaluation Team"
 }
