@@ -47,8 +47,7 @@ export default function AssessmentDetails({
   const [selectedSupervisor, setSelectedSupervisor] = useState('');
 
   const [isEvaluateesTableLoading, setEvaluateesTableLoading] = useState(false);
-  const [isSendForApprovalDialogOpen, setSendForApprovalDialogOpen] =
-    useState(false);
+  const [isSendForApprovalDialogOpen, setSendForApprovalDialogOpen] = useState(false);
 
   const { token } = useContext(UserContext);
 
@@ -99,7 +98,7 @@ export default function AssessmentDetails({
             user_id: selectedSupervisor,
             assessment_id: assessmentDetails.id,
           }),
-        },
+        }
       ).then((response) => {
         setSendForApprovalDialogOpen(false);
         if (response.ok) {
@@ -126,7 +125,7 @@ export default function AssessmentDetails({
         data.sort((a, b) => a - b);
         data.forEach((user) => {
           users.push(
-            `${user.academic_title} ${user.first_name} ${user.last_name}`,
+            `${user.academic_title} ${user.first_name} ${user.last_name}`
           );
         });
         setSupervisors(data);
@@ -146,7 +145,7 @@ export default function AssessmentDetails({
               Accept: 'application/json',
               'Content-Type': 'application/json',
             },
-          },
+          }
         )
           .then((response) => response.json())
           .then((data) => {

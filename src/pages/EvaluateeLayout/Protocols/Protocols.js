@@ -46,7 +46,7 @@ export default function Evaluations({ setSelectedPage, link }) {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        },
+        }
       )
         .then((response) => response.json())
         .then((data) => {

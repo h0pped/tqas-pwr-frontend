@@ -68,9 +68,9 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
         semester.dateFrom,
         semester.dateTo,
         undefined,
-        '[]',
-      ),
-    ),
+        '[]'
+      )
+    )
   );
 
   const [isAssessmentsLoading, setAssessmentsLoading] = useState(false);
@@ -216,7 +216,7 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
           >
             <AssessmentDetails
               assessmentDetails={assessments.find(
-                (assesment) => assesment.id === selectedAssessment,
+                (assesment) => assesment.id === selectedAssessment
               )}
             />
           </Box>
