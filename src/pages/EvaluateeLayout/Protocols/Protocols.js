@@ -23,6 +23,45 @@ const Transition = forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
 ));
 
+const fakeProtocols = {
+  "protocols": [
+    {
+      "evaluatee_id": 1,
+      "evaluatee_academic_title": "Prof. Dr. Hab.",
+      "evaluatee_first_name": "Blue",
+      "evaluatee_last_name": "System",
+      "assessment_semester": "Winter 2022/2023",
+      "evaluation_status": "Ongoing",
+      "evaluation_team": [
+        'Prof dr hab Jack System',
+        'Prof dr hab Jack System',
+        'Prof dr hab Jack System'
+      ],
+      "courses": [
+        { "course_name": "Mathematical Analysis I", "course_code": "MA9990", "course_details": "111 C-3 cz/TP+1/2 09:15-11:00 \n111 C-3 cz/TN+1/2 09:15-11:00"},
+        { "course_name": "Mathematical Analysis II","course_code": "MA10223", "course_details": "111 C-3 cz/TP+1/2 09:15-11:00 \n111 C-3 cz/TN+1/2 09:15-11:00 \n111 C-3 cz/TN+1/2 09:15-11:00 \n111 C-3 cz/TN+1/2 09:15-11:00"}
+      ]
+    },
+    {
+      "evaluatee_id": 2,
+      "evaluatee_academic_title": "Dr.",
+      "evaluatee_first_name": "Red",
+      "evaluatee_last_name": "System",
+      "assessment_semester": "Winter 2022/2023",
+      "evaluation_status": "Ongoing",
+      "evaluation_team": [
+        'Prof dr hab Jack System',
+        'Prof dr hab Jack System',
+        'Prof dr hab Jack System'
+      ],
+      "courses": [
+        { "course_name": "Physics I", "course_code": "PHY890", "course_details": "111 C-3 cz/TP+1/2 09:15-11:00 \n111 C-3 cz/TN+1/2 09:15-11:00 \n111 C-3 cz/TN+1/2 09:15-11:00"},
+        { "course_name": "Physics II", "course_code": "PHY190", "course_details": "111 C-3 cz/TP+1/2 09:15-11:00 \n111 C-3 cz/TN+1/2 09:15-11:00"}
+      ]
+    },
+  ]
+}
+
 export default function Evaluations({ setSelectedPage, link }) {
   const { t } = useTranslation();
   const { token, id } = useContext(UserContext);
@@ -89,14 +128,13 @@ export default function Evaluations({ setSelectedPage, link }) {
             }}
           >
             <Box sx={{ width: '100%' }}>
-              <Typography variant="h5">{t('evaluation_protocols')}</Typography>
+              <Typography variant="h5">Awaiting evaluation</Typography>
             </Box>
             <Box
               sx={{
                 p: 0.7,
                 display: 'flex',
-                flexWrap: 'wrap',
-                flexDirection: 'row',
+                flexDirection: 'column',
                 overflowY: 'scroll',
                 height: '100%',
                 width: '100%',
@@ -107,13 +145,13 @@ export default function Evaluations({ setSelectedPage, link }) {
               }}
             >
               {isProtocolsLoading && <LinearProgress />}
-              {protocols.length === 0 && (
+              {fakeProtocols.length === 0 && (
                 <Typography variant="subtitle2" sx={{ color: '#848884' }}>
                   {t('no_protocols_found')}
                 </Typography>
               )}
-              {protocols.length > 0 &&
-                protocols.map((protocol) => (
+              {fakeProtocols.protocols.length > 0 &&
+                fakeProtocols.protocols.map((protocol) => (
                   <ProtocolCard
                     key={protocol.id}
                     protocol={protocol}
