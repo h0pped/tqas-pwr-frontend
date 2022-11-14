@@ -145,5 +145,9 @@
   "evaluation": "Evaluation",
   "awaiting_evaluation": "Awaiting evaluations",
   "evaluations": "Evaluations",
-  "no_assessments_awaiting_your_approval": "No schedules awaiting your approval"
+  "no_assessments_awaiting_your_approval": "No schedules awaiting your approval",
+  "team_of_evaluation": "Evaluation Team",
+  "assign": "Assign",
+  "course_details": "Course Details",
+  "assign_evaluation_team": "Assign Evaluation Team"
 }
