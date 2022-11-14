@@ -136,7 +136,7 @@
   "protocol": "Protocol",
   "evaluation_protocols": "Classess evaluation protocols",
   "submit": "Submit",
-  "no_protocols_found": "No protocols found",
+  "no_protocols_found": "No evaluations found",
   "save": "Save",
   "select_evaluatee": "Select Evaluatee",
   "details_label": "Place and date of didactic classes",
