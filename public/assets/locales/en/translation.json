@@ -141,5 +141,9 @@
   "select_evaluatee": "Select Evaluatee",
   "details_label": "Place and date of didactic classes",
   "add_course": "Add course",
-  "edit_course": "Edit course"
+  "edit_course": "Edit course",
+  "evaluation": "Evaluation",
+  "awaiting_evaluation": "Awaiting evaluations",
+  "evaluations": "Evaluations",
+  "no_assessments_awaiting_your_approval": "No schedules awaiting your approval"
 }

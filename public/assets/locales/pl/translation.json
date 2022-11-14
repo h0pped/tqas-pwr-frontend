@@ -141,5 +141,9 @@
   "select_evaluatee": "Wybierz hospitującego",
   "details_label": "Miejsce i termin zajęć dydaktycznych",
   "add_course": "Dodaj kurs",
-  "edit_course": "Edytuj kurs"
+  "edit_course": "Edytuj kurs",
+  "evaluation": "Hospitacja",
+  "awaiting_evaluation": "W trakcie oczekiwania na hospitacje",
+  "evaluations": "Hospitacji",
+  "no_assessments_awaiting_your_approval": "Brak harmonogramów oczekujących na zatwierdzenie"
 }

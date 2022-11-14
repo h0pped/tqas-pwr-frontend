@@ -18,7 +18,7 @@ import LanguageSwitchV2 from '../../components/LanguageSwitch/LanguageSwitchV2.j
 
 import ScheduleApproval from './ScheduleApproval/ScheduleApproval.js';
 import MyAssessments from './MyAssessments/MyAssessments.js';
-import Evaluations from './Protocols/Protocols.js';
+import Evaluations from './Evaluation/Evaluation.js';
 
 import departmentLogo from '../../assets/images/departmentLogo.svg';
 
@@ -37,7 +37,7 @@ const Layout = () => {
       link: 'schedule-approval',
     },
     {
-      label: t('drawer_item_title_protocols'),
+      label: t('evaluations'),
       link: 'protocols',
     },
   ];

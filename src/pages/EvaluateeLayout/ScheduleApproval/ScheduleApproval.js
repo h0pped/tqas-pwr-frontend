@@ -77,6 +77,11 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
             }}
           >
             {isAssessmentsLoading && <LinearProgress />}
+            {assessments.length === 0 && (
+              <Typography variant="subtitle2" sx={{ color: '#848884' }}>
+                {t('no_assessments_awaiting_your_approval')}
+              </Typography>
+            )}
             {!isAssessmentsLoading &&
               assessments.map((item) => (
                 <AssessmentCard

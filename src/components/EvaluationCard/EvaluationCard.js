@@ -2,16 +2,28 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
 import { useTranslation } from 'react-i18next';
-
-import ArticleIcon from '@mui/icons-material/Article';
-import { Divider } from '@mui/material';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
+
+import { formatAcademicTitle } from '../../utils/formatAcademicTitle.js';
 
 export default function ProtocolCard({ protocol, setOpenProtcolForm }) {
   const { t } = useTranslation();
 
-  var members = protocol.evaluation_team.join(', ');
+  let members = '';
+
+  protocol.evaluation_team.forEach((member, idx, array) => {
+    const fullName = ` ${formatAcademicTitle(
+      member.user_full.academic_title
+    )} ${member.user_full.first_name} ${member.user_full.last_name}`;
+
+    members += fullName;
+
+    if (idx !== array.length - 1) {
+      members += ', ';
+    }
+  });
+
   return (
     <Box
       onClick={() => {
@@ -61,7 +73,7 @@ export default function ProtocolCard({ protocol, setOpenProtcolForm }) {
             variant="body1"
             sx={{ fontWeight: 'bold', height: '1.5rem' }}
           >
-            Evaluation
+            {t('evaluation')}
           </Typography>
           <Typography
             sx={{
@@ -69,7 +81,9 @@ export default function ProtocolCard({ protocol, setOpenProtcolForm }) {
               fontSize: '1rem',
             }}
           >
-            {`${protocol.evaluatee_academic_title} ${protocol.evaluatee_first_name} ${protocol.evaluatee_last_name}`}
+            {`${formatAcademicTitle(protocol.academic_title)} ${
+              protocol.first_name
+            } ${protocol.last_name}`}
           </Typography>
         </Box>
         <Box
@@ -82,39 +96,38 @@ export default function ProtocolCard({ protocol, setOpenProtcolForm }) {
           <Chip
             sx={{ color: '#000000' }}
             size="small"
-            label={protocol.evaluation_status}
+            label={protocol.evaluatee.evaluations[0].status}
           />
         </Box>
       </Box>
       <Chip
         sx={{ mt: 2 }}
         icon={<CalendarMonthIcon />}
-        label={protocol.assessment_semester}
+        label={protocol.evaluatee.evaluations[0].assessment.name}
         variant="outlined"
       />
       <Box sx={{ mt: 2, p: 1, borderRadius: 1, backgroundColor: '#f4f5f7' }}>
-        {protocol.courses.map((course) => (
+        {protocol.evaluatee.evaluations.map((evaluation) => (
           <Box>
-            <Box sx={{ display: 'flex', flexBasis: 'row', gap: 1, mt: 1 }}>
+            <Box sx={{ display: 'flex', flexBasis: 'row', gap: 1 }}>
               <Typography sx={{ fontWeight: 'bold' }}>
-                {course.course_code}:
+                {evaluation.course_code}:
               </Typography>
-              <Typography key={course.course_name}>
-                {course.course_name}
+              <Typography key={evaluation.course.course_name}>
+                {evaluation.course.course_name}
               </Typography>
             </Box>
-            <Typography variant="subtitle2">{course.course_details}</Typography>
+            <Typography variant="subtitle2">{evaluation.details}</Typography>
           </Box>
-
         ))}
       </Box>
       <Box sx={{ mt: 2, p: 1, borderRadius: 1, backgroundColor: '#f4f5f7' }}>
-        <Typography sx={{ fontWeight: 'bold' }}>Evaluation team:</Typography>
+        <Typography sx={{ fontWeight: 'bold' }}>
+          {t('evaluation_team')}
+        </Typography>
         <Box>
-          <Box sx={{ display: 'flex', flexBasis: 'row', gap: 1, mt: 1 }}>
-            <Typography>
-              {members}
-            </Typography>
+          <Box sx={{ display: 'flex', flexBasis: 'row', gap: 1 }}>
+            <Typography>{members}</Typography>
           </Box>
         </Box>
       </Box>

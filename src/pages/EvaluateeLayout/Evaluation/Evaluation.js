@@ -13,7 +13,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import { ToastContainer, toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 
-import ProtocolCard from '../../../components/ProtocolCard/ProtocolCard.js';
+import Evaluation from '../../../components/EvaluationCard/EvaluationCard.js';
 
 import UserContext from '../../../context/UserContext/UserContext.js';
 
@@ -23,52 +23,17 @@ const Transition = forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
 ));
 
-const fakeProtocols = {
-  "protocols": [
-    {
-      "evaluatee_id": 1,
-      "evaluatee_academic_title": "Prof. Dr. Hab.",
-      "evaluatee_first_name": "Blue",
-      "evaluatee_last_name": "System",
-      "assessment_semester": "Winter 2022/2023",
-      "evaluation_status": "Ongoing",
-      "evaluation_team": [
-        'Prof dr hab Jack System',
-        'Prof dr hab Jack System',
-        'Prof dr hab Jack System'
-      ],
-      "courses": [
-        { "course_name": "Mathematical Analysis I", "course_code": "MA9990", "course_details": "111 C-3 cz/TP+1/2 09:15-11:00 \n111 C-3 cz/TN+1/2 09:15-11:00"},
-        { "course_name": "Mathematical Analysis II","course_code": "MA10223", "course_details": "111 C-3 cz/TP+1/2 09:15-11:00 \n111 C-3 cz/TN+1/2 09:15-11:00 \n111 C-3 cz/TN+1/2 09:15-11:00 \n111 C-3 cz/TN+1/2 09:15-11:00"}
-      ]
-    },
-    {
-      "evaluatee_id": 2,
-      "evaluatee_academic_title": "Dr.",
-      "evaluatee_first_name": "Red",
-      "evaluatee_last_name": "System",
-      "assessment_semester": "Winter 2022/2023",
-      "evaluation_status": "Ongoing",
-      "evaluation_team": [
-        'Prof dr hab Jack System',
-        'Prof dr hab Jack System',
-        'Prof dr hab Jack System'
-      ],
-      "courses": [
-        { "course_name": "Physics I", "course_code": "PHY890", "course_details": "111 C-3 cz/TP+1/2 09:15-11:00 \n111 C-3 cz/TN+1/2 09:15-11:00 \n111 C-3 cz/TN+1/2 09:15-11:00"},
-        { "course_name": "Physics II", "course_code": "PHY190", "course_details": "111 C-3 cz/TP+1/2 09:15-11:00 \n111 C-3 cz/TN+1/2 09:15-11:00"}
-      ]
-    },
-  ]
-}
-
 export default function Evaluations({ setSelectedPage, link }) {
   const { t } = useTranslation();
   const { token, id } = useContext(UserContext);
-  const [protocols, setProtocols] = useState([]);
-  const [isProtocolFormOpen, setProtocolFormOpen] = useState(false);
 
-  const [isProtocolsLoading, setProtocolsLoading] = useState(false);
+  const [
+    evaluationsMemberIsAssignedTo,
+    setEvaluationsMemberAssignedTo,
+  ] = useState([]);
+
+  const [isProtocolFormOpen, setProtocolFormOpen] = useState(false);
+  const [isEvaluationsLoading, setEvaluationsLoading] = useState(false);
 
   const notifyError = (msg) =>
     toast.error(`${t('error_dialog')} ${msg}`, {
@@ -86,11 +51,11 @@ export default function Evaluations({ setSelectedPage, link }) {
     setProtocolFormOpen(false);
   };
 
-  async function getProtocols() {
-    setProtocolsLoading(true);
+  async function getEvaluationsETMemberResponsibleFor() {
+    setEvaluationsLoading(true);
     try {
       await fetch(
-        `${config.server.url}/protocols/getProtocolsByETMember?id=${id}`,
+        `${config.server.url}/evaluationsManagement/getEvaluationsETMemberResponsibleFor?id=${id}`,
         {
           method: 'GET',
           headers: {
@@ -99,19 +64,19 @@ export default function Evaluations({ setSelectedPage, link }) {
         }
       )
         .then((response) => response.json())
-        .then(({ protocols }) => {
-          setProtocols(protocols);
+        .then(({ evaluatees }) => {
+          setEvaluationsMemberAssignedTo(evaluatees);
         });
     } catch (error) {
       notifyError(t('error_server'));
     } finally {
-      setProtocolsLoading(false);
+      setEvaluationsLoading(false);
     }
   }
 
   useEffect(() => {
     setSelectedPage(link);
-    getProtocols();
+    getEvaluationsETMemberResponsibleFor();
   }, [link, setSelectedPage]);
 
   return (
@@ -128,7 +93,7 @@ export default function Evaluations({ setSelectedPage, link }) {
             }}
           >
             <Box sx={{ width: '100%' }}>
-              <Typography variant="h5">Awaiting evaluation</Typography>
+              <Typography variant="h5">{t('awaiting_evaluation')}</Typography>
             </Box>
             <Box
               sx={{
@@ -144,17 +109,17 @@ export default function Evaluations({ setSelectedPage, link }) {
                 backgroundColor: '#f4f5f7',
               }}
             >
-              {isProtocolsLoading && <LinearProgress />}
-              {fakeProtocols.length === 0 && (
+              {isEvaluationsLoading && <LinearProgress />}
+              {evaluationsMemberIsAssignedTo.length === 0 && (
                 <Typography variant="subtitle2" sx={{ color: '#848884' }}>
                   {t('no_protocols_found')}
                 </Typography>
               )}
-              {fakeProtocols.protocols.length > 0 &&
-                fakeProtocols.protocols.map((protocol) => (
-                  <ProtocolCard
-                    key={protocol.id}
-                    protocol={protocol}
+              {evaluationsMemberIsAssignedTo.length > 0 &&
+                evaluationsMemberIsAssignedTo.map((evaluation) => (
+                  <Evaluation
+                    key={evaluation.userId}
+                    protocol={evaluation}
                     setOpenProtcolForm={setProtocolFormOpen}
                   />
                 ))}
