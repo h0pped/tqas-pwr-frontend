@@ -145,5 +145,9 @@
   "evaluation": "Hospitacja",
   "awaiting_evaluation": "W trakcie oczekiwania na hospitacje",
   "evaluations": "Hospitacji",
-  "no_assessments_awaiting_your_approval": "Brak harmonogramów oczekujących na zatwierdzenie"
+  "no_assessments_awaiting_your_approval": "Brak harmonogramów oczekujących na zatwierdzenie",
+  "team_of_evaluation": "Zespół oceniający",
+  "assign": "Przydzielać",
+  "course_details": "Szczegóły Kursu",
+  "assign_evaluation_team": "Przypisz zespół oceniający"
 }
