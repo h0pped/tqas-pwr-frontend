@@ -30,7 +30,7 @@ import TextareaAutosize from '@mui/material/TextareaAutosize';
 import config from '../../../../config/index.config.js';
 import UserContext from '../../../../context/UserContext/UserContext.js';
 
-export default function AssessmentDetails({ assessmentDetails, onAssignTeam }) {
+export default function AssessmentDetails({ assessmentDetails, onAssignTeam, setEvaluateeDetails }) {
   const { t } = useTranslation();
   const { token } = useContext(UserContext);
 
@@ -137,7 +137,11 @@ export default function AssessmentDetails({ assessmentDetails, onAssignTeam }) {
                 sx={{ width: '100%' }}
                 size="small"
                 variant="contained"
-                onClick={handleOpenAssignTeamDialog}
+                onClick={() => {
+                  handleOpenAssignTeamDialog();
+                  setEvaluateeDetails(row);
+                }
+                }
               >
                 {t('assign_team')}
               </Button>

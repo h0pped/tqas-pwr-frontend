@@ -23,6 +23,7 @@ import config from '../../../../config/index.config.js';
 import UserContext from '../../../../context/UserContext/UserContext.js';
 import customDataGridToolbar from '../../../../components/CustomGridToolbar/CustomDataGridToolBar.js';
 import DeleteAction from '../../../AdminLayout/ManageWZHZGroup/DeleteActions.js';
+import { json } from 'react-router-dom';
 
 const Transition = forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
@@ -34,10 +35,10 @@ const Item = styled(Paper)(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     width: `calc (1000px)`,
   },
-  height: 800,
+  border: 'solid 1px #f4f5f7',
 }));
 
-export default function DialogAssignTeam({ isOpen, onClose }) {
+export default function DialogAssignTeam({ isOpen, onClose, data }) {
   const [wzhzList, setWzhzList] = useState({ wzhzList: [] });
   const [outsideList, setOutsideList] = useState({ outsideList: [] });
   const { token } = useContext(UserContext);
@@ -45,14 +46,13 @@ export default function DialogAssignTeam({ isOpen, onClose }) {
   const [setSelectedUser] = useState(null);
 
   function getFullName(params) {
-    return ` ${params.row.academic_title || ''} ${
-      params.row.first_name || ''
-    } ${params.row.last_name || ''}`;
+    return ` ${params.row.academic_title || ''} ${params.row.first_name || ''
+      } ${params.row.last_name || ''}`;
   }
 
   const columns = [
     {
-      field: 'id',
+      field: 'member_user_id',
       headerName: 'Id',
       minWidth: 20,
       flex: 0.2,
@@ -64,16 +64,10 @@ export default function DialogAssignTeam({ isOpen, onClose }) {
       flex: 0.8,
       valueGetter: getFullName,
     },
-    { field: 'email', headerName: 'Email address', minWidth: 300, flex: 0.8 },
-    {
-      field: 'from',
-      headerName: 'From',
-      minWidth: 80,
-      flex: 0.5,
-    },
+    { field: 'member_email', headerName: 'Email address', minWidth: 300, flex: 0.8 },
     {
       field: 'actions',
-      headerName: '',
+      headerName: 'Actions',
       type: 'actions',
       flex: 0.5,
       renderCell: (params) => <DeleteAction {...{ params }} />,
@@ -195,156 +189,112 @@ export default function DialogAssignTeam({ isOpen, onClose }) {
         sx={{
           m: 0,
           p: 0,
-          height: 400,
+          display: 'flex',
+          justifyContent: 'center',
         }}
       >
-        <Grid container spacing={6}>
-          <Grid item xs={3.7} sx={{ height: 400 }}>
+        <Grid container spacing={2} sx={{ mt: 2 }}>
+          <Grid item sx={4} sx={{ ml: 1 }}>
             <Item>
-              <Typography variant="h6" align="center">
+              <Typography sx={{ mt: 2 }} variant="h6">
+                {console.log(data)}
+                Evaluatee
+              </Typography>
+              <Box sx={{ borderRadius: 1, backgroundColor: '#f4f5f7', p: 1 }}>
+                <Typography>
+                  {`${data.academic_title} ${data.first_name} ${data.last_name}`}
+                </Typography>
+              </Box>
+              <Typography sx={{ mt: 2 }} variant="h6">
                 {t('course_details')}
               </Typography>
-              <Card sx={{ minWidth: 275 }}>
-                <CardContent>
-                  <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
-                  >
-                    MA0293029
-                  </Typography>
-                  <Typography variant="h5" component="div">
-                    Math Analysis I
-                  </Typography>
-                  <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    Enrolled: 14/15/15/13
-                  </Typography>
-                  <Typography variant="body2">
-                    pn.9:15-11:00 D-2.s333 <br />
-                    pn.9:15-11:00 D-2.s333 <br />
-                    pn.9:15-11:00 D-2.s333 <br />
-                    pn.9:15-11:00 D-2.s333 <br />
-                  </Typography>
-                </CardContent>
-              </Card>
-              <Card sx={{ mt: 5, minWidth: 275 }}>
-                <CardContent>
-                  <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
-                  >
-                    OP0293029
-                  </Typography>
-                  <Typography variant="h5" component="div">
-                    Operating System
-                  </Typography>
-                  <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    Enrolled: 14/15/15/13
-                  </Typography>
-                  <Typography variant="body2">
-                    pn.13:15-15:00 D-2.s333 <br />
-                    pn.13:15-15:00 D-2.s333 <br />
-                    pn.13:15-15:00 D-2.s333 <br />
-                    pn.13:15-15:00 D-2.s333 <br />
-                  </Typography>
-                </CardContent>
-              </Card>
+              <Box sx={{ borderRadius: 1, backgroundColor: '#f4f5f7', p: 1 }}>
+                {data.evaluatee &&
+                  data.evaluatee.evaluations.map((evaluation) => (
+                    <Card sx={{ minWidth: 275, mb: 1 }}>
+                      <CardContent>
+                        <Typography
+                          sx={{ fontSize: 14 }}
+                          color="text.secondary"
+                          gutterBottom
+                        >
+                          {evaluation.course.course_code}
+                        </Typography>
+                        <Typography variant="h5" component="div">
+                          {evaluation.course.course_name}
+                        </Typography>
+                        <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                          {evaluation.enrolled_students}
+                        </Typography>
+                        <Typography variant="body2">
+                          {evaluation.details}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  ))}
+              </Box>
             </Item>
           </Grid>
-          <Grid item xs={8.3}>
+          <Grid item xs sx={{ mr: 1 }}>
             <Item>
               <Typography variant="h6" align="center">
                 {t('assign_evaluation_team')}
               </Typography>
               <Box
                 sx={{
-                  mt: 7,
-                  ml: 4,
-                  mb: 2,
-                  width: {
-                    xs: '200px',
-                    sm: '300px',
-                    md: '500px',
-                    lg: '800px',
-                    xl: '980px',
-                  },
                   display: 'flex',
-                  justifyContent: 'space-between',
+                  flexDirection: 'row',
+                  width: '100%',
                   alignContent: 'center',
-                  gap: 1,
+                  gap: 3,
+                  mt: 4,
                 }}
               >
-                <Autocomplete
-                  disablePortal
-                  id="combo-box-demo"
-                  size="small"
-                  options={wzhzList}
-                  onChange={(event, value) => setSelectedUser(value.id)}
-                  getOptionLabel={(option) =>
-                    `${option.academic_title} ${option.first_name} ${option.last_name} `
-                  }
-                  sx={{
-                    flex: 1,
-                  }}
-                  renderInput={(params) => (
-                    <TextField {...params} label="WZHZ List" />
-                  )}
-                />
-                <Button
-                  size="24px"
-                  variant="contained"
-                  sx={{
-                    width: {
-                      xs: '10px',
-                      sm: '20px',
-                      md: '30px',
-                      lg: '50px',
-                      xl: '60px',
-                    },
-                    mr: 5,
-                  }}
-                >
-                  {t('button_add')}
-                </Button>
-                <Autocomplete
-                  disablePortal
-                  id="combo-box-demo"
-                  size="small"
-                  options={outsideList}
-                  onChange={(event, value) => setSelectedUser(value.id)}
-                  getOptionLabel={(option) =>
-                    `${option.academic_title} ${option.first_name} ${option.last_name} `
-                  }
-                  sx={{
-                    flex: 1,
-                  }}
-                  renderInput={(params) => (
-                    <TextField {...params} label="User" />
-                  )}
-                />
-                <Button
-                  size="24px"
-                  variant="contained"
-                  sx={{
-                    width: {
-                      xs: '10px',
-                      sm: '20px',
-                      md: '30px',
-                      lg: '50px',
-                      xl: '60px',
-                    },
-                  }}
-                >
-                  {t('button_add')}
-                </Button>
+                <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, width: '50%' }}>
+                  <Autocomplete
+                    disablePortal
+                    id="wzhz"
+                    sx={{ flex: 1 }}
+                    size="small"
+                    options={wzhzList}
+                    onChange={(event, value) => setSelectedUser(value.id)}
+                    getOptionLabel={(option) =>
+                      `${option.academic_title} ${option.first_name} ${option.last_name} `
+                    }
+                    renderInput={(params) => (
+                      <TextField {...params} label="WZHZ List" />
+                    )}
+                  />
+                  <Button variant="contained" size="small">{t('button_add')}</Button>
+                </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, width: '50%' }}>
+                  <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    sx={{ flex: 1 }}
+                    size="small"
+                    options={outsideList}
+                    onChange={(event, value) => setSelectedUser(value.id)}
+                    getOptionLabel={(option) =>
+                      `${option.academic_title} ${option.first_name} ${option.last_name} `
+                    }
+                    sx={{
+                      flex: 1,
+                    }}
+                    renderInput={(params) => (
+                      <TextField {...params} label="User" />
+                    )}
+                  />
+                  <Button variant="contained" size="small">{t('button_add')}</Button>
+                </Box>
               </Box>
-              <Typography variant="h6" sx={{ mt: 10, ml: 1 }} align="left">
+              <Typography variant="h6" sx={{ mt: 4 }} align="left">
                 {t('team_of_evaluation')}
               </Typography>
               <Box sx={{ height: 400, width: '100%' }}>
                 <DataGrid
-                  rows={initialsRows}
+                  rows={data.evaluation_team}
+                  getRowId={(row) => row.member_user_id}
                   columns={columns}
                   components={{
                     Toolbar: customDataGridToolbar,

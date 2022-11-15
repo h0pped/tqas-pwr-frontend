@@ -25,6 +25,7 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
   const [assessments, setAssessments] = useState([]);
   const [selectedAssessment, setSelectedAssessment] = useState(null);
   const [isAssignTeamDialogOpen, setAssignTeamDialogOpen] = useState(false);
+  const [dialogData, setDialogData] = useState([]);
 
   const notifySuccess = (msg) =>
     toast.success(`${t('success')} ${msg}`, {
@@ -84,6 +85,7 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
         notifySuccess={notifySuccess}
         notifyError={notifyError}
         assessment={selectedAssessment}
+        data={dialogData}
       />
       <Grid container sx={{ height: '100%' }}>
         <Grid item xs={12}>
@@ -142,6 +144,7 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
               assessmentDetails={assessments.find(
                 (assessment) => assessment.id === selectedAssessment
               )}
+              setEvaluateeDetails={setDialogData}
             />
           </Box>
         </Grid>
