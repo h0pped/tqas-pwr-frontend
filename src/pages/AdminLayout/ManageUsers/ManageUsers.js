@@ -225,6 +225,9 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
         await fetch(`${config.server.url}/uploadUsers/appendUsers/`, {
           method: 'POST',
           body: formData,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }).then((response) => {
           setFileUploadIsLoading(false);
           if (response.ok) {
