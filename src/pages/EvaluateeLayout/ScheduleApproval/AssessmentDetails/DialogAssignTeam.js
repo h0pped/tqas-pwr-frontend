@@ -16,7 +16,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { useTranslation } from 'react-i18next';
 import { TextField } from '@mui/material';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import Autocomplete from '@mui/material/Autocomplete';
 import { DataGrid } from '@mui/x-data-grid';
 import config from '../../../../config/index.config.js';
@@ -43,7 +43,8 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
   const [outsideList, setOutsideList] = useState({ outsideList: [] });
   const { token } = useContext(UserContext);
   const { t } = useTranslation();
-  const [setSelectedUser] = useState(null);
+  const [selectedWzhzMember, setSelectedWzhzMember] = useState(null);
+  const [selectedOutsideUser, setSelectedOutsideUser] = useState(null);
 
   function getFullName(params) {
     return ` ${params.row.academic_title || ''} ${params.row.first_name || ''
@@ -64,7 +65,12 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
       flex: 0.8,
       valueGetter: getFullName,
     },
-    { field: 'member_email', headerName: 'Email address', minWidth: 300, flex: 0.8 },
+    {
+      field: 'member_email',
+      headerName: 'Email address',
+      minWidth: 300,
+      flex: 0.8,
+    },
     {
       field: 'actions',
       headerName: 'Actions',
@@ -74,40 +80,17 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
     },
   ];
 
-  const initialsRows = [
-    {
-      id: 1,
-      academic_title: 'Prof dr hab inz',
-      first_name: 'Kitkat',
-      last_name: 'System',
-      email: 'kitkat.system@pwr.edu.pl',
-      from: 'WZHZ Group',
-    },
-    {
-      id: 2,
-      academic_title: 'dr inz',
-      first_name: 'White',
-      last_name: 'System',
-      email: 'white.system@pwr.edu.pl',
-      from: 'WZHZ Group',
-    },
-    {
-      id: 3,
-      academic_title: 'dr hab',
-      first_name: 'Greg',
-      last_name: 'System',
-      email: 'greg.system@pwr.edu.pl',
-      from: 'Outside Group',
-    },
-    {
-      id: 4,
-      academic_title: ' mgt inz',
-      first_name: 'Oreo',
-      last_name: 'System',
-      email: 'oreo.system@pwr.edu.pl',
-      from: 'Outside Group',
-    },
-  ];
+  const notifySuccess = (msg) =>
+    toast.success(`${t('success')} ${msg}`, {
+      position: 'top-center',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+    });
 
   const notifyError = (msg) =>
     toast.error(`${t('error_dialog')} ${msg}`, {
@@ -152,6 +135,52 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
         });
     } catch (error) {
       notifyError(t('error_server'));
+    }
+  }
+
+  function addMember(user) {
+    if (data.evaluatee && user) {
+      console.log(selectedOutsideUser);
+      console.log(selectedWzhzMember);
+      var jsonData = {}
+      data.evaluatee.evaluations.forEach((evaluation) => {
+        const evaluationId = evaluation.id;
+        const u = new Object();
+        u[user] = false;
+        jsonData[evaluationId] = u;
+
+        console.log(jsonData);
+
+        try {
+          fetch(
+            `${config.server.url}/evaluationsManagement/createEvaluationTeams`,
+            {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+              },
+              body: {
+                jsonData,
+              },
+            }
+          ).then((response) => {
+            console.log(response);
+            if (response.ok) {
+              notifySuccess('Added');
+              //setUpdated(true);
+            } else {
+              notifyError('Error while adding new memebr.');
+            }
+            //setAddUserBtnLoading(false);
+          });
+        } catch (error) {
+          notifyError('Error while adding a memeber');
+        } finally {
+          console.log('finish');
+        }
+      });
     }
   }
 
@@ -250,14 +279,21 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                   mt: 4,
                 }}
               >
-                <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, width: '50%' }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    gap: 1,
+                    width: '50%',
+                  }}
+                >
                   <Autocomplete
                     disablePortal
                     id="wzhz"
                     sx={{ flex: 1 }}
                     size="small"
                     options={wzhzList}
-                    onChange={(event, value) => setSelectedUser(value.id)}
+                    onChange={(event, value) => setSelectedWzhzMember(value.id)}
                     getOptionLabel={(option) =>
                       `${option.academic_title} ${option.first_name} ${option.last_name} `
                     }
@@ -265,16 +301,31 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                       <TextField {...params} label="WZHZ List" />
                     )}
                   />
-                  <Button variant="contained" size="small">{t('button_add')}</Button>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    onClick={() => addMember(selectedWzhzMember)}
+                  >
+                    {t('button_add')}
+                  </Button>
                 </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, width: '50%' }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    gap: 1,
+                    width: '50%',
+                  }}
+                >
                   <Autocomplete
                     disablePortal
                     id="combo-box-demo"
                     sx={{ flex: 1 }}
                     size="small"
                     options={outsideList}
-                    onChange={(event, value) => setSelectedUser(value.id)}
+                    onChange={(event, value) =>
+                      setSelectedOutsideUser(value.id)
+                    }
                     getOptionLabel={(option) =>
                       `${option.academic_title} ${option.first_name} ${option.last_name} `
                     }
@@ -285,7 +336,13 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                       <TextField {...params} label="User" />
                     )}
                   />
-                  <Button variant="contained" size="small">{t('button_add')}</Button>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    onClick={() => addMember(selectedOutsideUser)}
+                  >
+                    {t('button_add')}
+                  </Button>
                 </Box>
               </Box>
               <Typography variant="h6" sx={{ mt: 4 }} align="left">
