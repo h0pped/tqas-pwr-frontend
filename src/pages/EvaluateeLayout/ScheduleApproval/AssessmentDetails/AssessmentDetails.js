@@ -68,7 +68,7 @@ export default function AssessmentDetails({ assessmentDetails, onAssignTeam }) {
       setEvaluateesTableLoading(true);
       try {
         fetch(
-          `${config.server.url}/evaluationsManagement/getEvaluateesByAssessment?id=${assessmentDetails.id}`,
+          `${config.server.url}/assessmentManagement/getEvaluateesByAssessment?id=${assessmentDetails.id}`,
           {
             method: 'GET',
             headers: {
