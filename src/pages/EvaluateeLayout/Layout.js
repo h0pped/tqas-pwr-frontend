@@ -18,6 +18,7 @@ import LanguageSwitchV2 from '../../components/LanguageSwitch/LanguageSwitchV2.j
 
 import ScheduleApproval from './ScheduleApproval/ScheduleApproval.js';
 import MyAssessments from './MyAssessments/MyAssessments.js';
+import Evaluations from './Evaluation/Evaluation.js';
 
 import departmentLogo from '../../assets/images/departmentLogo.svg';
 
@@ -27,11 +28,17 @@ const Layout = () => {
   const { t } = useTranslation();
 
   const pages = [
-    { label: t('my_assessments'), link: 'my-assessments' },
+    {
+      label: t('my_assessments'),
+      link: 'my-assessments',
+    },
     {
       label: t('schedule_approval'),
       link: 'schedule-approval',
-      component: <ScheduleApproval />,
+    },
+    {
+      label: t('evaluations'),
+      link: 'protocols',
     },
   ];
   const settings = ['Logout'];
@@ -184,6 +191,13 @@ const Layout = () => {
                 <MyAssessments
                   {...{ setSelectedPage, link: 'my-assessments' }}
                 />
+              }
+            />
+            <Route
+              exact
+              path="/protocols"
+              element={
+                <Evaluations {...{ setSelectedPage, link: 'protocols' }} />
               }
             />
           </Routes>

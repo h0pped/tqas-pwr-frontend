@@ -14,11 +14,9 @@ import UserContext from '../../../context/UserContext/UserContext.js';
 import config from '../../../config/index.config.js';
 import DialogAssignTeam from './AssessmentDetails/DialogAssignTeam.js';
 
-const currentlyLoggedInUserId = 15;
-
 export default function ScheduleApproval({ setSelectedPage, link }) {
   const { t } = useTranslation();
-  const { token } = useContext(UserContext);
+  const { token, id } = useContext(UserContext);
 
   const [isAssessmentsLoading, setAssessmentsLoading] = useState(false);
 
@@ -54,7 +52,7 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
     setAssessmentsLoading(true);
     try {
       await fetch(
-        `${config.server.url}/assessmentManagement/getAssessmentsBySupervisor?id=${currentlyLoggedInUserId}`,
+        `${config.server.url}/assessmentManagement/getAssessmentsBySupervisor?id=${id}`,
         {
           method: 'GET',
           headers: {
@@ -113,6 +111,11 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
             }}
           >
             {isAssessmentsLoading && <LinearProgress />}
+            {assessments.length === 0 && (
+              <Typography variant="subtitle2" sx={{ color: '#848884' }}>
+                {t('no_assessments_awaiting_your_approval')}
+              </Typography>
+            )}
             {!isAssessmentsLoading &&
               assessments.map((item) => (
                 <AssessmentCard
