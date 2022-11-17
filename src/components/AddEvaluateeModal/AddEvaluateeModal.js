@@ -119,7 +119,7 @@ const AddEvaluateeModal = ({
 
     try {
       const res = await fetch(
-        `${config.server.url}/evaluationsManagement/createListOfClasses`,
+        `${config.server.url}/assessmentManagement/createListOfClasses`,
         {
           method: 'POST',
           headers: {

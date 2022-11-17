@@ -52,7 +52,7 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
     setAssessmentsLoading(true);
     try {
       await fetch(
-        `${config.server.url}/evaluationsManagement/getAssessmentsBySupervisor?id=${id}`,
+        `${config.server.url}/assessmentManagement/getAssessmentsBySupervisor?id=${id}`,
         {
           method: 'GET',
           headers: {

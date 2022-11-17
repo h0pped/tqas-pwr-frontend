@@ -98,7 +98,7 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
     handleCloseCreateAssessmentDialog();
     setIsAssessmentsUpdated(false);
     try {
-      fetch(`${config.server.url}/evaluationsManagement/createAssessment`, {
+      fetch(`${config.server.url}/assessmentManagement/createAssessment`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -124,7 +124,7 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
   async function getAssessments() {
     setAssessmentsLoading(true);
     try {
-      await fetch(`${config.server.url}/evaluationsManagement/getAssessments`, {
+      await fetch(`${config.server.url}/assessmentManagement/getAssessments`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
