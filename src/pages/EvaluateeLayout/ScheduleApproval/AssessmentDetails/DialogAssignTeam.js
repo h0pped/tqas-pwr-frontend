@@ -46,6 +46,25 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
   const [selectedWzhzMember, setSelectedWzhzMember] = useState(null);
   const [selectedOutsideUser, setSelectedOutsideUser] = useState(null);
 
+  const evaluationTeam = data.evaluation_team;
+
+  if (data.evaluation_team) {
+    const evaluationsETResponsibleFor = evaluationTeam.map((et) => et.evaluation_id);
+    let uniqueEvaluationsETResponsibleFor = [...new Set(evaluationsETResponsibleFor)];
+    console.log(uniqueEvaluationsETResponsibleFor);
+
+    const a = [];
+    uniqueEvaluationsETResponsibleFor.forEach((evaluations) => {
+      const newEvaluationTeam = new Object();
+      newEvaluationTeam[evaluations] = evaluationsETResponsibleFor.find((member) => member.evaluation_id === evaluations);
+      a.push(newEvaluationTeam);
+    });
+
+    console.log(a);
+  }
+
+  //const apiFormatEvaluationTeam = 
+
   function getFullName(params) {
     return ` ${params.row.academic_title || ''} ${params.row.first_name || ''
       } ${params.row.last_name || ''}`;
@@ -139,49 +158,8 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
   }
 
   function addMember(user) {
-    if (data.evaluatee && user) {
-      console.log(selectedOutsideUser);
-      console.log(selectedWzhzMember);
-      var jsonData = {}
-      data.evaluatee.evaluations.forEach((evaluation) => {
-        const evaluationId = evaluation.id;
-        const u = new Object();
-        u[user] = false;
-        jsonData[evaluationId] = u;
-
-        console.log(jsonData);
-
-        try {
-          fetch(
-            `${config.server.url}/evaluationsManagement/createEvaluationTeams`,
-            {
-              method: 'POST',
-              headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-              },
-              body: {
-                jsonData,
-              },
-            }
-          ).then((response) => {
-            console.log(response);
-            if (response.ok) {
-              notifySuccess('Added');
-              //setUpdated(true);
-            } else {
-              notifyError('Error while adding new memebr.');
-            }
-            //setAddUserBtnLoading(false);
-          });
-        } catch (error) {
-          notifyError('Error while adding a memeber');
-        } finally {
-          console.log('finish');
-        }
-      });
-    }
+    console.log(user);
+    console.log(evaluationTeam);
   }
 
   useEffect(() => {
@@ -350,7 +328,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
               </Typography>
               <Box sx={{ height: 400, width: '100%' }}>
                 <DataGrid
-                  rows={data.evaluation_team}
+                  rows={evaluationTeam}
                   getRowId={(row) => row.member_user_id}
                   columns={columns}
                   components={{
