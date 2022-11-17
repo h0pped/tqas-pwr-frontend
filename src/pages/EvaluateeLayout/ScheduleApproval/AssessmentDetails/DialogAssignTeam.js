@@ -48,22 +48,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
 
   const evaluationTeam = data.evaluation_team;
 
-  if (data.evaluation_team) {
-    const evaluationsETResponsibleFor = evaluationTeam.map((et) => et.evaluation_id);
-    let uniqueEvaluationsETResponsibleFor = [...new Set(evaluationsETResponsibleFor)];
-    console.log(uniqueEvaluationsETResponsibleFor);
-
-    const a = [];
-    uniqueEvaluationsETResponsibleFor.forEach((evaluations) => {
-      const newEvaluationTeam = new Object();
-      newEvaluationTeam[evaluations] = evaluationsETResponsibleFor.find((member) => member.evaluation_id === evaluations);
-      a.push(newEvaluationTeam);
-    });
-
-    console.log(a);
-  }
-
-  //const apiFormatEvaluationTeam = 
+  const [currentEvaluationTeam, setCurrentEvaluationTeam] = useState(null);
 
   function getFullName(params) {
     return ` ${params.row.academic_title || ''} ${params.row.first_name || ''
@@ -165,7 +150,33 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
   useEffect(() => {
     getWzhzList();
     getOutsideList();
-  }, []);
+
+    console.log(data.evaluation_team);
+
+    if (data.evaluation_team) {
+      const evaluationsETResponsibleFor = data.evaluatee.evaluations.map(
+        (e) => e.id
+      );
+
+      let newEvalObj = {};
+
+      evaluationsETResponsibleFor.forEach((ev) => {
+        const evalTeam = [];
+        data.evaluation_team.forEach((member) => {
+          const memberObj = {};
+          memberObj[member.member_user_id] = false;
+          evalTeam.push(memberObj);
+        });
+
+        newEvalObj[ev] = evalTeam;
+      });
+
+      console.log(`OBJ: ${JSON.stringify(newEvalObj)}`);
+      setCurrentEvaluationTeam(newEvalObj);
+      console.log(currentEvaluationTeam);
+      console.log(console.log(evaluationsETResponsibleFor));
+    }
+  }, [isOpen, setCurrentEvaluationTeam]);
 
   return (
     <Dialog
@@ -201,7 +212,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
         }}
       >
         <Grid container spacing={2} sx={{ mt: 2 }}>
-          <Grid item sx={4} sx={{ ml: 1 }}>
+          <Grid item xs={4} sx={{ ml: 1 }}>
             <Item>
               <Typography sx={{ mt: 2 }} variant="h6">
                 {console.log(data)}
