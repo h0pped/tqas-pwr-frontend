@@ -381,7 +381,7 @@ export default function AssessmentDetails({ assessmentDetails, onAssignTeam }) {
       <Dialog open={isRejectDialogOpen} onClose={handleCloseRejectDialog}>
         <DialogTitle>{t('reject_schedule')}</DialogTitle>
         <DialogContent>
-          <DialogContentText>{t('evaluation_team')}</DialogContentText>
+          <DialogContentText>{t('provide_reason')}</DialogContentText>
           <Box sx={{ display: 'flex', gap: 1, mt: 1, flexDirection: 'column' }}>
             <TextareaAutosize
               aria-label="minimum height"

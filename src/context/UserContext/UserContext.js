@@ -19,6 +19,7 @@ export const UserContextProvider = ({ children }) => {
   const [firstName, setFirstName] = useState(getTokenInfo().first_name);
   const [lastName, setLastName] = useState(getTokenInfo().last_name);
   const [role, setRole] = useState(getTokenInfo().role);
+  const [id, setId] = useState(getTokenInfo().id);
 
   const loginHandler = (jwt) => {
     saveToken(jwt);
@@ -28,6 +29,7 @@ export const UserContextProvider = ({ children }) => {
     setFirstName(jsonParsedTokenInfo.first_name);
     setLastName(jsonParsedTokenInfo.last_name);
     setRole(jsonParsedTokenInfo.role);
+    setId(jsonParsedTokenInfo.id);
     setExpiresIn(new Date(jsonParsedTokenInfo.exp * 1000));
     setIsLoggedIn(true);
   };
@@ -63,6 +65,7 @@ export const UserContextProvider = ({ children }) => {
         firstName,
         lastName,
         role,
+        id,
         login: loginHandler,
         logout: logoutHandler,
       }}
