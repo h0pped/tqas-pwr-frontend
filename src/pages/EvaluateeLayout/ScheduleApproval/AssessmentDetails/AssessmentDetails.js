@@ -68,7 +68,7 @@ export default function AssessmentDetails({ assessmentDetails, onAssignTeam, set
       setEvaluateesTableLoading(true);
       try {
         fetch(
-          `${config.server.url}/evaluationsManagement/getEvaluateesByAssessment?id=${assessmentDetails.id}`,
+          `${config.server.url}/assessmentManagement/getEvaluateesByAssessment?id=${assessmentDetails.id}`,
           {
             method: 'GET',
             headers: {
@@ -385,7 +385,7 @@ export default function AssessmentDetails({ assessmentDetails, onAssignTeam, set
       <Dialog open={isRejectDialogOpen} onClose={handleCloseRejectDialog}>
         <DialogTitle>{t('reject_schedule')}</DialogTitle>
         <DialogContent>
-          <DialogContentText>{t('evaluation_team')}</DialogContentText>
+          <DialogContentText>{t('provide_reason')}</DialogContentText>
           <Box sx={{ display: 'flex', gap: 1, mt: 1, flexDirection: 'column' }}>
             <TextareaAutosize
               aria-label="minimum height"

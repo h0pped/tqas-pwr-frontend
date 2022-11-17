@@ -224,6 +224,9 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
       try {
         await fetch(`${config.server.url}/uploadUsers/appendUsers/`, {
           method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           body: formData,
           headers: {
             Authorization: `Bearer ${token}`,
