@@ -16,14 +16,13 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { useTranslation } from 'react-i18next';
 import { TextField } from '@mui/material';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import Autocomplete from '@mui/material/Autocomplete';
 import { DataGrid } from '@mui/x-data-grid';
 import config from '../../../../config/index.config.js';
 import UserContext from '../../../../context/UserContext/UserContext.js';
 import customDataGridToolbar from '../../../../components/CustomGridToolbar/CustomDataGridToolBar.js';
 import DeleteAction from '../../../AdminLayout/ManageWZHZGroup/DeleteActions.js';
-import { json } from 'react-router-dom';
 
 const Transition = forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
@@ -49,6 +48,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
   const evaluationTeam = data.evaluation_team;
 
   const [currentEvaluationTeam, setCurrentEvaluationTeam] = useState(null);
+  const [evaluations, setEvaluations] = useState(null);
 
   function getFullName(params) {
     return ` ${params.row.academic_title || ''} ${params.row.first_name || ''
@@ -145,6 +145,14 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
   function addMember(user) {
     console.log(user);
     console.log(evaluationTeam);
+    console.log(currentEvaluationTeam);
+    evaluations.forEach((evaluation) => {
+      const newUser = {};
+      newUser[user] = false;
+      currentEvaluationTeam[evaluation].push(newUser);
+    });
+
+    console.log(currentEvaluationTeam);
   }
 
   useEffect(() => {
@@ -158,7 +166,9 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
         (e) => e.id
       );
 
-      let newEvalObj = {};
+      setEvaluations(evaluationsETResponsibleFor);
+
+      const newEvalObj = {};
 
       evaluationsETResponsibleFor.forEach((ev) => {
         const evalTeam = [];
@@ -318,9 +328,6 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                     getOptionLabel={(option) =>
                       `${option.academic_title} ${option.first_name} ${option.last_name} `
                     }
-                    sx={{
-                      flex: 1,
-                    }}
                     renderInput={(params) => (
                       <TextField {...params} label="User" />
                     )}
