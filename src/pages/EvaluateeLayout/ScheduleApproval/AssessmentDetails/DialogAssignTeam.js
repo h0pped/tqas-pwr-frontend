@@ -110,7 +110,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
     });
 
   const notifyInfo = (msg) =>
-    toast.info(`${t('info')} ${msg}`, {
+    toast.info(`${msg}`, {
       position: 'top-center',
       autoClose: 5000,
       hideProgressBar: false,
