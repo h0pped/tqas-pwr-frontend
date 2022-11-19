@@ -282,7 +282,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
         removeMemberEntry(id);
       } else {
         try {
-          evaluations.forEach((evaluation) => {
+          evaluations.forEach((evaluation, i) => {
             fetch(
               `${config.server.url}/evaluationsManagement/removeEvaluationTeamMember`,
               {
@@ -296,9 +296,13 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
               }
             ).then((response) => {
               if (response.ok) {
-                removeMemberEntry(id);
+                if (i === evaluations.length - 1) {
+                  removeMemberEntry(id);
+                }
               } else {
-                notifyError(t('error_delete_et_member'));
+                if (i === evaluations.length - 1) {
+                  notifyError(t('error_delete_et_member'));
+                }
                 setDeleteLoading(false);
               }
             });
@@ -674,7 +678,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                     </Fab>
                                     {isDeleteLoading &&
                                       memberForDeletion ===
-                                      Object.keys(member)[0] && (
+                                        Object.keys(member)[0] && (
                                         <CircularProgress
                                           size={44}
                                           sx={{
