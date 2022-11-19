@@ -228,9 +228,6 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
             Authorization: `Bearer ${token}`,
           },
           body: formData,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
         }).then((response) => {
           setFileUploadIsLoading(false);
           if (response.ok) {

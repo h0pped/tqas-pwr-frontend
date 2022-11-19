@@ -1,15 +1,15 @@
-import { useEffect, useState, forwardRef, useContext } from 'react';
+import { useEffect, useState, forwardRef, useContext, useReducer } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import LinearProgress from '@mui/material/LinearProgress';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
@@ -18,11 +18,16 @@ import { useTranslation } from 'react-i18next';
 import { TextField } from '@mui/material';
 import { toast } from 'react-toastify';
 import Autocomplete from '@mui/material/Autocomplete';
-import { DataGrid } from '@mui/x-data-grid';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import SaveIcon from '@mui/icons-material/Save';
 import config from '../../../../config/index.config.js';
 import UserContext from '../../../../context/UserContext/UserContext.js';
-import customDataGridToolbar from '../../../../components/CustomGridToolbar/CustomDataGridToolBar.js';
-import DeleteAction from '../../../AdminLayout/ManageWZHZGroup/DeleteActions.js';
+import ChangesMightBeLostDialog from '../../../../components/ChangesMightBeLostDialog/ChangesMightBeLostDialog.js';
 
 const Transition = forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
@@ -38,56 +43,32 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function DialogAssignTeam({ isOpen, onClose, data }) {
-  const [wzhzList, setWzhzList] = useState({ wzhzList: [] });
-  const [outsideList, setOutsideList] = useState({ outsideList: [] });
+  const [ignored, forceUpdate] = useReducer((x) => x + 1, 0);
+
   const { token } = useContext(UserContext);
   const { t } = useTranslation();
+
+  const [wzhzList, setWzhzList] = useState({ wzhzList: [] });
+  const [outsideList, setOutsideList] = useState({ outsideList: [] });
+
   const [selectedWzhzMember, setSelectedWzhzMember] = useState(null);
   const [selectedOutsideUser, setSelectedOutsideUser] = useState(null);
-
-  const evaluationTeam = data.evaluation_team;
 
   const [currentEvaluationTeam, setCurrentEvaluationTeam] = useState(null);
   const [evaluations, setEvaluations] = useState(null);
 
-  function getFullName(params) {
-    return ` ${params.row.academic_title || ''} ${params.row.first_name || ''
-      } ${params.row.last_name || ''}`;
-  }
+  const [isSaveLoading, setSaveLoading] = useState(false);
 
-  const columns = [
-    {
-      field: 'member_user_id',
-      headerName: 'Id',
-      minWidth: 20,
-      flex: 0.2,
-    },
-    {
-      field: 'full_name',
-      headerName: 'Full Name',
-      minWidth: 180,
-      flex: 0.8,
-      valueGetter: getFullName,
-    },
-    {
-      field: 'member_email',
-      headerName: 'Email address',
-      minWidth: 300,
-      flex: 0.8,
-    },
-    {
-      field: 'actions',
-      headerName: 'Actions',
-      type: 'actions',
-      flex: 0.5,
-      renderCell: (params) => <DeleteAction {...{ params }} />,
-    },
-  ];
+  const [
+    isChangesMightBeLostDialogOpen,
+    setChangesMightBeLostDialogOpen,
+  ] = useState(false);
+  const [isChangesMade, setChangesMade] = useState(false);
 
   const notifySuccess = (msg) =>
     toast.success(`${t('success')} ${msg}`, {
       position: 'top-center',
-      autoClose: 5000,
+      autoClose: 8000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -99,7 +80,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
   const notifyError = (msg) =>
     toast.error(`${t('error_dialog')} ${msg}`, {
       position: 'top-center',
-      autoClose: 5000,
+      autoClose: 8000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -107,6 +88,26 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
       progress: undefined,
       theme: 'light',
     });
+
+  const notifyInfo = (msg) =>
+    toast.info(`${t('info')} ${msg}`, {
+      position: 'top-center',
+      autoClose: 8000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+    });
+
+  const handleCloseDialog = () => {
+    if (isChangesMade) {
+      setChangesMightBeLostDialogOpen(true);
+    } else {
+      onClose();
+    }
+  };
 
   function getWzhzList() {
     try {
@@ -117,8 +118,11 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
         },
       })
         .then((response) => response.json())
-        .then((data) => {
-          setWzhzList(data);
+        .then((d) => {
+          console.log(d);
+          console.log(data);
+          //setWzhzList(d.filter((user) => user.id !== data.id));
+          setWzhzList(d);
         });
     } catch (error) {
       notifyError(t('error_server'));
@@ -134,8 +138,9 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
         },
       })
         .then((response) => response.json())
-        .then((data) => {
-          setOutsideList(data);
+        .then((d) => {
+          //setOutsideList(d.filter((user) => user.id !== data.id));
+          setOutsideList(d);
         });
     } catch (error) {
       notifyError(t('error_server'));
@@ -143,16 +148,66 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
   }
 
   function addMember(user) {
-    console.log(user);
-    console.log(evaluationTeam);
     console.log(currentEvaluationTeam);
-    evaluations.forEach((evaluation) => {
-      const newUser = {};
-      newUser[user] = false;
-      currentEvaluationTeam[evaluation].push(newUser);
-    });
 
+    if (
+      Object.values(currentEvaluationTeam)[0].some(
+        (member) => Number(Object.keys(member)[0]) === Number(user)
+      )
+    ) {
+      notifyError('Selected user is already a member of this evaluation team.');
+    } else {
+      setChangesMade(true);
+      const updatedEvalTeam = currentEvaluationTeam;
+      evaluations.forEach((evaluation) => {
+        const newUser = {};
+        newUser[user] = false;
+        updatedEvalTeam[evaluation].push(newUser);
+        setCurrentEvaluationTeam(updatedEvalTeam);
+        forceUpdate();
+      });
+    }
     console.log(currentEvaluationTeam);
+  }
+
+  function saveEvaluationTeam() {
+    if (isChangesMade) {
+      setSaveLoading(true);
+      try {
+        fetch(
+          `${config.server.url}/evaluationsManagement/createEvaluationTeams`,
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(currentEvaluationTeam),
+          }
+        ).then((response) => {
+          if (response.ok) {
+            notifySuccess('Evaluation team was successfully saved.');
+            setChangesMade(false);
+            setSaveLoading(false);
+            onClose();
+          } else {
+            notifyError('There was a problem while assigning a team.');
+            setChangesMade(false);
+            setSaveLoading(false);
+            onClose();
+          }
+        });
+      } catch (error) {
+        notifyError(t('server_error'));
+      }
+    } else {
+      notifyInfo('No changes to be saved.');
+    }
+  }
+
+  function isWzhzMemeber(userId) {
+    return wzhzList.some((member) => member.id === Number(userId));
   }
 
   useEffect(() => {
@@ -183,10 +238,13 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
 
       console.log(`OBJ: ${JSON.stringify(newEvalObj)}`);
       setCurrentEvaluationTeam(newEvalObj);
+
       console.log(currentEvaluationTeam);
       console.log(console.log(evaluationsETResponsibleFor));
+
+      console.log(wzhzList);
     }
-  }, [isOpen, setCurrentEvaluationTeam]);
+  }, [isOpen]);
 
   return (
     <Dialog
@@ -200,7 +258,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
           <IconButton
             edge="start"
             color="inherit"
-            onClick={onClose}
+            onClick={handleCloseDialog}
             aria-label="close"
           >
             <CloseIcon />
@@ -208,9 +266,32 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
             {t('team_of_evaluation')}
           </Typography>
-          <Button autoFocus color="inherit" onClick={onClose}>
-            {t('assign')}
-          </Button>
+          <Box x={{ m: 1, position: 'relative' }}>
+            <Button
+              autoFocus
+              variant="contained"
+              sx={{ boxShadow: 0 }}
+              disabled={isSaveLoading}
+              startIcon={<SaveIcon />}
+              style={{ backgroundColor: '#fdf0ef', color: '#D9372A' }}
+              onClick={saveEvaluationTeam}
+            >
+              Save
+            </Button>
+            {isSaveLoading && (
+              <CircularProgress
+                size={24}
+                sx={{
+                  color: '#D9372A',
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  marginTop: '-12px',
+                  marginLeft: '-12px',
+                }}
+              />
+            )}
+          </Box>
         </Toolbar>
       </AppBar>
       <Box
@@ -224,7 +305,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
         <Grid container spacing={2} sx={{ mt: 2 }}>
           <Grid item xs={4} sx={{ ml: 1 }}>
             <Item>
-              <Typography sx={{ mt: 2 }} variant="h6">
+              <Typography variant="h6">
                 {console.log(data)}
                 Evaluatee
               </Typography>
@@ -239,7 +320,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
               <Box sx={{ borderRadius: 1, backgroundColor: '#f4f5f7', p: 1 }}>
                 {data.evaluatee &&
                   data.evaluatee.evaluations.map((evaluation) => (
-                    <Card sx={{ minWidth: 275, mb: 1 }}>
+                    <Card sx={{ mb: 1, boxShadow: 0 }}>
                       <CardContent>
                         <Typography
                           sx={{ fontSize: 14 }}
@@ -265,7 +346,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
           </Grid>
           <Grid item xs sx={{ mr: 1 }}>
             <Item>
-              <Typography variant="h6" align="center">
+              <Typography variant="h6">
                 {t('assign_evaluation_team')}
               </Typography>
               <Box
@@ -345,26 +426,127 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                 {t('team_of_evaluation')}
               </Typography>
               <Box sx={{ height: 400, width: '100%' }}>
-                <DataGrid
-                  rows={evaluationTeam}
-                  getRowId={(row) => row.member_user_id}
-                  columns={columns}
-                  components={{
-                    Toolbar: customDataGridToolbar,
-                    LoadingOverlay: LinearProgress,
+                <TableContainer
+                  component={Paper}
+                  sx={{
+                    mt: 1,
+                    boxShadow: 0,
+                    border: 'solid 1px rgba(235, 235, 235)',
                   }}
-                  componentsProps={{
-                    toolbar: {
-                      showQuickFilter: true,
-                      quickFilterProps: { debounceMs: 500 },
-                    },
-                  }}
-                />
+                >
+                  <Table
+                    sx={{ minWidth: 650 }}
+                    size="small"
+                    aria-label="a dense table"
+                  >
+                    <TableHead>
+                      <TableRow sx={{ backgroundColor: '#f4f5f7' }}>
+                        <TableCell>User ID</TableCell>
+                        <TableCell>Academic Title</TableCell>
+                        <TableCell align="left">First name</TableCell>
+                        <TableCell align="left">Last name</TableCell>
+                        <TableCell align="left">Email</TableCell>
+                        <TableCell align="left">Group</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {currentEvaluationTeam &&
+                        Object.values(currentEvaluationTeam)[0].map(
+                          (member) => (
+                            <TableRow
+                              key={Object.keys(member)[0]}
+                              sx={{
+                                '&:last-child td, &:last-child th': {
+                                  border: 0,
+                                },
+                              }}
+                            >
+                              <TableCell
+                                key={Object.keys(member)[0]}
+                                component="th"
+                                scope="row"
+                              >
+                                {Object.keys(member)[0]}
+                              </TableCell>
+                              <TableCell
+                                key={Object.keys(member)[0]}
+                                align="left"
+                                component="th"
+                                scope="row"
+                              >
+                                {
+                                  outsideList.find(
+                                    (user) =>
+                                      user.id === Number(Object.keys(member)[0])
+                                  ).academic_title
+                                }
+                              </TableCell>
+                              <TableCell
+                                key={Object.keys(member)[0]}
+                                align="left"
+                                component="th"
+                                scope="row"
+                              >
+                                {
+                                  outsideList.find(
+                                    (user) =>
+                                      user.id === Number(Object.keys(member)[0])
+                                  ).first_name
+                                }
+                              </TableCell>
+                              <TableCell
+                                key={Object.keys(member)[0]}
+                                align="left"
+                                component="th"
+                                scope="row"
+                              >
+                                {
+                                  outsideList.find(
+                                    (user) =>
+                                      user.id === Number(Object.keys(member)[0])
+                                  ).last_name
+                                }
+                              </TableCell>
+                              <TableCell
+                                key={Object.keys(member)[0]}
+                                align="left"
+                                component="th"
+                                scope="row"
+                              >
+                                {
+                                  outsideList.find(
+                                    (user) =>
+                                      user.id === Number(Object.keys(member)[0])
+                                  ).email
+                                }
+                              </TableCell>
+                              <TableCell
+                                key={Object.keys(member)[0]}
+                                align="left"
+                                component="th"
+                                scope="row"
+                              >
+                                {isWzhzMemeber(Object.keys(member)[0])
+                                  ? 'WZHZ'
+                                  : 'Other'}
+                              </TableCell>
+                            </TableRow>
+                          )
+                        )}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
               </Box>
             </Item>
           </Grid>
         </Grid>
       </Box>
+      <ChangesMightBeLostDialog
+        isChangesDialogOpen={isChangesMightBeLostDialogOpen}
+        onClose={() => setChangesMightBeLostDialogOpen(false)}
+        onCloseParent={onClose}
+        onChangesDicard={() => setChangesMade(false)}
+      />
     </Dialog>
   );
 }
