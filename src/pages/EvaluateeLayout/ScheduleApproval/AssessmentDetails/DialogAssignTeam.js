@@ -258,24 +258,28 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
     }
   }
 
+  function removeMemberEntry(id) {
+    evaluations.forEach((evaluation) => {
+      const etForEvaluation = currentEvaluationTeam[evaluation];
+      const index = etForEvaluation.findIndex(
+        (member) => Number(Object.keys(member)[0]) === Number(id)
+      );
+      if (index > -1) {
+        currentEvaluationTeam[evaluation].splice(index, 1);
+      }
+    });
+    notifyInfo(t('selection_removed'));
+    forceUpdate();
+    setDeleteLoading(false);
+    setChangesMade(true);
+  }
+
   function removeMember() {
     if (memberForDeletion) {
       const id = memberForDeletion;
 
       if (virtualUsers.includes(Number(id))) {
-        evaluations.forEach((evaluation) => {
-          const etForEvaluation = currentEvaluationTeam[evaluation];
-          const index = etForEvaluation.findIndex(
-            (member) => Number(Object.keys(member)[0]) === Number(id)
-          );
-          if (index > -1) {
-            currentEvaluationTeam[evaluation].splice(index, 1);
-          }
-        });
-        notifyInfo(t('selection_removed'));
-        forceUpdate();
-        setDeleteLoading(false);
-        setChangesMade(true);
+        removeMemberEntry(id);
       } else {
         try {
           evaluations.forEach((evaluation) => {
@@ -292,19 +296,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
               }
             ).then((response) => {
               if (response.ok) {
-                evaluations.forEach((evaluation) => {
-                  const etForEvaluation = currentEvaluationTeam[evaluation];
-                  const index = etForEvaluation.findIndex(
-                    (member) => Number(Object.keys(member)[0]) === Number(id)
-                  );
-                  if (index > -1) {
-                    currentEvaluationTeam[evaluation].splice(index, 1);
-                  }
-                });
-                notifyInfo(t('selection_removed'));
-                forceUpdate();
-                setDeleteLoading(false);
-                setChangesMade(true);
+                removeMemberEntry(id);
               } else {
                 notifyError(t('error_delete_et_member'));
                 setDeleteLoading(false);
