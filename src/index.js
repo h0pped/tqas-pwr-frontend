@@ -36,6 +36,11 @@ const theme = createTheme({
       main: '#D9372A',
       dark: '#C31E1A',
     },
+    secondary: {
+      light: '#DF9A8C',
+      main: '#FFFFFF',
+      dark: '#C31E1A',
+    },
   },
 });
 

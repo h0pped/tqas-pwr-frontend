@@ -20,14 +20,24 @@ import { toast } from 'react-toastify';
 import Autocomplete from '@mui/material/Autocomplete';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
+import Fab from '@mui/material/Fab';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import SaveIcon from '@mui/icons-material/Save';
+import CheckIcon from '@mui/icons-material/Check';
+import Tooltip from '@mui/material/Tooltip';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import Alert from '@mui/material/Alert';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import config from '../../../../config/index.config.js';
 import UserContext from '../../../../context/UserContext/UserContext.js';
 import ChangesMightBeLostDialog from '../../../../components/ChangesMightBeLostDialog/ChangesMightBeLostDialog.js';
+import ConfirmDelitionDialog from '../../../../components/ConfirmDeletionDialog/ConfirmDelitionDialog.js';
 
 const Transition = forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
@@ -58,6 +68,13 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
   const [evaluations, setEvaluations] = useState(null);
 
   const [isSaveLoading, setSaveLoading] = useState(false);
+
+  const [isDeleteSuccess, setDeleteSuccess] = useState(false);
+  const [isDeleteLoading, setDeleteLoading] = useState(false);
+
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [memberForDeletion, setMemberForDeletion] = useState(null);
+  const [isDeleteWZHZMemberDialogOpen, setDeleteWZHZMemberDialogOpen] = useState(false);
 
   const [
     isChangesMightBeLostDialogOpen,
@@ -109,6 +126,37 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
     }
   };
 
+  const handleRemoveMember = (userId) => {
+    setMemberForDeletion(userId);
+    setDeleteLoading(true);
+
+    if (isWzhzMemeber(userId)) {
+      setDeleteWZHZMemberDialogOpen(true);
+    } else {
+      setDeleteDialogOpen(true);
+    }
+  };
+
+  const handleDeleteDialogOptionNo = () => {
+    setDeleteDialogOpen(false);
+    setDeleteLoading(false);
+  };
+
+  const handleDeleteWZHZMemberDialogOptionNo = () => {
+    setDeleteWZHZMemberDialogOpen(false);
+    setDeleteLoading(false);
+  };
+
+  const handleDeleteDialogOptionYes = async () => {
+    setDeleteDialogOpen(false);
+    removeMember();
+  };
+
+  const handleDeleteWZHZMemberDialogOptionYes = async () => {
+    setDeleteWZHZMemberDialogOpen(false);
+    removeMember();
+  };
+
   function getWzhzList() {
     try {
       fetch(`${config.server.url}/wzhzData/getMembers`, {
@@ -118,11 +166,9 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
         },
       })
         .then((response) => response.json())
-        .then((d) => {
-          console.log(d);
-          console.log(data);
-          //setWzhzList(d.filter((user) => user.id !== data.id));
-          setWzhzList(d);
+        .then((wzhzUsers) => {
+          console.log(wzhzUsers);
+          setWzhzList(wzhzUsers.filter((user) => user.id !== data.id));
         });
     } catch (error) {
       notifyError(t('error_server'));
@@ -138,9 +184,8 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
         },
       })
         .then((response) => response.json())
-        .then((d) => {
-          //setOutsideList(d.filter((user) => user.id !== data.id));
-          setOutsideList(d);
+        .then((users) => {
+          setOutsideList(users.filter((user) => user.id !== data.id));
         });
     } catch (error) {
       notifyError(t('error_server'));
@@ -155,7 +200,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
         (member) => Number(Object.keys(member)[0]) === Number(user)
       )
     ) {
-      notifyError('Selected user is already a member of this evaluation team.');
+      notifyError('User is already selected.');
     } else {
       setChangesMade(true);
       const updatedEvalTeam = currentEvaluationTeam;
@@ -172,38 +217,111 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
 
   function saveEvaluationTeam() {
     if (isChangesMade) {
-      setSaveLoading(true);
-      try {
-        fetch(
-          `${config.server.url}/evaluationsManagement/createEvaluationTeams`,
-          {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${token}`,
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(currentEvaluationTeam),
-          }
-        ).then((response) => {
-          if (response.ok) {
-            notifySuccess('Evaluation team was successfully saved.');
-            setChangesMade(false);
-            setSaveLoading(false);
-            onClose();
-          } else {
-            notifyError('There was a problem while assigning a team.');
-            setChangesMade(false);
-            setSaveLoading(false);
-            onClose();
-          }
-        });
-      } catch (error) {
-        notifyError(t('server_error'));
+      if (isCurrentEvaluationTeamHasWZHZMember()) {
+        setSaveLoading(true);
+        try {
+          fetch(
+            `${config.server.url}/evaluationsManagement/createEvaluationTeams`,
+            {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(currentEvaluationTeam),
+            }
+          ).then((response) => {
+            if (response.ok) {
+              notifySuccess('Evaluation team was successfully saved.');
+              setChangesMade(false);
+              setSaveLoading(false);
+              onClose();
+            } else {
+              notifyError('There was a problem while assigning a team.');
+              setChangesMade(false);
+              setSaveLoading(false);
+              onClose();
+            }
+          });
+        } catch (error) {
+          notifyError(t('server_error'));
+        }
+      } else {
+        notifyError('Evaluation team must have at least one WZHZ member!');
       }
     } else {
       notifyInfo('No changes to be saved.');
     }
+  }
+
+  function removeMember() {
+    if (memberForDeletion) {
+      const id = memberForDeletion;
+      console.log(memberForDeletion);
+      try {
+        evaluations.forEach((evaluation) => {
+          fetch(
+            `${config.server.url}/evaluationsManagement/removeEvaluationTeamMember`,
+            {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ userId: id, evaluationId: evaluation }),
+            }
+          ).then((response) => {
+            if (response.ok) {
+              evaluations.forEach((evaluation) => {
+                console.log(currentEvaluationTeam[evaluation]);
+                const etForEvaluation = currentEvaluationTeam[evaluation];
+                const index = etForEvaluation.findIndex(
+                  (member) => Number(Object.keys(member)[0]) === Number(id)
+                );
+                etForEvaluation.forEach((member) => {
+                  console.log(id);
+                  console.log(Object.keys(member)[0]);
+                });
+                console.log(`INDEX TO DEL: ${index}`);
+                if (index > -1) {
+                  currentEvaluationTeam[evaluation].splice(index, 1);
+                }
+              });
+              notifySuccess('Success delete.');
+              forceUpdate();
+              setDeleteLoading(false);
+              setChangesMade(true);
+            } else {
+              notifyError('Error delete.');
+              setDeleteLoading(false);
+            }
+          });
+        });
+      } catch (error) {
+        notifyError('error_server');
+        setDeleteLoading(false);
+      }
+    }
+  }
+
+  function isCurrentEvaluationTeamHasWZHZMember() {
+    let isContains = false;
+    console.log(currentEvaluationTeam);
+    console.log(wzhzList);
+    evaluations.forEach((evaluation) => {
+      // const memberId = Object.keys(currentEvaluationTeam[evaluation])[0];
+      // isContains = isWzhzMemeber(memberId);
+      currentEvaluationTeam[evaluation].forEach((member) => {
+        const memberId = Object.keys(member)[0];
+        if (isWzhzMemeber(memberId)) {
+          isContains = true;
+        }
+      });
+    });
+
+    return isContains;
   }
 
   function isWzhzMemeber(userId) {
@@ -227,13 +345,30 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
 
       evaluationsETResponsibleFor.forEach((ev) => {
         const evalTeam = [];
-        data.evaluation_team.forEach((member) => {
+        console.log(data.evaluation_team);
+
+        const uniqueIds = [];
+
+        const unique = data.evaluation_team.filter((element) => {
+          const isDuplicate = uniqueIds.includes(element.member_user_id);
+
+          if (!isDuplicate) {
+            uniqueIds.push(element.member_user_id);
+
+            return true;
+          }
+
+          return false;
+        });
+
+        unique.forEach((member) => {
           const memberObj = {};
           memberObj[member.member_user_id] = false;
           evalTeam.push(memberObj);
         });
 
         newEvalObj[ev] = evalTeam;
+        console.log(unique);
       });
 
       console.log(`OBJ: ${JSON.stringify(newEvalObj)}`);
@@ -266,14 +401,14 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
             {t('team_of_evaluation')}
           </Typography>
-          <Box x={{ m: 1, position: 'relative' }}>
+          <Box x={{ m: 1, width: '40rem', border: 'solid 1px #000000' }}>
             <Button
               autoFocus
               variant="contained"
               sx={{ boxShadow: 0 }}
               disabled={isSaveLoading}
               startIcon={<SaveIcon />}
-              style={{ backgroundColor: '#fdf0ef', color: '#D9372A' }}
+              color="secondary"
               onClick={saveEvaluationTeam}
             >
               Save
@@ -282,12 +417,10 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
               <CircularProgress
                 size={24}
                 sx={{
-                  color: '#D9372A',
+                  color: '#FFFFFF',
                   position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  marginTop: '-12px',
-                  marginLeft: '-12px',
+                  top: '1.3rem',
+                  right: '3.5rem',
                 }}
               />
             )}
@@ -425,13 +558,14 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
               <Typography variant="h6" sx={{ mt: 4 }} align="left">
                 {t('team_of_evaluation')}
               </Typography>
-              <Box sx={{ height: 400, width: '100%' }}>
+              <Box sx={{ height: '55vh', width: '100%' }}>
                 <TableContainer
                   component={Paper}
                   sx={{
                     mt: 1,
                     boxShadow: 0,
                     border: 'solid 1px rgba(235, 235, 235)',
+                    maxHeight: '100%',
                   }}
                 >
                   <Table
@@ -447,29 +581,25 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                         <TableCell align="left">Last name</TableCell>
                         <TableCell align="left">Email</TableCell>
                         <TableCell align="left">Group</TableCell>
+                        <TableCell align="left">Actions</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
+                      {currentEvaluationTeam && console.log(currentEvaluationTeam)}
                       {currentEvaluationTeam &&
                         Object.values(currentEvaluationTeam)[0].map(
                           (member) => (
                             <TableRow
-                              key={Object.keys(member)[0]}
                               sx={{
                                 '&:last-child td, &:last-child th': {
                                   border: 0,
                                 },
                               }}
                             >
-                              <TableCell
-                                key={Object.keys(member)[0]}
-                                component="th"
-                                scope="row"
-                              >
+                              <TableCell component="th" scope="row">
                                 {Object.keys(member)[0]}
                               </TableCell>
                               <TableCell
-                                key={Object.keys(member)[0]}
                                 align="left"
                                 component="th"
                                 scope="row"
@@ -482,7 +612,6 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                 }
                               </TableCell>
                               <TableCell
-                                key={Object.keys(member)[0]}
                                 align="left"
                                 component="th"
                                 scope="row"
@@ -495,7 +624,6 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                 }
                               </TableCell>
                               <TableCell
-                                key={Object.keys(member)[0]}
                                 align="left"
                                 component="th"
                                 scope="row"
@@ -508,7 +636,6 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                 }
                               </TableCell>
                               <TableCell
-                                key={Object.keys(member)[0]}
                                 align="left"
                                 component="th"
                                 scope="row"
@@ -521,7 +648,6 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                 }
                               </TableCell>
                               <TableCell
-                                key={Object.keys(member)[0]}
                                 align="left"
                                 component="th"
                                 scope="row"
@@ -529,6 +655,42 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                 {isWzhzMemeber(Object.keys(member)[0])
                                   ? 'WZHZ'
                                   : 'Other'}
+                              </TableCell>
+                              <TableCell component="th" scope="row">
+                                <Tooltip title="Remove" placement="top">
+                                  <Box sx={{ m: 1, position: 'relative' }}>
+                                    <Fab
+                                      aria-label="save"
+                                      onClick={() =>
+                                        handleRemoveMember(Object.keys(member)[0])
+                                        //removeMember(Object.keys(member)[0])
+                                      }
+                                      sx={{
+                                        backgroundColor: '#ffffff',
+                                        color: '#D9372A',
+                                        boxShadow: 0,
+                                      }}
+                                      size="small"
+                                    >
+                                      {isDeleteSuccess ? (
+                                        <CheckIcon />
+                                      ) : (
+                                        <PersonRemoveIcon />
+                                      )}
+                                    </Fab>
+                                    {isDeleteLoading && (
+                                      <CircularProgress
+                                        size={44}
+                                        sx={{
+                                          position: 'absolute',
+                                          top: -2,
+                                          left: -2,
+                                          zIndex: 1,
+                                        }}
+                                      />
+                                    )}
+                                  </Box>
+                                </Tooltip>
                               </TableCell>
                             </TableRow>
                           )
@@ -547,6 +709,47 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
         onCloseParent={onClose}
         onChangesDicard={() => setChangesMade(false)}
       />
+      <Dialog
+        open={isDeleteDialogOpen}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleDeleteDialogOptionNo}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>Remove team member?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Are you sure you want to remove this member?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteDialogOptionYes}>
+            {t('button_yes')}
+          </Button>
+          <Button onClick={handleDeleteDialogOptionNo}>{t('button_no')}</Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={isDeleteWZHZMemberDialogOpen}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleDeleteWZHZMemberDialogOptionNo}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>Remove team member?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Are you sure you want to remove this member?
+          </DialogContentText>
+          <Alert severity="warning" sx={{ mt: 1}}>Member you are trying to delete is a member of WZHZ group.</Alert>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteWZHZMemberDialogOptionYes}>
+            {t('button_yes')}
+          </Button>
+          <Button onClick={handleDeleteWZHZMemberDialogOptionNo}>{t('button_no')}</Button>
+        </DialogActions>
+      </Dialog>
     </Dialog>
   );
 }

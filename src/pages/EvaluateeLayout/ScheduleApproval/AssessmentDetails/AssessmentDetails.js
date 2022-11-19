@@ -133,7 +133,8 @@ export default function AssessmentDetails({
             {row.evaluatee.evaluations.length}
           </TableCell>
           <TableCell width="18%" component="th" scope="row">
-            {`${row.evaluation_team.length} ${t('member')}`}
+            {console.log(row.evaluation_team)}
+            {`${[...new Set(row.evaluation_team.map(item => item.member_user_id))].length} ${t('member')}`}
           </TableCell>
           <TableCell width="18%" component="th" scope="row">
             <Tooltip title="Remove evaluatee" placement="top">
