@@ -8,11 +8,16 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Alert from '@mui/material/Alert';
 import Slide from '@mui/material/Slide';
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="down" ref={ref} {...props} />;
-});
+const Transition = React.forwardRef((props, ref) => (
+  <Slide direction="down" ref={ref} {...props} />
+));
 
-export default function AlertDialogSlide({ isChangesDialogOpen, onClose, onCloseParent, onChangesDicard }) {
+export default function AlertDialogSlide({
+  isChangesDialogOpen,
+  onClose,
+  onCloseParent,
+  onChangesDicard,
+}) {
   return (
     <Dialog
       open={isChangesDialogOpen}
@@ -25,7 +30,9 @@ export default function AlertDialogSlide({ isChangesDialogOpen, onClose, onClose
         <DialogContentText id="alert-dialog-slide-description">
           Changes you made may not be saved.
         </DialogContentText>
-        <Alert sx={{ mt: 1 }} severity="info">To save your changes, press NO and click SAVE in the top-right corner.</Alert>
+        <Alert sx={{ mt: 1 }} severity="info">
+          To save your changes, press NO and click SAVE in the top-right corner.
+        </Alert>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>No</Button>
@@ -34,7 +41,10 @@ export default function AlertDialogSlide({ isChangesDialogOpen, onClose, onClose
             onClose();
             onCloseParent();
             onChangesDicard();
-          }}>Yes</Button>
+          }}
+        >
+          Yes
+        </Button>
       </DialogActions>
     </Dialog>
   );

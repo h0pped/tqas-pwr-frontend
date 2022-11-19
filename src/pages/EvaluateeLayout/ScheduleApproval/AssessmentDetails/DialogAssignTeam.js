@@ -26,7 +26,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import SaveIcon from '@mui/icons-material/Save';
-import CheckIcon from '@mui/icons-material/Check';
 import Tooltip from '@mui/material/Tooltip';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -37,7 +36,6 @@ import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import config from '../../../../config/index.config.js';
 import UserContext from '../../../../context/UserContext/UserContext.js';
 import ChangesMightBeLostDialog from '../../../../components/ChangesMightBeLostDialog/ChangesMightBeLostDialog.js';
-import ConfirmDelitionDialog from '../../../../components/ConfirmDeletionDialog/ConfirmDelitionDialog.js';
 
 const Transition = forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
@@ -53,6 +51,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function DialogAssignTeam({ isOpen, onClose, data }) {
+  // eslint-disable-next-line no-unused-vars
   const [ignored, forceUpdate] = useReducer((x) => x + 1, 0);
 
   const { token } = useContext(UserContext);
@@ -68,13 +67,14 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
   const [evaluations, setEvaluations] = useState(null);
 
   const [isSaveLoading, setSaveLoading] = useState(false);
-
-  const [isDeleteSuccess, setDeleteSuccess] = useState(false);
   const [isDeleteLoading, setDeleteLoading] = useState(false);
 
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [memberForDeletion, setMemberForDeletion] = useState(null);
-  const [isDeleteWZHZMemberDialogOpen, setDeleteWZHZMemberDialogOpen] = useState(false);
+  const [
+    isDeleteWZHZMemberDialogOpen,
+    setDeleteWZHZMemberDialogOpen,
+  ] = useState(false);
 
   const [
     isChangesMightBeLostDialogOpen,
@@ -410,7 +410,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
               disabled={isSaveLoading}
               startIcon={<SaveIcon />}
               color="secondary"
-              onClick={saveEvaluationTeam}
+              onClick={() => saveEvaluationTeam()}
             >
               Save
             </Button>
@@ -439,10 +439,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
         <Grid container spacing={2} sx={{ mt: 2 }}>
           <Grid item xs={4} sx={{ ml: 1 }}>
             <Item>
-              <Typography variant="h6">
-                {console.log(data)}
-                Evaluatee
-              </Typography>
+              <Typography variant="h6">Evaluatee</Typography>
               <Box sx={{ borderRadius: 1, backgroundColor: '#f4f5f7', p: 1 }}>
                 <Typography>
                   {`${data.academic_title} ${data.first_name} ${data.last_name}`}
@@ -586,7 +583,6 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {currentEvaluationTeam && console.log(currentEvaluationTeam)}
                       {currentEvaluationTeam &&
                         Object.values(currentEvaluationTeam)[0].map(
                           (member) => (
@@ -663,8 +659,9 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                     <Fab
                                       aria-label="save"
                                       onClick={() =>
-                                        handleRemoveMember(Object.keys(member)[0])
-                                        //removeMember(Object.keys(member)[0])
+                                        handleRemoveMember(
+                                          Object.keys(member)[0]
+                                        )
                                       }
                                       sx={{
                                         backgroundColor: '#ffffff',
@@ -673,11 +670,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                       }}
                                       size="small"
                                     >
-                                      {isDeleteSuccess ? (
-                                        <CheckIcon />
-                                      ) : (
-                                        <PersonRemoveIcon />
-                                      )}
+                                      <PersonRemoveIcon />
                                     </Fab>
                                     {isDeleteLoading && (
                                       <CircularProgress
@@ -742,13 +735,17 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
           <DialogContentText id="alert-dialog-slide-description">
             Are you sure you want to remove this member?
           </DialogContentText>
-          <Alert severity="warning" sx={{ mt: 1}}>Member you are trying to delete is a member of WZHZ group.</Alert>
+          <Alert severity="warning" sx={{ mt: 1 }}>
+            Member you are trying to delete is a member of WZHZ group.
+          </Alert>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDeleteWZHZMemberDialogOptionYes}>
             {t('button_yes')}
           </Button>
-          <Button onClick={handleDeleteWZHZMemberDialogOptionNo}>{t('button_no')}</Button>
+          <Button onClick={handleDeleteWZHZMemberDialogOptionNo}>
+            {t('button_no')}
+          </Button>
         </DialogActions>
       </Dialog>
     </Dialog>
