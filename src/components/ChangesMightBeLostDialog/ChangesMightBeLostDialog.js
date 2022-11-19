@@ -29,7 +29,7 @@ export default function AlertDialogSlide({
       aria-describedby="alert-dialog-slide-description"
     >
       <DialogTitle>
-        {t('are_you_sure_you_want_to_close_this_window')}
+        {t('are_you_sure_you_want_to_close_this_window')}?
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-slide-description">

@@ -61,6 +61,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
 
   const [wzhzList, setWzhzList] = useState({ wzhzList: [] });
   const [outsideList, setOutsideList] = useState({ outsideList: [] });
+  const [oldUsers, setOldUsers] = useState([]);
 
   const [selectedWzhzMember, setSelectedWzhzMember] = useState(null);
   const [selectedOutsideUser, setSelectedOutsideUser] = useState(null);
@@ -255,46 +256,74 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
     }
   }
 
-  function removeMember() {
+  async function removeMember() {
     if (memberForDeletion) {
       const id = memberForDeletion;
-      try {
-        evaluations.forEach((evaluation) => {
-          fetch(
-            `${config.server.url}/evaluationsManagement/removeEvaluationTeamMember`,
-            {
-              method: 'POST',
-              headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ userId: id, evaluationId: evaluation }),
-            }
-          ).then((response) => {
-            if (response.ok) {
-              evaluations.forEach((evaluation) => {
-                const etForEvaluation = currentEvaluationTeam[evaluation];
-                const index = etForEvaluation.findIndex(
-                  (member) => Number(Object.keys(member)[0]) === Number(id)
-                );
-                if (index > -1) {
-                  currentEvaluationTeam[evaluation].splice(index, 1);
-                }
-              });
-              notifyInfo(t('selection_removed'));
-              forceUpdate();
-              setDeleteLoading(false);
-              setChangesMade(true);
-            } else {
-              notifyError(t('error_delete_et_member'));
-              setDeleteLoading(false);
-            }
-          });
+
+      await fetch(`${config.server.url}/userData/getUsers`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((users) => {
+          setOldUsers(users.filter((user) => user.id !== data.id));
         });
-      } catch (error) {
-        notifyError('error_server');
+
+      if (oldUsers.some((user) => user.id === id)) {
+        try {
+          evaluations.forEach((evaluation) => {
+            fetch(
+              `${config.server.url}/evaluationsManagement/removeEvaluationTeamMember`,
+              {
+                method: 'POST',
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId: id, evaluationId: evaluation }),
+              }
+            ).then((response) => {
+              if (response.ok) {
+                evaluations.forEach((evaluation) => {
+                  const etForEvaluation = currentEvaluationTeam[evaluation];
+                  const index = etForEvaluation.findIndex(
+                    (member) => Number(Object.keys(member)[0]) === Number(id)
+                  );
+                  if (index > -1) {
+                    currentEvaluationTeam[evaluation].splice(index, 1);
+                  }
+                });
+                notifyInfo(t('selection_removed'));
+                forceUpdate();
+                setDeleteLoading(false);
+                setChangesMade(true);
+              } else {
+                notifyError(t('error_delete_et_member'));
+                setDeleteLoading(false);
+              }
+            });
+          });
+        } catch (error) {
+          notifyError('error_server');
+          setDeleteLoading(false);
+        }
+      } else {
+        evaluations.forEach((evaluation) => {
+          const etForEvaluation = currentEvaluationTeam[evaluation];
+          const index = etForEvaluation.findIndex(
+            (member) => Number(Object.keys(member)[0]) === Number(id)
+          );
+          if (index > -1) {
+            currentEvaluationTeam[evaluation].splice(index, 1);
+          }
+        });
+        notifyInfo(t('selection_removed'));
+        forceUpdate();
         setDeleteLoading(false);
+        setChangesMade(true);
       }
     }
   }
@@ -658,7 +687,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                     </Fab>
                                     {isDeleteLoading &&
                                       memberForDeletion ===
-                                        Object.keys(member)[0] && (
+                                      Object.keys(member)[0] && (
                                         <CircularProgress
                                           size={44}
                                           sx={{
