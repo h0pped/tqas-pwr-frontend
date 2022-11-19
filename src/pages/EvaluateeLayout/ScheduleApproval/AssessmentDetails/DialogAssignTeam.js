@@ -1,4 +1,8 @@
 import { useEffect, useState, forwardRef, useContext, useReducer } from 'react';
+import { styled } from '@mui/material/styles';
+import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
+
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import AppBar from '@mui/material/AppBar';
@@ -7,16 +11,13 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
-import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import { useTranslation } from 'react-i18next';
-import { TextField } from '@mui/material';
-import { toast } from 'react-toastify';
+import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -33,6 +34,7 @@ import Alert from '@mui/material/Alert';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
+
 import config from '../../../../config/index.config.js';
 import UserContext from '../../../../context/UserContext/UserContext.js';
 import ChangesMightBeLostDialog from '../../../../components/ChangesMightBeLostDialog/ChangesMightBeLostDialog.js';
@@ -80,6 +82,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
     isChangesMightBeLostDialogOpen,
     setChangesMightBeLostDialogOpen,
   ] = useState(false);
+
   const [isChangesMade, setChangesMade] = useState(false);
 
   const notifySuccess = (msg) =>
@@ -167,7 +170,6 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
       })
         .then((response) => response.json())
         .then((wzhzUsers) => {
-          console.log(wzhzUsers);
           setWzhzList(wzhzUsers.filter((user) => user.id !== data.id));
         });
     } catch (error) {
@@ -193,8 +195,6 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
   }
 
   function addMember(user) {
-    console.log(currentEvaluationTeam);
-
     if (
       Object.values(currentEvaluationTeam)[0].some(
         (member) => Number(Object.keys(member)[0]) === Number(user)
@@ -213,7 +213,6 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
       });
       notifyInfo('Selection added.');
     }
-    console.log(currentEvaluationTeam);
   }
 
   function saveEvaluationTeam() {
@@ -259,7 +258,6 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
   function removeMember() {
     if (memberForDeletion) {
       const id = memberForDeletion;
-      console.log(memberForDeletion);
       try {
         evaluations.forEach((evaluation) => {
           fetch(
@@ -276,16 +274,10 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
           ).then((response) => {
             if (response.ok) {
               evaluations.forEach((evaluation) => {
-                console.log(currentEvaluationTeam[evaluation]);
                 const etForEvaluation = currentEvaluationTeam[evaluation];
                 const index = etForEvaluation.findIndex(
                   (member) => Number(Object.keys(member)[0]) === Number(id)
                 );
-                etForEvaluation.forEach((member) => {
-                  console.log(id);
-                  console.log(Object.keys(member)[0]);
-                });
-                console.log(`INDEX TO DEL: ${index}`);
                 if (index > -1) {
                   currentEvaluationTeam[evaluation].splice(index, 1);
                 }
@@ -309,11 +301,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
 
   function isCurrentEvaluationTeamHasWZHZMember() {
     let isContains = false;
-    console.log(currentEvaluationTeam);
-    console.log(wzhzList);
     evaluations.forEach((evaluation) => {
-      // const memberId = Object.keys(currentEvaluationTeam[evaluation])[0];
-      // isContains = isWzhzMemeber(memberId);
       currentEvaluationTeam[evaluation].forEach((member) => {
         const memberId = Object.keys(member)[0];
         if (isWzhzMemeber(memberId)) {
@@ -333,8 +321,6 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
     getWzhzList();
     getOutsideList();
 
-    console.log(data.evaluation_team);
-
     if (data.evaluation_team) {
       const evaluationsETResponsibleFor = data.evaluatee.evaluations.map(
         (e) => e.id
@@ -342,43 +328,36 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
 
       setEvaluations(evaluationsETResponsibleFor);
 
-      const newEvalObj = {};
+      const currentEvaluationTeamApiFormat = {};
 
-      evaluationsETResponsibleFor.forEach((ev) => {
-        const evalTeam = [];
-        console.log(data.evaluation_team);
+      evaluationsETResponsibleFor.forEach((evaluation) => {
+        const evaluationTeams = [];
+        const uniqueMemberIds = [];
 
-        const uniqueIds = [];
+        const uniqueMembersPerAllEvaluations = data.evaluation_team.filter(
+          (member) => {
+            const isDuplicate = uniqueMemberIds.includes(member.member_user_id);
 
-        const unique = data.evaluation_team.filter((element) => {
-          const isDuplicate = uniqueIds.includes(element.member_user_id);
+            if (!isDuplicate) {
+              uniqueMemberIds.push(member.member_user_id);
 
-          if (!isDuplicate) {
-            uniqueIds.push(element.member_user_id);
+              return true;
+            }
 
-            return true;
+            return false;
           }
+        );
 
-          return false;
+        uniqueMembersPerAllEvaluations.forEach((member) => {
+          const newMemberObjectApiFormat = {};
+          newMemberObjectApiFormat[member.member_user_id] = false;
+          evaluationTeams.push(newMemberObjectApiFormat);
         });
 
-        unique.forEach((member) => {
-          const memberObj = {};
-          memberObj[member.member_user_id] = false;
-          evalTeam.push(memberObj);
-        });
-
-        newEvalObj[ev] = evalTeam;
-        console.log(unique);
+        currentEvaluationTeamApiFormat[evaluation] = evaluationTeams;
       });
 
-      console.log(`OBJ: ${JSON.stringify(newEvalObj)}`);
-      setCurrentEvaluationTeam(newEvalObj);
-
-      console.log(currentEvaluationTeam);
-      console.log(console.log(evaluationsETResponsibleFor));
-
-      console.log(wzhzList);
+      setCurrentEvaluationTeam(currentEvaluationTeamApiFormat);
     }
   }, [isOpen]);
 
@@ -666,23 +645,26 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                       sx={{
                                         backgroundColor: '#ffffff',
                                         color: '#D9372A',
-                                        boxShadow: 0,
+                                        boxShadow: 1,
+                                        border: 'solid 0.5px #f4f5f7',
                                       }}
                                       size="small"
                                     >
                                       <PersonRemoveIcon />
                                     </Fab>
-                                    {isDeleteLoading && (
-                                      <CircularProgress
-                                        size={44}
-                                        sx={{
-                                          position: 'absolute',
-                                          top: -2,
-                                          left: -2,
-                                          zIndex: 1,
-                                        }}
-                                      />
-                                    )}
+                                    {isDeleteLoading &&
+                                      memberForDeletion ===
+                                        Object.keys(member)[0] && (
+                                        <CircularProgress
+                                          size={44}
+                                          sx={{
+                                            position: 'absolute',
+                                            top: -2,
+                                            left: -2,
+                                            zIndex: 1,
+                                          }}
+                                        />
+                                      )}
                                   </Box>
                                 </Tooltip>
                               </TableCell>
