@@ -109,7 +109,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
   const notifyInfo = (msg) =>
     toast.info(`${t('info')} ${msg}`, {
       position: 'top-center',
-      autoClose: 8000,
+      autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -211,6 +211,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
         setCurrentEvaluationTeam(updatedEvalTeam);
         forceUpdate();
       });
+      notifyInfo('Selection added.');
     }
     console.log(currentEvaluationTeam);
   }
@@ -289,7 +290,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                   currentEvaluationTeam[evaluation].splice(index, 1);
                 }
               });
-              notifySuccess('Success delete.');
+              notifyInfo('Selection removed.');
               forceUpdate();
               setDeleteLoading(false);
               setChangesMade(true);

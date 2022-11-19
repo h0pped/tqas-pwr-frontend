@@ -23,7 +23,7 @@ export default function AlertDialogSlide({ isChangesDialogOpen, onClose, onClose
       <DialogTitle>Are you sure you want to close this window?</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-slide-description">
-          Changes you made will not be saved.
+          Changes you made may not be saved.
         </DialogContentText>
         <Alert sx={{ mt: 1 }} severity="info">To save your changes, press NO and click SAVE in the top-right corner.</Alert>
       </DialogContent>
