@@ -516,7 +516,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                     size="small"
                     onClick={() => addMember(selectedWzhzMember)}
                   >
-                    {t('button_add')}
+                    {t('add')}
                   </Button>
                 </Box>
                 <Box
@@ -548,7 +548,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                     size="small"
                     onClick={() => addMember(selectedOutsideUser)}
                   >
-                    {t('button_add')}
+                    {t('add')}
                   </Button>
                 </Box>
               </Box>

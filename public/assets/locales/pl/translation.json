@@ -167,5 +167,6 @@
   "member_you_are_trying_to_delete_is_a_member_of_WZHZ_group": "Członek, którego próbujesz usunąć, jest członkiem grupy WZHZ.",
   "are_you_sure_you_want_to_close_this_window": "Czy na pewno chcesz zamknąć to okno",
   "changes_you_made_may_not_be_saved": "Wprowadzone zmiany mogą nie zostać zapisane.",
-  "to_save_your_changes_press_NO_and_click_SAVE_in_the_top_right_corner": "Aby zapisać zmiany, naciśnij NIE i kliknij ZAPISZ w prawym górnym rogu."
+  "to_save_your_changes_press_NO_and_click_SAVE_in_the_top_right_corner": "Aby zapisać zmiany, naciśnij NIE i kliknij ZAPISZ w prawym górnym rogu.",
+  "add": "Dodaj"
 }
