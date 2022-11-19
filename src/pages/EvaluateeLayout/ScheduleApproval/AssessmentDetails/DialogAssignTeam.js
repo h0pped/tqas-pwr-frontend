@@ -61,7 +61,6 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
 
   const [wzhzList, setWzhzList] = useState({ wzhzList: [] });
   const [outsideList, setOutsideList] = useState({ outsideList: [] });
-  const [oldUsers, setOldUsers] = useState([]);
 
   const [selectedWzhzMember, setSelectedWzhzMember] = useState(null);
   const [selectedOutsideUser, setSelectedOutsideUser] = useState(null);
@@ -71,6 +70,8 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
 
   const [isSaveLoading, setSaveLoading] = useState(false);
   const [isDeleteLoading, setDeleteLoading] = useState(false);
+
+  const [virtualUsers, setVirtualUsers] = useState([]);
 
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [memberForDeletion, setMemberForDeletion] = useState(null);
@@ -203,6 +204,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
     ) {
       notifyError(t('user_already_selected'));
     } else {
+      setVirtualUsers((oldArray) => [...oldArray, user]);
       setChangesMade(true);
       const updatedEvalTeam = currentEvaluationTeam;
       evaluations.forEach((evaluation) => {
@@ -256,22 +258,25 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
     }
   }
 
-  async function removeMember() {
+  function removeMember() {
     if (memberForDeletion) {
       const id = memberForDeletion;
 
-      await fetch(`${config.server.url}/userData/getUsers`, {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((response) => response.json())
-        .then((users) => {
-          setOldUsers(users.filter((user) => user.id !== data.id));
+      if (virtualUsers.includes(Number(id))) {
+        evaluations.forEach((evaluation) => {
+          const etForEvaluation = currentEvaluationTeam[evaluation];
+          const index = etForEvaluation.findIndex(
+            (member) => Number(Object.keys(member)[0]) === Number(id)
+          );
+          if (index > -1) {
+            currentEvaluationTeam[evaluation].splice(index, 1);
+          }
         });
-
-      if (oldUsers.some((user) => user.id === id)) {
+        notifyInfo(t('selection_removed'));
+        forceUpdate();
+        setDeleteLoading(false);
+        setChangesMade(true);
+      } else {
         try {
           evaluations.forEach((evaluation) => {
             fetch(
@@ -310,20 +315,6 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
           notifyError('error_server');
           setDeleteLoading(false);
         }
-      } else {
-        evaluations.forEach((evaluation) => {
-          const etForEvaluation = currentEvaluationTeam[evaluation];
-          const index = etForEvaluation.findIndex(
-            (member) => Number(Object.keys(member)[0]) === Number(id)
-          );
-          if (index > -1) {
-            currentEvaluationTeam[evaluation].splice(index, 1);
-          }
-        });
-        notifyInfo(t('selection_removed'));
-        forceUpdate();
-        setDeleteLoading(false);
-        setChangesMade(true);
       }
     }
   }
@@ -350,45 +341,47 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
     getWzhzList();
     getOutsideList();
 
-    if (data.evaluation_team) {
-      const evaluationsETResponsibleFor = data.evaluatee.evaluations.map(
-        (e) => e.id
-      );
-
-      setEvaluations(evaluationsETResponsibleFor);
-
-      const currentEvaluationTeamApiFormat = {};
-
-      evaluationsETResponsibleFor.forEach((evaluation) => {
-        const evaluationTeams = [];
-        const uniqueMemberIds = [];
-
-        const uniqueMembersPerAllEvaluations = data.evaluation_team.filter(
-          (member) => {
-            const isDuplicate = uniqueMemberIds.includes(member.member_user_id);
-
-            if (!isDuplicate) {
-              uniqueMemberIds.push(member.member_user_id);
-
-              return true;
-            }
-
-            return false;
-          }
+    if (virtualUsers.length === 0) {
+      if (data.evaluation_team) {
+        const evaluationsETResponsibleFor = data.evaluatee.evaluations.map(
+          (e) => e.id
         );
 
-        uniqueMembersPerAllEvaluations.forEach((member) => {
-          const newMemberObjectApiFormat = {};
-          newMemberObjectApiFormat[member.member_user_id] = false;
-          evaluationTeams.push(newMemberObjectApiFormat);
+        setEvaluations(evaluationsETResponsibleFor);
+
+        const currentEvaluationTeamApiFormat = {};
+
+        evaluationsETResponsibleFor.forEach((evaluation) => {
+          const evaluationTeams = [];
+          const uniqueMemberIds = [];
+
+          const uniqueMembersPerAllEvaluations = data.evaluation_team.filter(
+            (member) => {
+              const isDuplicate = uniqueMemberIds.includes(member.member_user_id);
+
+              if (!isDuplicate) {
+                uniqueMemberIds.push(member.member_user_id);
+
+                return true;
+              }
+
+              return false;
+            }
+          );
+
+          uniqueMembersPerAllEvaluations.forEach((member) => {
+            const newMemberObjectApiFormat = {};
+            newMemberObjectApiFormat[member.member_user_id] = false;
+            evaluationTeams.push(newMemberObjectApiFormat);
+          });
+
+          currentEvaluationTeamApiFormat[evaluation] = evaluationTeams;
         });
 
-        currentEvaluationTeamApiFormat[evaluation] = evaluationTeams;
-      });
-
-      setCurrentEvaluationTeam(currentEvaluationTeamApiFormat);
+        setCurrentEvaluationTeam(currentEvaluationTeamApiFormat);
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, virtualUsers]);
 
   return (
     <Dialog
@@ -687,7 +680,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                     </Fab>
                                     {isDeleteLoading &&
                                       memberForDeletion ===
-                                        Object.keys(member)[0] && (
+                                      Object.keys(member)[0] && (
                                         <CircularProgress
                                           size={44}
                                           sx={{
