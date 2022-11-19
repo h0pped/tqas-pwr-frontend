@@ -349,7 +349,9 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
 
           const uniqueMembersPerAllEvaluations = data.evaluation_team.filter(
             (member) => {
-              const isDuplicate = uniqueMemberIds.includes(member.member_user_id);
+              const isDuplicate = uniqueMemberIds.includes(
+                member.member_user_id
+              );
 
               if (!isDuplicate) {
                 uniqueMemberIds.push(member.member_user_id);
