@@ -687,7 +687,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                     </Fab>
                                     {isDeleteLoading &&
                                       memberForDeletion ===
-                                      Object.keys(member)[0] && (
+                                        Object.keys(member)[0] && (
                                         <CircularProgress
                                           size={44}
                                           sx={{
