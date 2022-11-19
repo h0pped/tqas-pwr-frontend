@@ -133,7 +133,6 @@ export default function AssessmentDetails({
             {row.evaluatee.evaluations.length}
           </TableCell>
           <TableCell width="18%" component="th" scope="row">
-            {console.log(row.evaluation_team)}
             {`${
               [
                 ...new Set(
