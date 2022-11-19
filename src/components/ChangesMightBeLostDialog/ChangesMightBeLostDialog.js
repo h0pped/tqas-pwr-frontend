@@ -7,6 +7,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Alert from '@mui/material/Alert';
 import Slide from '@mui/material/Slide';
+import { useTranslation } from 'react-i18next';
 
 const Transition = React.forwardRef((props, ref) => (
   <Slide direction="down" ref={ref} {...props} />
@@ -18,6 +19,8 @@ export default function AlertDialogSlide({
   onCloseParent,
   onChangesDicard,
 }) {
+  const { t } = useTranslation();
+
   return (
     <Dialog
       open={isChangesDialogOpen}
@@ -25,17 +28,21 @@ export default function AlertDialogSlide({
       keepMounted
       aria-describedby="alert-dialog-slide-description"
     >
-      <DialogTitle>Are you sure you want to close this window?</DialogTitle>
+      <DialogTitle>
+        {t('are_you_sure_you_want_to_close_this_window')}
+      </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-slide-description">
-          Changes you made may not be saved.
+          {t('changes_you_made_may_not_be_saved')}
         </DialogContentText>
         <Alert sx={{ mt: 1 }} severity="info">
-          To save your changes, press NO and click SAVE in the top-right corner.
+          {t(
+            'to_save_your_changes_press_NO_and_click_SAVE_in_the_top_right_corner'
+          )}
         </Alert>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>No</Button>
+        <Button onClick={onClose}>{t('button_no')}</Button>
         <Button
           onClick={() => {
             onClose();
@@ -43,7 +50,7 @@ export default function AlertDialogSlide({
             onChangesDicard();
           }}
         >
-          Yes
+          {t('button_yes')}
         </Button>
       </DialogActions>
     </Dialog>

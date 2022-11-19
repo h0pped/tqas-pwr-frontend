@@ -200,7 +200,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
         (member) => Number(Object.keys(member)[0]) === Number(user)
       )
     ) {
-      notifyError('User is already selected.');
+      notifyError(t('user_already_selected'));
     } else {
       setChangesMade(true);
       const updatedEvalTeam = currentEvaluationTeam;
@@ -211,7 +211,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
         setCurrentEvaluationTeam(updatedEvalTeam);
         forceUpdate();
       });
-      notifyInfo('Selection added.');
+      notifyInfo(t('selection_added'));
     }
   }
 
@@ -233,12 +233,12 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
             }
           ).then((response) => {
             if (response.ok) {
-              notifySuccess('Evaluation team was successfully saved.');
+              notifySuccess(t('et_save_success'));
               setChangesMade(false);
               setSaveLoading(false);
               onClose();
             } else {
-              notifyError('There was a problem while assigning a team.');
+              notifyError(t('et_save_error'));
               setChangesMade(false);
               setSaveLoading(false);
               onClose();
@@ -248,10 +248,10 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
           notifyError(t('server_error'));
         }
       } else {
-        notifyError('Evaluation team must have at least one WZHZ member!');
+        notifyError(t('error_at_least_one_wzhz_member'));
       }
     } else {
-      notifyInfo('No changes to be saved.');
+      notifyInfo(t('no_changes_to_save'));
     }
   }
 
@@ -282,12 +282,12 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                   currentEvaluationTeam[evaluation].splice(index, 1);
                 }
               });
-              notifyInfo('Selection removed.');
+              notifyInfo(t('selection_removed'));
               forceUpdate();
               setDeleteLoading(false);
               setChangesMade(true);
             } else {
-              notifyError('Error delete.');
+              notifyError(t('error_delete_et_member'));
               setDeleteLoading(false);
             }
           });
@@ -391,7 +391,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
               color="secondary"
               onClick={() => saveEvaluationTeam()}
             >
-              Save
+              {t('save')}
             </Button>
             {isSaveLoading && (
               <CircularProgress
@@ -418,14 +418,14 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
         <Grid container spacing={2} sx={{ mt: 2 }}>
           <Grid item xs={4} sx={{ ml: 1 }}>
             <Item>
-              <Typography variant="h6">Evaluatee</Typography>
+              <Typography variant="h6">{t('evaluatee')}</Typography>
               <Box sx={{ borderRadius: 1, backgroundColor: '#f4f5f7', p: 1 }}>
                 <Typography>
                   {`${data.academic_title} ${data.first_name} ${data.last_name}`}
                 </Typography>
               </Box>
               <Typography sx={{ mt: 2 }} variant="h6">
-                {t('course_details')}
+                {t('courses')}
               </Typography>
               <Box sx={{ borderRadius: 1, backgroundColor: '#f4f5f7', p: 1 }}>
                 {data.evaluatee &&
@@ -552,13 +552,17 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                   >
                     <TableHead>
                       <TableRow sx={{ backgroundColor: '#f4f5f7' }}>
-                        <TableCell>User ID</TableCell>
-                        <TableCell>Academic Title</TableCell>
-                        <TableCell align="left">First name</TableCell>
-                        <TableCell align="left">Last name</TableCell>
-                        <TableCell align="left">Email</TableCell>
-                        <TableCell align="left">Group</TableCell>
-                        <TableCell align="left">Actions</TableCell>
+                        <TableCell>{t('user_id')}</TableCell>
+                        <TableCell>{t('label_academic_title')}</TableCell>
+                        <TableCell align="left">
+                          {t('label_first_name')}
+                        </TableCell>
+                        <TableCell align="left">
+                          {t('label_last_name')}
+                        </TableCell>
+                        <TableCell align="left">{t('label_email')}</TableCell>
+                        <TableCell align="left">{t('group')}</TableCell>
+                        <TableCell align="left">{t('label_actions')}</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -630,7 +634,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                               >
                                 {isWzhzMemeber(Object.keys(member)[0])
                                   ? 'WZHZ'
-                                  : 'Other'}
+                                  : t('other')}
                               </TableCell>
                               <TableCell component="th" scope="row">
                                 <Tooltip title="Remove" placement="top">
@@ -692,10 +696,10 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
         onClose={handleDeleteDialogOptionNo}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>Remove team member?</DialogTitle>
+        <DialogTitle>{t('remove_team_member')}?</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Are you sure you want to remove this member?
+            {t('are_you_sure_you_want_to_remove_this_member')}?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -712,13 +716,13 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
         onClose={handleDeleteWZHZMemberDialogOptionNo}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>Remove team member?</DialogTitle>
+        <DialogTitle>{t('remove_team_member')}?</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Are you sure you want to remove this member?
+            {t('are_you_sure_you_want_to_remove_this_member')}?
           </DialogContentText>
           <Alert severity="warning" sx={{ mt: 1 }}>
-            Member you are trying to delete is a member of WZHZ group.
+            {t('member_you_are_trying_to_delete_is_a_member_of_WZHZ_group')}
           </Alert>
         </DialogContent>
         <DialogActions>
