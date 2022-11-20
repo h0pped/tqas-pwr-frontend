@@ -34,6 +34,7 @@ import Alert from '@mui/material/Alert';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 
 import config from '../../../../config/index.config.js';
 import UserContext from '../../../../context/UserContext/UserContext.js';
@@ -72,6 +73,8 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
   const [isDeleteLoading, setDeleteLoading] = useState(false);
 
   const [virtualUsers, setVirtualUsers] = useState([]);
+
+  const [teamLeader, setTeamLeader] = useState([]);
 
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [memberForDeletion, setMemberForDeletion] = useState(null);
@@ -209,7 +212,6 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
       const updatedEvalTeam = currentEvaluationTeam;
       evaluations.forEach((evaluation) => {
         const newUser = {};
-        newUser[user] = false;
         updatedEvalTeam[evaluation].push(newUser);
         setCurrentEvaluationTeam(updatedEvalTeam);
         forceUpdate();
@@ -381,6 +383,10 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
     }
   }, [isOpen, virtualUsers]);
 
+  const makeLeader = (userId) => {
+    // console.log(currentEvaluationTeam);
+    // setTeamLeader(userId);
+  };
   return (
     <Dialog
       fullScreen
@@ -602,15 +608,34 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                 '&:last-child td, &:last-child th': {
                                   border: 0,
                                 },
+                                backgroundColor:
+                                  teamLeader === Object.keys(member)[0]
+                                    ? '#D9372A'
+                                    : 'white',
                               }}
                             >
-                              <TableCell component="th" scope="row">
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                sx={{
+                                  color:
+                                    teamLeader === Object.keys(member)[0]
+                                      ? 'white'
+                                      : 'black',
+                                }}
+                              >
                                 {Object.keys(member)[0]}
                               </TableCell>
                               <TableCell
                                 align="left"
                                 component="th"
                                 scope="row"
+                                sx={{
+                                  color:
+                                    teamLeader === Object.keys(member)[0]
+                                      ? 'white'
+                                      : 'black',
+                                }}
                               >
                                 {
                                   outsideList.find(
@@ -623,6 +648,12 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                 align="left"
                                 component="th"
                                 scope="row"
+                                sx={{
+                                  color:
+                                    teamLeader === Object.keys(member)[0]
+                                      ? 'white'
+                                      : 'black',
+                                }}
                               >
                                 {
                                   outsideList.find(
@@ -635,6 +666,12 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                 align="left"
                                 component="th"
                                 scope="row"
+                                sx={{
+                                  color:
+                                    teamLeader === Object.keys(member)[0]
+                                      ? 'white'
+                                      : 'black',
+                                }}
                               >
                                 {
                                   outsideList.find(
@@ -647,6 +684,12 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                 align="left"
                                 component="th"
                                 scope="row"
+                                sx={{
+                                  color:
+                                    teamLeader === Object.keys(member)[0]
+                                      ? 'white'
+                                      : 'black',
+                                }}
                               >
                                 {
                                   outsideList.find(
@@ -659,14 +702,52 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                 align="left"
                                 component="th"
                                 scope="row"
+                                sx={{
+                                  color:
+                                    teamLeader === Object.keys(member)[0]
+                                      ? 'white'
+                                      : 'black',
+                                }}
                               >
                                 {isWzhzMemeber(Object.keys(member)[0])
                                   ? 'WZHZ'
                                   : t('other')}
                               </TableCell>
                               <TableCell component="th" scope="row">
-                                <Tooltip title="Remove" placement="top">
-                                  <Box sx={{ m: 1, position: 'relative' }}>
+                                <Box sx={{ m: 1, position: 'relative' }}>
+                                  <Tooltip title="Make leader" placement="top">
+                                    <Fab
+                                      aria-label="make leader"
+                                      onClick={() =>
+                                        makeLeader(Object.keys(member)[0])
+                                      }
+                                      sx={{
+                                        backgroundColor: '#ffffff',
+                                        color: '#D9372A',
+                                        boxShadow: 1,
+                                        border: 'solid 0.5px #f4f5f7',
+                                        mr: 2,
+                                      }}
+                                      size="small"
+                                    >
+                                      <AssignmentIndIcon />
+                                    </Fab>
+                                  </Tooltip>
+
+                                  {isDeleteLoading &&
+                                    memberForDeletion ===
+                                      Object.keys(member)[0] && (
+                                      <CircularProgress
+                                        size={44}
+                                        sx={{
+                                          position: 'absolute',
+                                          top: -2,
+                                          left: -2,
+                                          zIndex: 1,
+                                        }}
+                                      />
+                                    )}
+                                  <Tooltip title="Remove" placement="top">
                                     <Fab
                                       aria-label="save"
                                       onClick={() =>
@@ -684,21 +765,8 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                     >
                                       <PersonRemoveIcon />
                                     </Fab>
-                                    {isDeleteLoading &&
-                                      memberForDeletion ===
-                                        Object.keys(member)[0] && (
-                                        <CircularProgress
-                                          size={44}
-                                          sx={{
-                                            position: 'absolute',
-                                            top: -2,
-                                            left: -2,
-                                            zIndex: 1,
-                                          }}
-                                        />
-                                      )}
-                                  </Box>
-                                </Tooltip>
+                                  </Tooltip>
+                                </Box>
                               </TableCell>
                             </TableRow>
                           )
