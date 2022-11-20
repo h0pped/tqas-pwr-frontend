@@ -39,6 +39,7 @@ import UserContext from '../../../../context/UserContext/UserContext.js';
 export default function AssessmentDetails({
   assessmentDetails,
   onAddEvalueatee,
+  onSendScheduleForApproval,
 }) {
   const { t } = useTranslation();
   const [evaluatees, setEvaluatees] = useState([]);
@@ -105,6 +106,7 @@ export default function AssessmentDetails({
         setSendForApprovalDialogOpen(false);
         if (response.ok) {
           notifySuccess(t('assessment_successfully_sent_for_approval'));
+          onSendScheduleForApproval();
         } else {
           notifyError(t('assessment_error_sending_for_approval'));
         }
