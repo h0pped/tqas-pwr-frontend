@@ -55,6 +55,11 @@ export default function AssessmentDetails({
     onAssignTeam();
   };
 
+  const handleAssignTeamButtonClick = (row) => {
+    handleOpenAssignTeamDialog();
+    setEvaluateeDetails(row);
+  };
+
   const notifyError = (msg) =>
     toast.error(`${t('error_dialog')} ${msg}`, {
       position: 'top-center',
@@ -147,10 +152,7 @@ export default function AssessmentDetails({
                 sx={{ width: '100%' }}
                 size="small"
                 variant="contained"
-                onClick={() => {
-                  handleOpenAssignTeamDialog();
-                  setEvaluateeDetails(row);
-                }}
+                onClick={() => handleAssignTeamButtonClick(row)}
               >
                 {t('assign_team')}
               </Button>
