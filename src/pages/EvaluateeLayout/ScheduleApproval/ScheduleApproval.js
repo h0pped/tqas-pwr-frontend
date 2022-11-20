@@ -4,7 +4,8 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import LinearProgress from '@mui/material/LinearProgress';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
+
 import AssessmentDetails from './AssessmentDetails/AssessmentDetails.js';
 
 import AssessmentCard from '../../../components/AssessmentCard/AssessmentCard.js';
@@ -23,6 +24,7 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
   const [assessments, setAssessments] = useState([]);
   const [selectedAssessment, setSelectedAssessment] = useState(null);
   const [isAssignTeamDialogOpen, setAssignTeamDialogOpen] = useState(false);
+  const [dialogData, setDialogData] = useState([]);
 
   const notifySuccess = (msg) =>
     toast.success(`${t('success')} ${msg}`, {
@@ -76,12 +78,14 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
 
   return (
     <Box sx={{ flexGrow: 1, height: '75vh' }}>
+      <ToastContainer />
       <DialogAssignTeam
         isOpen={isAssignTeamDialogOpen}
         onClose={() => setAssignTeamDialogOpen(false)}
         notifySuccess={notifySuccess}
         notifyError={notifyError}
         assessment={selectedAssessment}
+        data={dialogData}
       />
       <Grid container sx={{ height: '100%' }}>
         <Grid item xs={12}>
@@ -145,6 +149,7 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
               assessmentDetails={assessments.find(
                 (assessment) => assessment.id === selectedAssessment
               )}
+              setEvaluateeDetails={setDialogData}
             />
           </Box>
         </Grid>
