@@ -595,6 +595,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                     </TableHead>
                     <TableBody>
                       {currentEvaluationTeam &&
+                        outsideList &&
                         Object.values(currentEvaluationTeam)[0].map(
                           (member) => (
                             <TableRow
