@@ -223,6 +223,7 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
               assessmentDetails={assessments.find(
                 (assesment) => assesment.id === selectedAssessment
               )}
+              onSendScheduleForApproval={() => setIsAssessmentsUpdated(true)}
             />
           </Box>
         </Grid>
