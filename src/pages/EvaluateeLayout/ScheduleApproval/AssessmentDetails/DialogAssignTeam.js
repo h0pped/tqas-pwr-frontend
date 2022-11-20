@@ -447,7 +447,15 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
               <Typography sx={{ mt: 2 }} variant="h6">
                 {t('courses')}
               </Typography>
-              <Box sx={{ borderRadius: 1, backgroundColor: '#f4f5f7', p: 1, height: '55vh', overflowY: 'scroll' }}>
+              <Box
+                sx={{
+                  borderRadius: 1,
+                  backgroundColor: '#f4f5f7',
+                  p: 1,
+                  height: '55vh',
+                  overflowY: 'scroll',
+                }}
+              >
                 {data.evaluatee &&
                   data.evaluatee.evaluations.map((evaluation) => (
                     <Card sx={{ mb: 1, boxShadow: 0 }}>
