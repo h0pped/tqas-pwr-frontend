@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -11,8 +11,10 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+
+import UserContext from '../../context/UserContext/UserContext.js';
 
 import LanguageSwitchV2 from '../../components/LanguageSwitch/LanguageSwitchV2.js';
 
@@ -26,6 +28,8 @@ const Layout = () => {
   const navigate = useNavigate();
 
   const { t } = useTranslation();
+
+  const { token } = useContext(UserContext);
 
   const pages = [
     {
@@ -66,6 +70,10 @@ const Layout = () => {
   const handlePageChange = (pageURL) => {
     navigate(pageURL);
   };
+
+  if (!token) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <Box sx={{ height: '100%' }}>

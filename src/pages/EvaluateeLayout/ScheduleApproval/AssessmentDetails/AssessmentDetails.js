@@ -30,7 +30,11 @@ import TextareaAutosize from '@mui/material/TextareaAutosize';
 import config from '../../../../config/index.config.js';
 import UserContext from '../../../../context/UserContext/UserContext.js';
 
-export default function AssessmentDetails({ assessmentDetails, onAssignTeam }) {
+export default function AssessmentDetails({
+  assessmentDetails,
+  onAssignTeam,
+  setEvaluateeDetails,
+}) {
   const { t } = useTranslation();
   const { token } = useContext(UserContext);
 
@@ -49,6 +53,11 @@ export default function AssessmentDetails({ assessmentDetails, onAssignTeam }) {
 
   const handleOpenAssignTeamDialog = () => {
     onAssignTeam();
+  };
+
+  const handleAssignTeamButtonClick = (row) => {
+    handleOpenAssignTeamDialog();
+    setEvaluateeDetails(row);
   };
 
   const notifyError = (msg) =>
@@ -129,7 +138,13 @@ export default function AssessmentDetails({ assessmentDetails, onAssignTeam }) {
             {row.evaluatee.evaluations.length}
           </TableCell>
           <TableCell width="18%" component="th" scope="row">
-            {`${row.evaluation_team.length} ${t('member')}`}
+            {`${
+              [
+                ...new Set(
+                  row.evaluation_team.map((item) => item.member_user_id)
+                ),
+              ].length
+            } ${t('member')}`}
           </TableCell>
           <TableCell width="18%" component="th" scope="row">
             <Tooltip title="Remove evaluatee" placement="top">
@@ -137,7 +152,7 @@ export default function AssessmentDetails({ assessmentDetails, onAssignTeam }) {
                 sx={{ width: '100%' }}
                 size="small"
                 variant="contained"
-                onClick={handleOpenAssignTeamDialog}
+                onClick={() => handleAssignTeamButtonClick(row)}
               >
                 {t('assign_team')}
               </Button>
