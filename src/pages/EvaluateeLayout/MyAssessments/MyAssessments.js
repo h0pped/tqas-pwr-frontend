@@ -8,8 +8,8 @@ import EvaluationDetails from './EvaluationDetails/EvaluationDetails.js';
 import EvaluationCard from '../../../components/AssessmentCard/EvaluationCard.js';
 
 export default function MyAssessments({ setSelectedPage, link }) {
-  const [isAssessmentsLoading, setAssessmentsLoading] = useState(false);
-  const [assessments, setAssessments] = useState([
+  const [isAssessmentsLoading] = useState(false);
+  const [assessments] = useState([
     {
       id: 33,
       status: 'Open',
