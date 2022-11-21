@@ -94,6 +94,7 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
 
   const handleOpenCreateAssessmentDialog = () => {
     setNewAssessmentDepartmentValueError(false);
+    setNewAssessmentDepartmentValue('');
     setCreateAssessmentDialogOpen(true);
   };
 
