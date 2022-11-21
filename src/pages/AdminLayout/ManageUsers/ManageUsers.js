@@ -326,8 +326,8 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
         />
         <TextField
           id="text-field-department"
-          error={errors.lastName}
-          helperText={t(errors.lastName)}
+          error={errors.department}
+          helperText={t(errors.department)}
           name="department"
           size="small"
           label={t('department')}
