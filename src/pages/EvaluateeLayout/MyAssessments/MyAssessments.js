@@ -59,6 +59,11 @@ export default function MyAssessments({ setSelectedPage, link }) {
             }}
           >
             {isAssessmentsLoading && <LinearProgress />}
+            {isAssessmentsLoading && (
+              <Typography variant="subtitle2" sx={{ color: '#848884' }}>
+                {t('no_assessment')}
+              </Typography>
+            )}
             {!isAssessmentsLoading &&
               assessments.map((item) => (
                 <EvaluationCard

@@ -171,12 +171,15 @@
   "add": "Add",
   "schedule_rejected": "Schedule was successfully rejected",
   "schedule_approved": "Schedule was successfully approved",
-  "evaluation_review": "Evaluation review",
+  "assessment_result": "Assessment result",
   "result":"Result",
-  "info_review":"You have been evaluated on Thursday, October 21st, 2022. You have 14 days to accept or decline this result.",
   "decline_result":"Decline result",
-  "info_of_decline":"Are you sure that you want to decline the result of the evaluation? if yes, please provide the reason:",
+  "info_for_decline":"Are you sure that you want to decline the result of the evaluation? If yes, please provide the reason:",
   "approve_result":"Approve result",
-  "open_protocol":"Open protocol form"
-  
+  "open_protocol":"Open protocol form" ,
+  "reason_decline":"Write your reason for declining",
+  "decline":"Decline",
+  "first_info": "You have been evaluated on",
+  "second_info":"You have 14 days to accept or decline this result.",
+  "no_assessment": "No assessment found"
 }

@@ -171,11 +171,15 @@
   "add": "Dodaj",
   "schedule_rejected": "Harmonogram został pomyślnie odrzucony",
   "schedule_approved": "Harmonogram został pomyślnie zatwierdzony",
-  "evaluation_review": "Przegląd oceny",
+  "assessment_result": "Wynik oceny",
   "result":"Wynik",
-  "info_review":"Zostałeś oceniony w czwartek, 21 października 2022 r. Masz 14 dni na zaakceptowanie lub odrzucenie tego wyniku.",
   "decline_result":"Odrzuć wynik",
-  "info_for_decline":"Czy na pewno chcesz odrzucić wynik oceny? jeśli tak, proszę podać przyczynę:",
+  "info_for_decline":"Czy na pewno chcesz odrzucić wynik oceny? Jeśli tak, proszę podać przyczynę:",
   "approve_result":"Zatwierdź wynik",
-  "open_protocol":"Otwarty formularz protokołu"
+  "open_protocol":"Otwarty formularz protokołu",
+  "reason_decline":"Napisz powód odmowy",
+  "decline":"Spadek",
+  "first_info": "Zostałeś oceniony na",
+  "second_info":"Masz 14 dni na zaakceptowanie lub odrzucenie tego wyniku.",
+  "no_assessment": "Nie znaleziono oceny"
 }

@@ -8,6 +8,7 @@ import CardContent from '@mui/material/CardContent';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
 import DialogContentText from '@mui/material/DialogContentText';
 import Slide from '@mui/material/Slide';
 import { useTranslation } from 'react-i18next';
@@ -19,7 +20,7 @@ import CardMedia from '@mui/material/CardMedia';
 import ClearIcon from '@mui/icons-material/Clear';
 import DoneIcon from '@mui/icons-material/Done';
 import Divider from '@mui/material/Divider';
-import c16Image from '../../../../assets/images/c-16-secondPict.jpeg';
+import c16Image from '../../../../assets/images/c-16-pict.jpeg';
 
 const Transition = forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
@@ -27,13 +28,15 @@ const Transition = forwardRef((props, ref) => (
 
 export default function EvaluationDetails({ assessmentDetails }) {
   const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const date = 'Thursday, October 21st, 2022';
+
   const handleClickOpen = () => {
-    setOpen(true);
+    setIsOpen(true);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setIsOpen(false);
   };
 
   useEffect(() => {}, [assessmentDetails]);
@@ -74,33 +77,32 @@ export default function EvaluationDetails({ assessmentDetails }) {
               width: '100%',
               flexDirection: 'row',
               justifyContent: 'space-between',
-              mt: 2,
             }}
           >
             <Typography sx={{ mb: 1 }} variant="h5">
-              {t('evaluation_review')}
+              {t('assessment_result')}
             </Typography>
           </Box>
-          <Divider sx={{ mb: 3 }} variant="middle" />
+          <Divider sx={{ mb: 3 }} />
           <Card
             sx={{
               minWidth: '100%',
               height: 'minContent',
-              backgroundColor: '#fafafa',
+              backgroundColor: '#ffffff',
             }}
           >
             <CardMedia
               component="img"
               height="180"
               image={c16Image}
-              alt="green iguana"
+              alt="faculty pict"
             />
             <CardContent>
               <Typography gutterBottom variant="h5" component="div">
-                {t('result')} : 4.0
+                {t('result')}: 4.0
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {t('info_review')}
+                {t('first_info')} {date}. {t('second_info')}
               </Typography>
             </CardContent>
             <CardActions>
@@ -113,30 +115,31 @@ export default function EvaluationDetails({ assessmentDetails }) {
                 {t('decline_result')}
               </Button>
               <Dialog
-                open={open}
+                open={isOpen}
                 TransitionComponent={Transition}
                 keepMounted
                 onClose={handleClose}
                 aria-describedby="alert-dialog-slide-description"
               >
+                <DialogTitle>Decline</DialogTitle>
                 <DialogContent>
                   <DialogContentText
                     id="alert-dialog-slide-description"
                     sx={{ mb: 2 }}
                   >
-                    {t('info_of_decline')}
+                    {t('info_for_decline')}
                   </DialogContentText>
                   <TextareaAutosize
                     sx={{ mt: 3 }}
                     aria-label="minimum height"
                     minRows={5}
-                    placeholder="Write your reason for declining"
+                    placeholder={t('reason_decline')}
                     style={{ width: '100%' }}
                   />
                 </DialogContent>
                 <DialogActions>
                   <Button onClick={handleClose}>{t('button_yes')}</Button>
-                  <Button onClick={handleClose}>{t('cancel')}</Button>
+                  <Button onClick={handleClose}>{t('button_no')}</Button>
                 </DialogActions>
               </Dialog>
               <Button sx={{ mb: 1 }} size="small" endIcon={<DoneIcon />}>
