@@ -181,5 +181,6 @@
   "decline":"Decline",
   "first_info": "You have been evaluated on",
   "second_info":"You have 14 days to accept or decline this result.",
-  "no_assessment": "No assessment found"
+  "no_assessment": "No assessment found",
+  "department": "Department"
 }
