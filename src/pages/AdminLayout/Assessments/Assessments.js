@@ -276,6 +276,9 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
                 ))}
               </Select>
             </FormControl>
+            <DialogContentText sx={{ mt: 1 }}>
+              {t('enter_department')}
+            </DialogContentText>
             <TextField
               error={newAssessmentDepartmentError}
               id="standard-error-helper-text"
