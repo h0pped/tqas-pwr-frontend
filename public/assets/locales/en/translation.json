@@ -168,5 +168,7 @@
   "are_you_sure_you_want_to_close_this_window": "Are you sure you want to close this window",
   "changes_you_made_may_not_be_saved": "Changes you made may not be saved.",
   "to_save_your_changes_press_NO_and_click_SAVE_in_the_top_right_corner": "To save your changes, press NO and click SAVE in the top-right corner.",
-  "add": "Add"
+  "add": "Add",
+  "schedule_rejected": "Schedule was successfully rejected",
+  "schedule_approved": "Schedule was successfully approved"
 }
