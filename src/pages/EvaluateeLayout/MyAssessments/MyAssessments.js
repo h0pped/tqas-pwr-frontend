@@ -7,14 +7,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import EvaluationDetails from './EvaluationDetails/EvaluationDetails.js';
 import EvaluationCard from '../../../components/AssessmentCard/EvaluationCard.js';
 
-export default function MyAssessments({
-  setSelectedPage,
-  link,
-  // id,
-  // setId,
-  // isSelected,
-}) {
-  // const { token } = useContext(UserContext);
+export default function MyAssessments({ setSelectedPage, link }) {
   const [isAssessmentsLoading, setAssessmentsLoading] = useState(false);
   const [assessments, setAssessments] = useState([
     {

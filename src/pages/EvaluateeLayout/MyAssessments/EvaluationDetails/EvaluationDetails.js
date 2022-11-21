@@ -145,25 +145,6 @@ export default function EvaluationDetails({ assessmentDetails }) {
                 Approve Result
               </Button>
             </CardActions>
-            {/* <CardContent>
-              <Typography
-                sx={{ mt: 8 }}
-                variant="h5"
-                component="div"
-                align="center"
-              >
-                You have been evaluated on Thursday, Ocotber 21st 2022. You have
-                1
-              </Typography>
-              <Typography
-                sx={{ mt: 5 }}
-                variant="h5"
-                component="div"
-                align="center"
-              >
-                Your Result : 4.5
-              </Typography>
-            </CardContent> */}
           </Card>
           <Box
             sx={{
