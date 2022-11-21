@@ -59,9 +59,40 @@ export default function AssessmentDetails({
     handleOpenAssignTeamDialog();
     setEvaluateeDetails(row);
   };
+  const handleOpenApproveSchedule = async () => {
+    const body = {
+      assessment_id: assessmentDetails.id,
+      status: 'ongoing',
+    };
+    const res = await fetch(
+      `${config.server.url}/assessmentManagement/reviewAssessment`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      }
+    );
+    if (res.ok) {
+      notifySuccess(t('schedule_approved'));
+    }
+  };
 
   const notifyError = (msg) =>
     toast.error(`${t('error_dialog')} ${msg}`, {
+      position: 'top-center',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+    });
+  const notifySuccess = (msg) =>
+    toast.success(`${msg}`, {
       position: 'top-center',
       autoClose: 5000,
       hideProgressBar: false,
@@ -282,25 +313,29 @@ export default function AssessmentDetails({
         <Typography sx={{ mb: 1 }} variant="h5">
           {t('assessment_details')}
         </Typography>
-        <Box sx={{ display: 'flex', gap: 1, flexDirection: 'row' }}>
-          <Button
-            sx={{ mb: 1 }}
-            variant="outlined"
-            size="small"
-            onClick={handleOpenRejectDialog}
-            endIcon={<ClearIcon />}
-          >
-            {t('reject_schedule')}
-          </Button>
-          <Button
-            sx={{ mb: 1 }}
-            variant="contained"
-            size="small"
-            endIcon={<DoneIcon />}
-          >
-            {t('approve_schedule')}
-          </Button>
-        </Box>
+        {assessmentDetails.status.toLowerCase() !== 'ongoing' &&
+          assessmentDetails.status.toLowerCase() !== 'changes required' && (
+            <Box sx={{ display: 'flex', gap: 1, flexDirection: 'row' }}>
+              <Button
+                sx={{ mb: 1 }}
+                variant="outlined"
+                size="small"
+                onClick={handleOpenRejectDialog}
+                endIcon={<ClearIcon />}
+              >
+                {t('reject_schedule')}
+              </Button>
+              <Button
+                sx={{ mb: 1 }}
+                variant="contained"
+                size="small"
+                endIcon={<DoneIcon />}
+                onClick={handleOpenApproveSchedule}
+              >
+                {t('approve_schedule')}
+              </Button>
+            </Box>
+          )}
       </Box>
       <Divider sx={{ m: 0 }} variant="middle" />
       <Box
