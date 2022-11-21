@@ -127,6 +127,12 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
       flex: 0.8,
     },
     {
+      field: 'department',
+      headerName: t('department'),
+      minWidth: 120,
+      flex: 1.5,
+    },
+    {
       field: 'user_type',
       headerName: t('label_user_role'),
       minWidth: 100,
