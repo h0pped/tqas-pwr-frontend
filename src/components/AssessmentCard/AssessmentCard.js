@@ -4,11 +4,13 @@ import Chip from '@mui/material/Chip';
 import { useTranslation } from 'react-i18next';
 
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import DomainIcon from '@mui/icons-material/Domain';
 
 export default function AssessmentCard({
   id,
   semester,
   status,
+  department,
   setId,
   isSelected,
   numberOfEvaluatees,
@@ -70,19 +72,46 @@ export default function AssessmentCard({
           >
             {t('assesment_card_assessment')}
           </Typography>
-          <Typography
+          <Box
             sx={{
-              height: '1.5rem',
-              fontSize: '1rem',
+              display: 'flex',
+              flexDirection: 'row',
+              gap: 0.5,
             }}
           >
-            {semester}
-          </Typography>
+            <Typography
+              sx={{
+                height: '1.5rem',
+                fontSize: '1rem',
+              }}
+            >
+              {semester}
+            </Typography>
+          </Box>
         </Box>
       </Box>
       <Box
         sx={{
-          mt: 2,
+          mt: 1.5,
+          mb: 1.5,
+          display: 'flex',
+          flexDirection: 'row',
+          gap: 0.8,
+        }}
+      >
+        <DomainIcon />
+        <Typography
+          variant="subtitle2"
+          sx={{
+            height: '1.5rem',
+            fontWeight: 'bold',
+          }}
+        >
+          {department}
+        </Typography>
+      </Box>
+      <Box
+        sx={{
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'space-between',

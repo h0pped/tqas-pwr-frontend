@@ -2,9 +2,6 @@ import { useEffect, useState, useContext } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
@@ -31,7 +28,6 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { LinearProgress } from '@mui/material';
 import Fab from '@mui/material/Fab';
 import { useTranslation } from 'react-i18next';
-import { assessmentStatuses } from '../../../../constants.js';
 
 import config from '../../../../config/index.config.js';
 import UserContext from '../../../../context/UserContext/UserContext.js';
@@ -311,7 +307,6 @@ export default function AssessmentDetails({
       <Divider sx={{ m: 0 }} variant="middle" />
       <Box
         sx={{
-          mt: 2,
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'space-between',
@@ -322,48 +317,67 @@ export default function AssessmentDetails({
           sx={{
             mt: 2,
             display: 'flex',
-            flexDirection: 'column',
+            flexDirection: 'row',
             gap: 2,
             width: '100%',
           }}
         >
           <Box
             sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 8,
+              width: '50%',
             }}
           >
-            <Typography sx={{ width: '10%' }}>Status</Typography>
-            <FormControl>
-              <Select
-                value={assessmentDetails.status}
-                displayEmpty
-                inputProps={{ 'aria-label': 'Without label' }}
-                size="small"
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 8,
+              }}
+            >
+              <Typography sx={{ width: '15%' }}>Status</Typography>
+              <Typography
+                variant="subtitle1"
+                sx={{ fontWeight: 'bold', width: '50%' }}
               >
-                {assessmentStatuses.map((status) => (
-                  <MenuItem value={status}>{status}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+                {assessmentDetails.status}
+              </Typography>
+            </Box>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 8,
+              }}
+            >
+              <Typography sx={{ width: '15%' }}>{t('semester')}</Typography>
+              <Typography
+                variant="subtitle1"
+                sx={{ fontWeight: 'bold', width: '50%' }}
+              >
+                {assessmentDetails.name}
+              </Typography>
+            </Box>
           </Box>
           <Box
             sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 8,
+              width: '50%',
             }}
           >
-            <Typography sx={{ width: '10%' }}>{t('semester')}</Typography>
-            <Typography
-              variant="subtitle1"
-              sx={{ fontWeight: 'bold', width: '50%' }}
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 8,
+              }}
             >
-              {assessmentDetails.name}
-            </Typography>
+              <Typography sx={{ width: '15%' }}>{t('department')}</Typography>
+              <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                {assessmentDetails.department}
+              </Typography>
+            </Box>
           </Box>
         </Box>
       </Box>

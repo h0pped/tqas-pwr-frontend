@@ -13,6 +13,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
 import moment from 'moment';
 import { ToastContainer, toast } from 'react-toastify';
 import { LinearProgress } from '@mui/material';
@@ -77,12 +78,22 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
     )
   );
 
+  const [
+    newAssessmentDepartmentValue,
+    setNewAssessmentDepartmentValue,
+  ] = useState('');
+  const [
+    newAssessmentDepartmentError,
+    setNewAssessmentDepartmentValueError,
+  ] = useState(false);
+
   const [isAssessmentsLoading, setAssessmentsLoading] = useState(false);
   const [isAssessmentsUpdated, setIsAssessmentsUpdated] = useState(false);
 
   const [assessments, setAssessments] = useState([]);
 
   const handleOpenCreateAssessmentDialog = () => {
+    setNewAssessmentDepartmentValueError(false);
     setCreateAssessmentDialogOpen(true);
   };
 
@@ -94,30 +105,40 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
     setSelectedSemesterValue(event.target.value);
   };
 
+  const handleDialogDepartmentChange = (event) => {
+    setNewAssessmentDepartmentValue(event.target.value);
+  };
+
   const handleCreateNewAssessment = () => {
-    handleCloseCreateAssessmentDialog();
     setIsAssessmentsUpdated(false);
-    try {
-      fetch(`${config.server.url}/assessmentManagement/createAssessment`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: selectedSemesterValue.label,
-        }),
-      }).then((response) => {
-        if (response.ok) {
-          notifySuccess(t('success_assessment_created'));
-          setIsAssessmentsUpdated(true);
-        } else {
-          notifyError(t('error_assessment_not_created'));
-        }
-      });
-    } catch (error) {
-      notifyError(t('error_server'));
+
+    if (newAssessmentDepartmentValue.length > 0) {
+      handleCloseCreateAssessmentDialog();
+      try {
+        fetch(`${config.server.url}/assessmentManagement/createAssessment`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: selectedSemesterValue.label,
+            department: newAssessmentDepartmentValue,
+          }),
+        }).then((response) => {
+          if (response.ok) {
+            notifySuccess(t('success_assessment_created'));
+            setIsAssessmentsUpdated(true);
+          } else {
+            notifyError(t('error_assessment_not_created'));
+          }
+        });
+      } catch (error) {
+        notifyError(t('error_server'));
+      }
+    } else {
+      setNewAssessmentDepartmentValueError(true);
     }
   };
 
@@ -200,6 +221,7 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
                   key={item.id}
                   id={item.id}
                   semester={item.name}
+                  department={item.department}
                   status={item.status}
                   setId={setSelectedAssessment}
                   isSelected={selectedAssessment === item.id}
@@ -235,7 +257,7 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
         <DialogTitle>{t('create_new_assesment')}</DialogTitle>
         <DialogContent>
           <DialogContentText>{t('select_semester')}</DialogContentText>
-          <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mt: 1 }}>
             <FormControl variant="standard" sx={{ mt: 1, width: '100%' }}>
               <InputLabel id="semster-select">{t('semester')}</InputLabel>
               <Select
@@ -253,6 +275,17 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
                 ))}
               </Select>
             </FormControl>
+            <TextField
+              error={newAssessmentDepartmentError}
+              id="standard-error-helper-text"
+              onChange={handleDialogDepartmentChange}
+              label={t('department')}
+              value={newAssessmentDepartmentValue}
+              helperText={
+                newAssessmentDepartmentError && t('manage_users_required')
+              }
+              variant="standard"
+            />
           </Box>
         </DialogContent>
         <DialogActions>
