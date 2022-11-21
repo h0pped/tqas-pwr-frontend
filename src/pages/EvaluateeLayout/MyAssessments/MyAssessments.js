@@ -3,12 +3,14 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import LinearProgress from '@mui/material/LinearProgress';
+import { useTranslation } from 'react-i18next';
 
 import EvaluationDetails from './EvaluationDetails/EvaluationDetails.js';
 import EvaluationCard from '../../../components/AssessmentCard/EvaluationCard.js';
 
 export default function MyAssessments({ setSelectedPage, link }) {
   const [isAssessmentsLoading] = useState(false);
+  const { t } = useTranslation();
   const [assessments] = useState([
     {
       id: 33,
@@ -38,7 +40,9 @@ export default function MyAssessments({ setSelectedPage, link }) {
               alignContent: 'center',
             }}
           >
-            <Typography variant="h5">Assessments</Typography>
+            <Typography variant="h5">
+              {t('assesment_card_assessment')}
+            </Typography>
           </Box>
         </Grid>
         <Grid item xs={4} sx={{ height: '100%' }}>

@@ -78,7 +78,7 @@ export default function EvaluationDetails({ assessmentDetails }) {
             }}
           >
             <Typography sx={{ mb: 1 }} variant="h5">
-              Evaluation Review
+              {t('evaluation_review')}
             </Typography>
           </Box>
           <Divider sx={{ mb: 3 }} variant="middle" />
@@ -97,11 +97,10 @@ export default function EvaluationDetails({ assessmentDetails }) {
             />
             <CardContent>
               <Typography gutterBottom variant="h5" component="div">
-                Result: 4.0
+                {t('result')} : 4.0
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                You have been evaluated on Thursday, October 21st 2022. You have
-                14 days to accept or decline this results.
+                {t('info_review')}
               </Typography>
             </CardContent>
             <CardActions>
@@ -111,7 +110,7 @@ export default function EvaluationDetails({ assessmentDetails }) {
                 onClick={handleClickOpen}
                 endIcon={<ClearIcon />}
               >
-                Decline Result
+                {t('decline_result')}
               </Button>
               <Dialog
                 open={open}
@@ -125,8 +124,7 @@ export default function EvaluationDetails({ assessmentDetails }) {
                     id="alert-dialog-slide-description"
                     sx={{ mb: 2 }}
                   >
-                    Are you sure that you want to decline the result of
-                    evaluation? if yes, please provide the reason:
+                    {t('info_of_decline')}
                   </DialogContentText>
                   <TextareaAutosize
                     sx={{ mt: 3 }}
@@ -137,12 +135,12 @@ export default function EvaluationDetails({ assessmentDetails }) {
                   />
                 </DialogContent>
                 <DialogActions>
-                  <Button onClick={handleClose}>Yes</Button>
-                  <Button onClick={handleClose}>Cancel</Button>
+                  <Button onClick={handleClose}>{t('button_yes')}</Button>
+                  <Button onClick={handleClose}>{t('cancel')}</Button>
                 </DialogActions>
               </Dialog>
               <Button sx={{ mb: 1 }} size="small" endIcon={<DoneIcon />}>
-                Approve Result
+                {t('approve_result')}
               </Button>
             </CardActions>
           </Card>
@@ -158,7 +156,7 @@ export default function EvaluationDetails({ assessmentDetails }) {
               variant="outlined"
               endIcon={<DescriptionIcon />}
             >
-              Open Protocol Form
+              {t('open_protocol')}
             </Button>
           </Box>
         </Box>

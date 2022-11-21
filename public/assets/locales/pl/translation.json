@@ -170,5 +170,12 @@
   "to_save_your_changes_press_NO_and_click_SAVE_in_the_top_right_corner": "Aby zapisać zmiany, naciśnij NIE i kliknij ZAPISZ w prawym górnym rogu.",
   "add": "Dodaj",
   "schedule_rejected": "Harmonogram został pomyślnie odrzucony",
-  "schedule_approved": "Harmonogram został pomyślnie zatwierdzony"
+  "schedule_approved": "Harmonogram został pomyślnie zatwierdzony",
+  "evaluation_review": "Przegląd oceny",
+  "result":"Wynik",
+  "info_review":"Zostałeś oceniony w czwartek, 21 października 2022 r. Masz 14 dni na zaakceptowanie lub odrzucenie tego wyniku.",
+  "decline_result":"Odrzuć wynik",
+  "info_for_decline":"Czy na pewno chcesz odrzucić wynik oceny? jeśli tak, proszę podać przyczynę:",
+  "approve_result":"Zatwierdź wynik",
+  "open_protocol":"Otwarty formularz protokołu"
 }

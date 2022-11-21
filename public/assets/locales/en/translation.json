@@ -170,5 +170,13 @@
   "to_save_your_changes_press_NO_and_click_SAVE_in_the_top_right_corner": "To save your changes, press NO and click SAVE in the top-right corner.",
   "add": "Add",
   "schedule_rejected": "Schedule was successfully rejected",
-  "schedule_approved": "Schedule was successfully approved"
+  "schedule_approved": "Schedule was successfully approved",
+  "evaluation_review": "Evaluation review",
+  "result":"Result",
+  "info_review":"You have been evaluated on Thursday, October 21st, 2022. You have 14 days to accept or decline this result.",
+  "decline_result":"Decline result",
+  "info_of_decline":"Are you sure that you want to decline the result of the evaluation? if yes, please provide the reason:",
+  "approve_result":"Approve result",
+  "open_protocol":"Open protocol form"
+  
 }
