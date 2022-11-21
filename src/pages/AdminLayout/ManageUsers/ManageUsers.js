@@ -150,7 +150,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
       field: 'actions',
       headerName: t('label_actions'),
       type: 'actions',
-      flex: 1,
+      minWidth: '120',
       renderCell: (params) => (
         <UsersActions {...{ params, activeRowId, setActiveRow, setUpdated }} />
       ),
@@ -176,6 +176,7 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
         body: JSON.stringify({
           first_name: values.firstName,
           last_name: values.lastName,
+          department: values.department,
           academic_title: academicTitleInputValue,
           email: values.email.toLowerCase(),
           user_type: roleInputValue,
@@ -320,6 +321,18 @@ export default function ManageUsers({ setDrawerSelectedItem, link }) {
           label={t('label_last_name')}
           variant="outlined"
           value={values.lastName || ''}
+          onChange={handleChange}
+          sx={{ minWidth: 100, flex: 1 }}
+        />
+        <TextField
+          id="text-field-department"
+          error={errors.lastName}
+          helperText={t(errors.lastName)}
+          name="department"
+          size="small"
+          label={t('department')}
+          variant="outlined"
+          value={values.department || ''}
           onChange={handleChange}
           sx={{ minWidth: 100, flex: 1 }}
         />

@@ -27,5 +27,9 @@ export default function validate(values) {
     errors.lastName = 'manage_users_required';
   }
 
+  if (!values.department) {
+    errors.department = 'manage_users_required';
+  }
+
   return errors;
 }
