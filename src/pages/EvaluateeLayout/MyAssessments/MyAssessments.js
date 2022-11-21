@@ -1,49 +1,36 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import LinearProgress from '@mui/material/LinearProgress';
 
-import UserContext from '../../../context/UserContext/UserContext.js';
-// import AssessmentCard from '../../../components/AssessmentCard/AssessmentCard.js';
-import config from '../../../config/index.config.js';
 import EvaluationDetails from './EvaluationDetails/EvaluationDetails.js';
-// import EvaluationCard from '../../../components/AssessmentCard/EvaluationCard.js';
-import AssessmentCard from '../../../components/AssessmentCard/AssessmentCard.js';
+import EvaluationCard from '../../../components/AssessmentCard/EvaluationCard.js';
 
-const currentlyLoggedInUserId = 15;
-
-export default function MyAssessments({ setSelectedPage, link }) {
-  const { token } = useContext(UserContext);
+export default function MyAssessments({
+  setSelectedPage,
+  link,
+  // id,
+  // setId,
+  // isSelected,
+}) {
+  // const { token } = useContext(UserContext);
   const [isAssessmentsLoading, setAssessmentsLoading] = useState(false);
-  const [assessments, setAssessments] = useState([]);
+  const [assessments, setAssessments] = useState([
+    {
+      id: 33,
+      status: 'Open',
+      name: 'Winter 2022/2023',
+      createdAt: '2022-11-12T14:53:01.637Z',
+      updatedAt: '2022-11-20T13:49:19.576Z',
+      supervisor_id: 22,
+      num_of_evaluatees: 2,
+    },
+  ]);
   const [selectedAssessment, setSelectedAssessment] = useState(null);
-
-  async function getAssessments() {
-    setAssessmentsLoading(true);
-    try {
-      await fetch(
-        `${config.server.url}/evaluationsManagement/getAssessmentsBySupervisor?id=${currentlyLoggedInUserId}`,
-        {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          setAssessments(data.assessments);
-          setAssessmentsLoading(false);
-        });
-    } catch (error) {
-      setAssessmentsLoading(false);
-    }
-  }
 
   useEffect(() => {
     setSelectedPage(link);
-    getAssessments();
   }, [link, setSelectedPage]);
   return (
     <Box sx={{ flexGrow: 1, height: '75vh' }}>
@@ -58,7 +45,7 @@ export default function MyAssessments({ setSelectedPage, link }) {
               alignContent: 'center',
             }}
           >
-            <Typography variant="h5">Assessment List</Typography>
+            <Typography variant="h5">Assessments</Typography>
           </Box>
         </Grid>
         <Grid item xs={4} sx={{ height: '100%' }}>
@@ -77,7 +64,7 @@ export default function MyAssessments({ setSelectedPage, link }) {
             {isAssessmentsLoading && <LinearProgress />}
             {!isAssessmentsLoading &&
               assessments.map((item) => (
-                <AssessmentCard
+                <EvaluationCard
                   key={item.id}
                   id={item.id}
                   semester={item.name}
@@ -100,7 +87,7 @@ export default function MyAssessments({ setSelectedPage, link }) {
             }}
           >
             <EvaluationDetails
-              evaluationDetails={assessments.find(
+              assessmentDetails={assessments.find(
                 (assessment) => assessment.id === selectedAssessment
               )}
             />
