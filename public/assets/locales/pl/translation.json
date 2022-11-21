@@ -180,7 +180,7 @@
   "reason_decline":"Napisz powód odmowy",
   "decline":"Spadek",
   "first_info": "Zostałeś oceniony na",
-  "second_info":"Masz 14 dni na zaakceptowanie lub odrzucenie tego wyniku.",
+  "second_info":"Masz 14 dni od daty wyświetlenia tego wyniku aby zaakceptować lub odrzucić wynik.",
   "no_assessment": "Nie znaleziono oceny",
   "department": "Katedra"
 }

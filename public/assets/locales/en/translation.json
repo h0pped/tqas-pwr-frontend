@@ -180,7 +180,7 @@
   "reason_decline":"Write your reason for declining",
   "decline":"Decline",
   "first_info": "You have been evaluated on",
-  "second_info":"You have 14 days to accept or decline this result.",
+  "second_info":"You have 14 days from the date to see this result to accept or decline the result.",
   "no_assessment": "No assessment found",
   "department": "Department"
 }
