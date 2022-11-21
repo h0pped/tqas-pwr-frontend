@@ -42,6 +42,7 @@ export default function AssessmentDetails({
 
   const [isEvaluateesTableLoading, setEvaluateesTableLoading] = useState(false);
   const [isRejectDialogOpen, setRejectDialogOpen] = useState(false);
+  const [rejectReason, setRejectReason] = useState('');
 
   const handleOpenRejectDialog = () => {
     setRejectDialogOpen(true);
@@ -51,7 +52,7 @@ export default function AssessmentDetails({
     setRejectDialogOpen(false);
   };
 
-  const handleOpenAssignTeamDialog = () => {
+  const handleOpenAssignTeamDialog = async () => {
     onAssignTeam();
   };
 
@@ -59,10 +60,11 @@ export default function AssessmentDetails({
     handleOpenAssignTeamDialog();
     setEvaluateeDetails(row);
   };
+
   const handleOpenApproveSchedule = async () => {
     const body = {
       assessment_id: assessmentDetails.id,
-      status: 'ongoing',
+      status: 'Ongoing',
     };
     const res = await fetch(
       `${config.server.url}/assessmentManagement/reviewAssessment`,
@@ -77,6 +79,29 @@ export default function AssessmentDetails({
     );
     if (res.ok) {
       notifySuccess(t('schedule_approved'));
+    }
+  };
+
+  const handleRejection = async () => {
+    const body = {
+      assessment_id: assessmentDetails.id,
+      status: 'Changes Required',
+      reason: rejectReason,
+    };
+    const res = await fetch(
+      `${config.server.url}/assessmentManagement/reviewAssessment`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      }
+    );
+    if (res.ok) {
+      notifySuccess(t('schedule_rejected'));
+      setRejectDialogOpen(false);
     }
   };
 
@@ -437,6 +462,8 @@ export default function AssessmentDetails({
               aria-label="minimum height"
               minRows={3}
               style={{ width: '100%' }}
+              value={rejectReason}
+              onChange={(e) => setRejectReason(e.target.value)}
             />
           </Box>
           <Alert severity="info" sx={{ mt: 2 }}>
@@ -447,7 +474,9 @@ export default function AssessmentDetails({
           <Button variant="outlined" onClick={handleCloseRejectDialog}>
             {t('cancel')}
           </Button>
-          <Button variant="contained">{t('send')}</Button>
+          <Button variant="contained" onClick={handleRejection}>
+            {t('send')}
+          </Button>
         </DialogActions>
       </Dialog>
     </Box>
