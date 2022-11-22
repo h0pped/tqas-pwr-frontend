@@ -59,7 +59,7 @@ export default function MyAssessments({ setSelectedPage, link }) {
             }}
           >
             {isAssessmentsLoading && <LinearProgress />}
-            {isAssessmentsLoading && (
+            {assessments.length === 0 && (
               <Typography variant="subtitle2" sx={{ color: '#848884' }}>
                 {t('no_assessment')}
               </Typography>

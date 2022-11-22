@@ -95,7 +95,7 @@ export default function EvaluationDetails({ assessmentDetails }) {
               component="img"
               height="180"
               image={c16Image}
-              alt="faculty pict"
+              alt="C-16 Building"
             />
             <CardContent>
               <Typography gutterBottom variant="h5" component="div">
@@ -121,7 +121,7 @@ export default function EvaluationDetails({ assessmentDetails }) {
                 onClose={handleClose}
                 aria-describedby="alert-dialog-slide-description"
               >
-                <DialogTitle>Decline</DialogTitle>
+                <DialogTitle>{t('decline')}</DialogTitle>
                 <DialogContent>
                   <DialogContentText
                     id="alert-dialog-slide-description"
