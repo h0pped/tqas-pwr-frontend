@@ -41,7 +41,7 @@ export default function MyAssessments({ setSelectedPage, link }) {
             }}
           >
             <Typography variant="h5">
-              {t('assesment_card_assessment')}
+              {t('drawer_item_title_classes_eval')}
             </Typography>
           </Box>
         </Grid>
@@ -61,7 +61,7 @@ export default function MyAssessments({ setSelectedPage, link }) {
             {isAssessmentsLoading && <LinearProgress />}
             {assessments.length === 0 && (
               <Typography variant="subtitle2" sx={{ color: '#848884' }}>
-                {t('no_assessment')}
+                {t('no_assessments')}
               </Typography>
             )}
             {!isAssessmentsLoading &&
