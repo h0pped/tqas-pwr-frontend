@@ -83,7 +83,7 @@ export default function EvaluationDetails({ assessmentDetails }) {
               {t('assessment_result')}
             </Typography>
           </Box>
-          <Divider sx={{ mb: 3 }} />
+          <Divider sx={{ mb: 2 }} />
           <Card
             sx={{
               minWidth: '100%',
