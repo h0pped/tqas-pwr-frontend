@@ -96,19 +96,29 @@ export default function AssessmentCard({
           mb: 1.5,
           display: 'flex',
           flexDirection: 'row',
+          width: '100%',
           gap: 0.8,
         }}
       >
         <DomainIcon />
-        <Typography
-          variant="subtitle2"
+        <Box
           sx={{
-            height: '1.5rem',
-            fontWeight: 'bold',
+            width: '90%',
           }}
         >
-          {department}
-        </Typography>
+          <Typography
+            variant="subtitle2"
+            sx={{
+              height: '1.5rem',
+              fontWeight: 'bold',
+              overflow: 'hidden',
+              width: '100%',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {department}
+          </Typography>
+        </Box>
       </Box>
       <Box
         sx={{

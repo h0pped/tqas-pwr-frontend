@@ -338,7 +338,7 @@ export default function AssessmentDetails({
               <Typography sx={{ width: '15%' }}>Status</Typography>
               <Typography
                 variant="subtitle1"
-                sx={{ fontWeight: 'bold', width: '50%' }}
+                sx={{ fontWeight: 'bold', width: '40%' }}
               >
                 {assessmentDetails.status}
               </Typography>
@@ -354,7 +354,7 @@ export default function AssessmentDetails({
               <Typography sx={{ width: '15%' }}>{t('semester')}</Typography>
               <Typography
                 variant="subtitle1"
-                sx={{ fontWeight: 'bold', width: '50%' }}
+                sx={{ fontWeight: 'bold', width: '40%' }}
               >
                 {assessmentDetails.name}
               </Typography>
@@ -362,7 +362,7 @@ export default function AssessmentDetails({
           </Box>
           <Box
             sx={{
-              width: '50%',
+              width: '60%',
             }}
           >
             <Box
@@ -371,12 +371,26 @@ export default function AssessmentDetails({
                 flexDirection: 'row',
                 alignItems: 'center',
                 gap: 8,
+                width: '100%',
               }}
             >
               <Typography sx={{ width: '15%' }}>{t('department')}</Typography>
-              <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                {assessmentDetails.department}
-              </Typography>
+              <Box
+                sx={{
+                  width: '70%',
+                  overflow: 'auto',
+                }}
+              >
+                <Typography
+                  variant="subtitle1"
+                  sx={{
+                    fontWeight: 'bold',
+                    textAlign: 'end',
+                  }}
+                >
+                  {assessmentDetails.department}
+                </Typography>
+              </Box>
             </Box>
           </Box>
         </Box>
