@@ -171,6 +171,7 @@
   "add": "Dodaj",
   "schedule_rejected": "Harmonogram został pomyślnie odrzucony",
   "schedule_approved": "Harmonogram został pomyślnie zatwierdzony",
+  "enter_department": "Wpisz katedru:",
   "assessment_result": "Wynik oceny",
   "result":"Wynik",
   "decline_result":"Odrzuć wynik",

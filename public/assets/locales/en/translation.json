@@ -171,6 +171,7 @@
   "add": "Add",
   "schedule_rejected": "Schedule was successfully rejected",
   "schedule_approved": "Schedule was successfully approved",
+  "enter_department": "Enter department:",
   "assessment_result": "Assessment result",
   "result":"Result",
   "decline_result":"Decline result",
