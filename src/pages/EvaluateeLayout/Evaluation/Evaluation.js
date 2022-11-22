@@ -126,9 +126,11 @@ export default function Evaluations({ setSelectedPage, link }) {
       </Grid>
       {isProtocolFormOpen && (
         <Protocol
+          evaluations={currentProtocol?.evaluatee?.evaluations}
           isProtocolFormOpen={isProtocolFormOpen}
           handleClose={handleClose}
           evaluation={currentProtocol}
+          notifyError={notifyError}
         />
       )}
     </Box>

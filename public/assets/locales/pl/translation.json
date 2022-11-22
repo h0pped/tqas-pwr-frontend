@@ -170,5 +170,6 @@
   "to_save_your_changes_press_NO_and_click_SAVE_in_the_top_right_corner": "Aby zapisać zmiany, naciśnij NIE i kliknij ZAPISZ w prawym górnym rogu.",
   "add": "Dodaj",
   "schedule_rejected": "Harmonogram został pomyślnie odrzucony",
-  "schedule_approved": "Harmonogram został pomyślnie zatwierdzony"
+  "schedule_approved": "Harmonogram został pomyślnie zatwierdzony",
+  "loading_protocol_error": "Wystąpił błąd podczas ładowania protokołu. Proszę spróbuj ponownie."
 }

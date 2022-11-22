@@ -22,27 +22,27 @@ const Section = ({
       </Typography>
       <Box sx={{ mx: 2 }}>
         {sectionData.map((question) => {
-          if (question.qusetion_type === 'open') {
+          if (question.question_type === 'open') {
             return (
               <OpenQuestion
                 question={question.question_text}
-                key={`${question.question_text}_${question.qusetion_type}`}
+                key={`${question.question_text}_${question.question_type}`}
                 onChangeHandler={onChangeHandler}
               />
             );
           }
-          if (question.qusetion_type === 'single choice') {
+          if (question.question_type === 'single choice') {
             return (
               <SingleChoiceQuestion
                 question={question.question_text}
-                key={`${question.question_text}_${question.qusetion_type}`}
+                key={`${question.question_text}_${question.question_type}`}
                 onChangeHandler={onChangeHandler}
                 options={question.answer_options}
               />
             );
           }
           if (
-            question.qusetion_type === 'single choice with additional field'
+            question.question_type === 'single choice with additional field'
           ) {
             return (
               <SingleChoiceWithAdditionalField
@@ -53,7 +53,7 @@ const Section = ({
                 onInternalQuestionChangeHandler={
                   onInternalQuestionChangeHandler
                 }
-                key={`${question.question_text}_${question.qusetion_type}`}
+                key={`${question.question_text}_${question.question_type}`}
               />
             );
           }

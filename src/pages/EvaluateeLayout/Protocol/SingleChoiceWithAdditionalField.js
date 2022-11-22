@@ -81,10 +81,11 @@ const SingleChoiceWithAdditionalField = ({
                   onClick={() => handleChooseAdditionalField(question, option)}
                   sx={{ display: 'inline' }}
                 />
+
                 {shownAdditionalQuestion &&
                   shownAdditionalQuestion.length > 0 &&
                   shownAdditionalQuestion.map((internalQuestion) => {
-                    if (internalQuestion.qusetion_type === 'open') {
+                    if (internalQuestion.question_type === 'open') {
                       return (
                         <OpenQuestion
                           question={internalQuestion.question_text}
@@ -100,7 +101,7 @@ const SingleChoiceWithAdditionalField = ({
                         />
                       );
                     }
-                    if (internalQuestion.qusetion_type === 'single choice') {
+                    if (internalQuestion.question_type === 'single choice') {
                       return (
                         <SingleChoiceQuestion
                           question={internalQuestion.question_text}
