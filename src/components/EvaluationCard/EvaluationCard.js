@@ -81,9 +81,9 @@ export default function ProtocolCard({ protocol, setOpenProtcolForm }) {
               fontSize: '1rem',
             }}
           >
-            {`${formatAcademicTitle(protocol.academic_title)} ${
-              protocol.first_name
-            } ${protocol.last_name}`}
+            {`${formatAcademicTitle(protocol.user.academic_title)} ${
+              protocol.user.first_name
+            } ${protocol.user.last_name}`}
           </Typography>
         </Box>
         <Box
@@ -96,18 +96,18 @@ export default function ProtocolCard({ protocol, setOpenProtcolForm }) {
           <Chip
             sx={{ color: '#000000' }}
             size="small"
-            label={protocol.evaluatee.evaluations[0].status}
+            label={protocol.evaluations[0].status}
           />
         </Box>
       </Box>
       <Chip
         sx={{ mt: 2 }}
         icon={<CalendarMonthIcon />}
-        label={protocol.evaluatee.evaluations[0].assessment.name}
+        label={protocol.evaluations[0].assessment.name}
         variant="outlined"
       />
       <Box sx={{ mt: 2, p: 1, borderRadius: 1, backgroundColor: '#f4f5f7' }}>
-        {protocol.evaluatee.evaluations.map((evaluation) => (
+        {protocol.evaluations.map((evaluation) => (
           <Box>
             <Box sx={{ display: 'flex', flexBasis: 'row', gap: 1 }}>
               <Typography sx={{ fontWeight: 'bold' }}>
