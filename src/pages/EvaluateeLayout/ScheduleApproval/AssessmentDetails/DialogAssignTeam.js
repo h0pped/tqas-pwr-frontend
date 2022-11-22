@@ -370,10 +370,11 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
               return false;
             }
           );
-
           uniqueMembersPerAllEvaluations.forEach((member) => {
             const newMemberObjectApiFormat = {};
-            newMemberObjectApiFormat[member.member_user_id] = false;
+            newMemberObjectApiFormat[member.member_user_id] =
+              member.is_head_of_team;
+
             evaluationTeams.push(newMemberObjectApiFormat);
           });
 
@@ -651,12 +652,11 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                       : 'whblackite',
                                 }}
                               >
-                                {
+                                {outsideList &&
                                   outsideList.find(
                                     (user) =>
                                       user.id === Number(Object.keys(member)[0])
-                                  ).academic_title
-                                }
+                                  ).academic_title}
                               </TableCell>
                               <TableCell
                                 align="left"
@@ -669,12 +669,11 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                       : 'whblackite',
                                 }}
                               >
-                                {
+                                {outsideList &&
                                   outsideList.find(
                                     (user) =>
                                       user.id === Number(Object.keys(member)[0])
-                                  ).first_name
-                                }
+                                  ).first_name}
                               </TableCell>
                               <TableCell
                                 align="left"
@@ -687,12 +686,11 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                       : 'whblackite',
                                 }}
                               >
-                                {
+                                {outsideList &&
                                   outsideList.find(
                                     (user) =>
                                       user.id === Number(Object.keys(member)[0])
-                                  ).last_name
-                                }
+                                  ).last_name}
                               </TableCell>
                               <TableCell
                                 align="left"
@@ -705,12 +703,11 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                       : 'whblackite',
                                 }}
                               >
-                                {
+                                {outsideList &&
                                   outsideList.find(
                                     (user) =>
                                       user.id === Number(Object.keys(member)[0])
-                                  ).email
-                                }
+                                  ).email}
                               </TableCell>
                               <TableCell
                                 align="left"
