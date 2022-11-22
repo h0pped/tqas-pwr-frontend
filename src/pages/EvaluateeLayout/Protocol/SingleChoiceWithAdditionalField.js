@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   FormControl,
   Typography,
@@ -64,7 +64,7 @@ const SingleChoiceWithAdditionalField = ({
           }
           if (typeof option === 'object') {
             return (
-              <>
+              <React.Fragment key={option.answer}>
                 <FormControlLabel
                   id={question.answer}
                   key={option.answer}
@@ -113,7 +113,7 @@ const SingleChoiceWithAdditionalField = ({
                     }
                     return null;
                   })}
-              </>
+              </React.Fragment>
             );
           }
           return null;

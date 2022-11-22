@@ -36,7 +36,10 @@ const Protocol = ({
   notifyError,
 }) => {
   const [protocolQuestions, setProtocolQuestions] = useState(null);
-  const [, setFullFilledProtocolQuestions] = useState({});
+  const [
+    fullFilledProtocolQuestions,
+    setFullFilledProtocolQuestions,
+  ] = useState({});
   const [, setProtocol] = useState(null);
   const [selectedCourse, setSelectedCourse] = useState({
     course: {
@@ -141,6 +144,7 @@ const Protocol = ({
   };
 
   const handleSubmitProtocol = async () => {
+    console.log(fullFilledProtocolQuestions);
     setSubmitLoading(true);
     setTimeout(() => setSubmitLoading(false), 3000);
   };
@@ -226,7 +230,6 @@ const Protocol = ({
             <Button
               variant="contained"
               onClick={handleSubmitProtocol}
-              loading={submitLoading}
               disabled={submitLoading}
             >
               {submitLoading ? <CircularProgress size={24} /> : t('submit')}
