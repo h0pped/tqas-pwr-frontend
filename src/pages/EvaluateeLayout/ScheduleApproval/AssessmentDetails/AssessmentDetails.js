@@ -376,7 +376,6 @@ export default function AssessmentDetails({
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            gap: 1,
             width: '100%',
           }}
         >
