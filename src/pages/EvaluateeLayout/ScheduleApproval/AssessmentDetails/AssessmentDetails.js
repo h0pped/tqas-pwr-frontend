@@ -374,10 +374,9 @@ export default function AssessmentDetails({
       >
         <Box
           sx={{
-            mt: 2,
             display: 'flex',
             flexDirection: 'column',
-            gap: 2,
+            gap: 1,
             width: '100%',
           }}
         >
@@ -387,11 +386,15 @@ export default function AssessmentDetails({
               flexDirection: 'row',
               alignItems: 'center',
               gap: 8,
-              width: '100%',
             }}
           >
-            <Typography sx={{ width: '10%' }}>Status</Typography>
-            <Typography sx={{ fontWeight: 'bold' }}>
+            <Typography
+              variant="subtitle2"
+              sx={{ width: 75, fontWeight: 'bold' }}
+            >
+              Status
+            </Typography>
+            <Typography variant="subtitle2" sx={{ width: '40%' }}>
               {assessmentDetails.status}
             </Typography>
           </Box>
@@ -401,12 +404,39 @@ export default function AssessmentDetails({
               flexDirection: 'row',
               alignItems: 'center',
               gap: 8,
-              width: '100%',
             }}
           >
-            <Typography sx={{ width: '10%' }}>{t('semester')}</Typography>
-            <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+            <Typography
+              variant="subtitle2"
+              sx={{ width: 75, fontWeight: 'bold' }}
+            >
+              {t('semester')}
+            </Typography>
+            <Typography variant="subtitle2" sx={{ width: '40%' }}>
               {assessmentDetails.name}
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 8,
+            }}
+          >
+            <Typography
+              variant="subtitle2"
+              sx={{ width: 75, fontWeight: 'bold' }}
+            >
+              {t('department')}
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              sx={{
+                width: 'auto',
+              }}
+            >
+              {assessmentDetails.department}
             </Typography>
           </Box>
         </Box>
