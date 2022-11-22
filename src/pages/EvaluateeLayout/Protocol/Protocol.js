@@ -36,10 +36,7 @@ const Protocol = ({
   notifyError,
 }) => {
   const [protocolQuestions, setProtocolQuestions] = useState(null);
-  const [
-    fullFilledProtocolQuestions,
-    setFullFilledProtocolQuestions,
-  ] = useState({});
+  const [, setFullFilledProtocolQuestions] = useState({});
   const [, setProtocol] = useState(null);
   const [selectedCourse, setSelectedCourse] = useState({
     course: {
@@ -144,7 +141,6 @@ const Protocol = ({
   };
 
   const handleSubmitProtocol = async () => {
-    console.log(fullFilledProtocolQuestions);
     setSubmitLoading(true);
     setTimeout(() => setSubmitLoading(false), 3000);
   };
