@@ -175,8 +175,16 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
       })
         .then((response) => response.json())
         .then((data) => {
-          setAssessments(data.assessments.sort((a, b) => b.id - a.id));
-          setFilteredAssessments(data.assessments.sort((a, b) => b.id - a.id));
+          setAssessments(
+            data.assessments.sort(
+              (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+            )
+          );
+          setFilteredAssessments(
+            data.assessments.sort(
+              (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+            )
+          );
           const listOfSemesters = ['All'];
           data.assessments.forEach(({ name }) => {
             const semester = name;
