@@ -283,9 +283,7 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
                   setId={setSelectedAssessment}
                   isSelected={selectedAssessment === item.id}
                   numberOfEvaluatees={item.num_of_evaluatees}
-                  ml={0.8}
-                  mr={0.8}
-                  mb={1}
+                  flag="adminAssessments"
                 />
               ))}
           </Box>
