@@ -171,6 +171,7 @@
   "add": "Dodaj",
   "schedule_rejected": "Harmonogram został pomyślnie odrzucony",
   "schedule_approved": "Harmonogram został pomyślnie zatwierdzony",
+  "loading_protocol_error": "Wystąpił błąd podczas ładowania protokołu. Proszę spróbuj ponownie.",
   "enter_department": "Wpisz katedru:",
   "assessment_result": "Wynik oceny",
   "result":"Wynik",

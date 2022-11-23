@@ -30,7 +30,7 @@ export const UserContextProvider = ({ children }) => {
     setLastName(jsonParsedTokenInfo.last_name);
     setRole(jsonParsedTokenInfo.role);
     setId(jsonParsedTokenInfo.id);
-    setExpiresIn(new Date(jsonParsedTokenInfo.exp * 1000));
+    setExpiresIn(new Date(jsonParsedTokenInfo.exp));
     setIsLoggedIn(true);
   };
   const logoutHandler = () => {

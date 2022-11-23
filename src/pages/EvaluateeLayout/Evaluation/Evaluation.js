@@ -1,27 +1,19 @@
-import { useEffect, useState, useContext, forwardRef } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
+
 import Typography from '@mui/material/Typography';
-import CloseIcon from '@mui/icons-material/Close';
-import Slide from '@mui/material/Slide';
 import LinearProgress from '@mui/material/LinearProgress';
 import { ToastContainer, toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
+
+import Protocol from '../Protocol/Protocol.js';
 
 import Evaluation from '../../../components/EvaluationCard/EvaluationCard.js';
 
 import UserContext from '../../../context/UserContext/UserContext.js';
 
 import config from '../../../config/index.config.js';
-
-const Transition = forwardRef((props, ref) => (
-  <Slide direction="up" ref={ref} {...props} />
-));
 
 export default function Evaluations({ setSelectedPage, link }) {
   const { t } = useTranslation();
@@ -34,7 +26,7 @@ export default function Evaluations({ setSelectedPage, link }) {
 
   const [isProtocolFormOpen, setProtocolFormOpen] = useState(false);
   const [isEvaluationsLoading, setEvaluationsLoading] = useState(false);
-
+  const [currentProtocol, setCurrentProtocol] = useState(null);
   const notifyError = (msg) =>
     toast.error(`${t('error_dialog')} ${msg}`, {
       position: 'top-center',
@@ -50,7 +42,10 @@ export default function Evaluations({ setSelectedPage, link }) {
   const handleClose = () => {
     setProtocolFormOpen(false);
   };
-
+  const handleOpenProtocolForm = (protocol) => {
+    setCurrentProtocol(protocol);
+    setProtocolFormOpen(true);
+  };
   async function getEvaluationsETMemberResponsibleFor() {
     setEvaluationsLoading(true);
     try {
@@ -120,38 +115,24 @@ export default function Evaluations({ setSelectedPage, link }) {
                   <Evaluation
                     key={evaluation.userId}
                     protocol={evaluation}
-                    setOpenProtcolForm={setProtocolFormOpen}
+                    setOpenProtcolForm={() => {
+                      handleOpenProtocolForm(evaluation);
+                    }}
                   />
                 ))}
             </Box>
           </Box>
         </Grid>
       </Grid>
-      <Dialog
-        fullScreen
-        open={isProtocolFormOpen}
-        onClose={handleClose}
-        TransitionComponent={Transition}
-      >
-        <AppBar sx={{ position: 'relative' }}>
-          <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={handleClose}
-              aria-label="close"
-            >
-              <CloseIcon />
-            </IconButton>
-            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              {t('protocol')}
-            </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
-              {t('submit')}
-            </Button>
-          </Toolbar>
-        </AppBar>
-      </Dialog>
+      {isProtocolFormOpen && (
+        <Protocol
+          evaluations={currentProtocol?.evaluatee?.evaluations}
+          isProtocolFormOpen={isProtocolFormOpen}
+          handleClose={handleClose}
+          evaluation={currentProtocol}
+          notifyError={notifyError}
+        />
+      )}
     </Box>
   );
 }
