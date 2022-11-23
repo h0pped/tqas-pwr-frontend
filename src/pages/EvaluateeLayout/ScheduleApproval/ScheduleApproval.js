@@ -126,6 +126,7 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
                   key={item.id}
                   id={item.id}
                   semester={item.name}
+                  department={item.department}
                   status={item.status}
                   setId={setSelectedAssessment}
                   isSelected={selectedAssessment === item.id}
