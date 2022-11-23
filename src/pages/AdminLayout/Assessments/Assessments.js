@@ -264,7 +264,9 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
                   sx={{ backgroundColor: '#ffffff' }}
                 >
                   {semestersOfAssessments.map((semester) => (
-                    <MenuItem value={semester}>{semester}</MenuItem>
+                    <MenuItem key={semester} value={semester}>
+                      {semester}
+                    </MenuItem>
                   ))}
                 </Select>
               </FormControl>
