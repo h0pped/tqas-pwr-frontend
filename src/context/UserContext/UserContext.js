@@ -28,7 +28,7 @@ export const UserContextProvider = ({ children }) => {
     const jsonParsedTokenInfo = JSON.parse(window.atob(base64));
     setFirstName(jsonParsedTokenInfo.first_name);
     setLastName(jsonParsedTokenInfo.last_name);
-    setRole(jsonParsedTokenInfo.role);
+    setRole(jsonParsedTokenInfo.user_type);
     setId(jsonParsedTokenInfo.id);
     setExpiresIn(new Date(jsonParsedTokenInfo.exp * 1000));
     setIsLoggedIn(true);
@@ -40,6 +40,8 @@ export const UserContextProvider = ({ children }) => {
     setIsLoggedIn(false);
     setFirstName(null);
     setLastName(null);
+    setId(null);
+    setRole(null);
   };
 
   // eslint-disable-next-line consistent-return

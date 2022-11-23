@@ -15,9 +15,13 @@ import Authentication from '../../components/Authentication/Authentication.js';
 import AppTitle from '../../components/AppTitle/AppTitle.js';
 
 const Login = () => {
-  const { isLoggedIn } = useContext(UserContext);
+  const { isLoggedIn, role } = useContext(UserContext);
 
   if (isLoggedIn) {
+    if (role !== 'admin') {
+      return <Navigate to="/evaluatee/my-assessments" />;
+    }
+
     return <Navigate to="/home/assessments" />;
   }
   return (

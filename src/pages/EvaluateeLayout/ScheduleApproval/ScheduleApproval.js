@@ -17,7 +17,7 @@ import DialogAssignTeam from './AssessmentDetails/DialogAssignTeam.js';
 
 export default function ScheduleApproval({ setSelectedPage, link }) {
   const { t } = useTranslation();
-  const { token, id } = useContext(UserContext);
+  const { token, id, role } = useContext(UserContext);
 
   const [isAssessmentsLoading, setAssessmentsLoading] = useState(false);
 

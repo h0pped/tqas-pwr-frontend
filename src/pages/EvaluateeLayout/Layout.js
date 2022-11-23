@@ -24,12 +24,43 @@ import Evaluations from './Evaluation/Evaluation.js';
 
 import departmentLogo from '../../assets/images/departmentLogo.svg';
 
+function stringToColor(string) {
+  let hash = 0;
+  let i;
+
+  /* eslint-disable no-bitwise */
+  for (i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let color = '#';
+
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += `00${value.toString(16)}`.slice(-2);
+  }
+  /* eslint-enable no-bitwise */
+
+  return color;
+}
+
+function stringAvatar(name) {
+  return {
+    sx: {
+      bgcolor: stringToColor(name),
+    },
+    children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+  };
+}
+
 const Layout = () => {
   const navigate = useNavigate();
 
   const { t } = useTranslation();
 
-  const { token } = useContext(UserContext);
+  const { token, isLoggedIn, role, firstName, lastName, logout } = useContext(
+    UserContext
+  );
 
   const pages = [
     {
@@ -45,7 +76,6 @@ const Layout = () => {
       link: 'protocols',
     },
   ];
-  const settings = ['Logout'];
 
   const [selectedPage, setSelectedPage] = useState('my-assessments');
 
@@ -63,6 +93,11 @@ const Layout = () => {
     setAnchorElNav(null);
   };
 
+  const handleSettingsLogout = () => {
+    handleCloseUserMenu();
+    logout();
+  };
+
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
@@ -71,8 +106,20 @@ const Layout = () => {
     navigate(pageURL);
   };
 
-  if (!token) {
+  if (!token || !isLoggedIn) {
     return <Navigate to="/" />;
+  }
+
+  if (
+    role !== 'dean' ||
+    role !== 'head of department' ||
+    role !== 'evaluatee'
+  ) {
+    return (
+      <Box>
+        <Typography>404 Not Found</Typography>
+      </Box>
+    );
   }
 
   return (
@@ -151,7 +198,7 @@ const Layout = () => {
               <LanguageSwitchV2 />
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  <Avatar {...stringAvatar(`${firstName} ${lastName}`)} />
                 </IconButton>
               </Tooltip>
               <Menu
@@ -170,11 +217,9 @@ const Layout = () => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                ))}
+                <MenuItem key="logout" onClick={handleSettingsLogout}>
+                  <Typography textAlign="center">Logout</Typography>
+                </MenuItem>
               </Menu>
             </Box>
           </Toolbar>

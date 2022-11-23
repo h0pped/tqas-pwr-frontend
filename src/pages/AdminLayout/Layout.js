@@ -105,12 +105,41 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
+function stringToColor(string) {
+  let hash = 0;
+  let i;
+
+  /* eslint-disable no-bitwise */
+  for (i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let color = '#';
+
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += `00${value.toString(16)}`.slice(-2);
+  }
+  /* eslint-enable no-bitwise */
+
+  return color;
+}
+
+function stringAvatar(name) {
+  return {
+    sx: {
+      bgcolor: stringToColor(name),
+    },
+    children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+  };
+}
+
 export default function Layout() {
   const { t } = useTranslation();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
-  const { token, role } = useContext(UserContext);
+  const { token, role, isLoggedIn, firstName, lastName, logout } = useContext(UserContext);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -129,6 +158,11 @@ export default function Layout() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleSettingsLogout = () => {
+    handleCloseUserMenu();
+    logout();
   };
 
   const [drawerSelectedItem, setDrawerSelectedItem] = useState('assessments');
@@ -196,8 +230,16 @@ export default function Layout() {
 
   const navigate = useNavigate();
 
-  if (!token) {
+  if (!token || !isLoggedIn) {
     return <Navigate to="/" />;
+  }
+
+  if (role !== 'admin') {
+    return (
+      <Box>
+        <Typography>404 Not Found</Typography>
+      </Box>
+    );
   }
 
   return (
@@ -230,7 +272,7 @@ export default function Layout() {
           <Box sx={{ flexGrow: 0, pl: 2 }}>
             <Tooltip title={t('profile')}>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar {...stringAvatar(`${firstName} ${lastName}`)} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -249,11 +291,9 @@ export default function Layout() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem key="logout" onClick={handleSettingsLogout}>
+                <Typography textAlign="center">Logout</Typography>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
@@ -315,6 +355,7 @@ export default function Layout() {
           <Routes>
             {drawerContentList.map((item) => (
               <Route
+                exact
                 key={item.title}
                 path={item.link}
                 element={item.component}
