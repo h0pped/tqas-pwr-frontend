@@ -122,7 +122,7 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
 
     if (event.target.value !== 'All') {
       const filteredAssessments = assessments.filter(
-        (assessment) => assessment.name === event.target.value
+        ({ name }) => name === event.target.value
       );
 
       setFilteredAssessments(filteredAssessments);
@@ -178,8 +178,8 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
           setAssessments(data.assessments.sort((a, b) => b.id - a.id));
           setFilteredAssessments(data.assessments.sort((a, b) => b.id - a.id));
           const listOfSemesters = ['All'];
-          data.assessments.forEach((assessment) => {
-            const semester = assessment.name;
+          data.assessments.forEach(({ name }) => {
+            const semester = name;
             if (!listOfSemesters.includes(semester)) {
               listOfSemesters.push(semester);
             }
