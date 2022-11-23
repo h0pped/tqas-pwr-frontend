@@ -219,19 +219,10 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
               alignContent: 'center',
             }}
           >
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                gap: 2,
-                alignContent: 'center',
-              }}
-            >
-              <Typography variant="h5">
-                {t('drawer_item_title_classes_eval')}
-              </Typography>
-              <Box />
-            </Box>
+            <Typography variant="h5">
+              {t('drawer_item_title_classes_eval')}
+            </Typography>
+            <Box />
             <Button
               variant="contained"
               size="small"
