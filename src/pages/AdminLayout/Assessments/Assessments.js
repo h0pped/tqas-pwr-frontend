@@ -67,6 +67,10 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
   const [isAddEvaluateeDialogOpen, setAddEvaluateeDialogOpen] = useState(false);
 
   const [selectedAssessment, setSelectedAssessment] = useState(null);
+  const [
+    selectedSemesterForFiltering,
+    setSelectedSemesterForFiltering,
+  ] = useState('All');
   const [selectedSemesterValue, setSelectedSemesterValue] = useState(
     semesters.find((semester) =>
       moment(new Date().toISOString().slice(0, 10)).isBetween(
@@ -91,6 +95,8 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
   const [isAssessmentsUpdated, setIsAssessmentsUpdated] = useState(false);
 
   const [assessments, setAssessments] = useState([]);
+  const [filteredAssessments, setFilteredAssessments] = useState([]);
+  const [semestersOfAssessments, setSemestersOfAssessments] = useState([]);
 
   const handleOpenCreateAssessmentDialog = () => {
     setNewAssessmentDepartmentValueError(false);
@@ -108,6 +114,21 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
 
   const handleDialogDepartmentChange = (event) => {
     setNewAssessmentDepartmentValue(event.target.value);
+  };
+
+  const handleSemesterFilterChange = (event) => {
+    setIsAssessmentsUpdated(false);
+    setSelectedSemesterForFiltering(event.target.value);
+
+    if (event.target.value !== 'All') {
+      const filteredAssessments = assessments.filter(
+        (assessment) => assessment.name === event.target.value
+      );
+
+      setFilteredAssessments(filteredAssessments);
+    } else {
+      setFilteredAssessments(assessments);
+    }
   };
 
   const handleCreateNewAssessment = () => {
@@ -155,6 +176,15 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
         .then((response) => response.json())
         .then((data) => {
           setAssessments(data.assessments.sort((a, b) => b.id - a.id));
+          setFilteredAssessments(data.assessments.sort((a, b) => b.id - a.id));
+          const listOfSemesters = ['All'];
+          data.assessments.forEach((assessment) => {
+            const semester = assessment.name;
+            if (!listOfSemesters.includes(semester)) {
+              listOfSemesters.push(semester);
+            }
+          });
+          setSemestersOfAssessments(listOfSemesters);
           setAssessmentsLoading(false);
         });
     } catch (error) {
@@ -189,9 +219,19 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
               alignContent: 'center',
             }}
           >
-            <Typography variant="h5">
-              {t('drawer_item_title_classes_eval')}
-            </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: 2,
+                alignContent: 'center',
+              }}
+            >
+              <Typography variant="h5">
+                {t('drawer_item_title_classes_eval')}
+              </Typography>
+              <Box />
+            </Box>
             <Button
               variant="contained"
               size="small"
@@ -205,19 +245,42 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
         <Grid item xs={4} sx={{ height: '100%' }}>
           <Box
             sx={{
-              p: 0.7,
               display: 'flex',
               flexDirection: 'column',
-              gap: 1,
               overflowY: 'scroll',
               height: '100%',
               borderRadius: 1,
               backgroundColor: '#f4f5f7',
             }}
           >
+            <Box
+              sx={{
+                display: 'flex',
+                position: 'sticky',
+                top: 0,
+                backgroundColor: '#f4f5f7',
+                p: 0.7,
+                pb: 1,
+                pt: 1,
+              }}
+            >
+              <FormControl size="small" sx={{ width: '100%' }}>
+                <Select
+                  id="semester-select-small"
+                  value={selectedSemesterForFiltering}
+                  inputProps={{ 'aria-label': 'Without label' }}
+                  onChange={handleSemesterFilterChange}
+                  sx={{ backgroundColor: '#ffffff' }}
+                >
+                  {semestersOfAssessments.map((semester) => (
+                    <MenuItem value={semester}>{semester}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
             {isAssessmentsLoading && <LinearProgress />}
             {!isAssessmentsLoading &&
-              assessments.map((item) => (
+              filteredAssessments.map((item) => (
                 <AssessmentCard
                   key={item.id}
                   id={item.id}
@@ -227,6 +290,9 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
                   setId={setSelectedAssessment}
                   isSelected={selectedAssessment === item.id}
                   numberOfEvaluatees={item.num_of_evaluatees}
+                  ml={0.8}
+                  mr={0.8}
+                  mb={1}
                 />
               ))}
           </Box>

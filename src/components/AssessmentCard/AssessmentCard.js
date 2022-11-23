@@ -14,6 +14,9 @@ export default function AssessmentCard({
   setId,
   isSelected,
   numberOfEvaluatees,
+  ml,
+  mr,
+  mb,
 }) {
   const { t } = useTranslation();
 
@@ -24,6 +27,9 @@ export default function AssessmentCard({
       }}
       sx={{
         p: 2,
+        ml,
+        mr,
+        mb,
         backgroundColor: '#ffffff',
         background: isSelected
           ? 'linear-gradient(45deg, rgba(217,55,42,1) 0%, rgba(255,128,118,1) 70%, rgba(217,55,42,1) 100%)'
