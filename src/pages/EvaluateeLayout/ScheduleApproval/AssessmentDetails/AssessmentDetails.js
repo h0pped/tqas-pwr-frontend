@@ -86,7 +86,7 @@ export default function AssessmentDetails({
     const body = {
       assessment_id: assessmentDetails.id,
       status: 'Changes Required',
-      reason: rejectReason,
+      rejection_reason: rejectReason,
     };
     const res = await fetch(
       `${config.server.url}/assessmentManagement/reviewAssessment`,
