@@ -29,7 +29,7 @@ const Layout = () => {
 
   const { t } = useTranslation();
 
-  const { token } = useContext(UserContext);
+  const { token, lastName, firstName } = useContext(UserContext);
 
   const pages = [
     {
@@ -151,7 +151,7 @@ const Layout = () => {
               <LanguageSwitchV2 />
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  <Avatar alt={lastName} src="/static/images/avatar/2.jpg" />
                 </IconButton>
               </Tooltip>
               <Menu
@@ -170,6 +170,11 @@ const Layout = () => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
+                <MenuItem key="logged-in-as" disabled>
+                  <Typography textAlign="center">
+                    {t('logged_in_as')} {`${lastName} ${firstName}`}
+                  </Typography>
+                </MenuItem>
                 {settings.map((setting) => (
                   <MenuItem key={setting} onClick={handleCloseUserMenu}>
                     <Typography textAlign="center">{setting}</Typography>

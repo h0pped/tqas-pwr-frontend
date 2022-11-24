@@ -110,7 +110,7 @@ export default function Layout() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
-  const { token, role } = useContext(UserContext);
+  const { token, role, firstName, lastName } = useContext(UserContext);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -230,7 +230,7 @@ export default function Layout() {
           <Box sx={{ flexGrow: 0, pl: 2 }}>
             <Tooltip title={t('profile')}>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt={lastName} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -249,6 +249,11 @@ export default function Layout() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
+              <MenuItem key="logged-in-as" disabled>
+                <Typography textAlign="center">
+                  {t('logged_in_as')} {`${lastName} ${firstName}`}
+                </Typography>
+              </MenuItem>
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">{setting}</Typography>
