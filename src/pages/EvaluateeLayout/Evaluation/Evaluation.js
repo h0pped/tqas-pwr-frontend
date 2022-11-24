@@ -105,12 +105,12 @@ export default function Evaluations({ setSelectedPage, link }) {
               }}
             >
               {isEvaluationsLoading && <LinearProgress />}
-              {evaluationsMemberIsAssignedTo.length === 0 && (
+              {evaluationsMemberIsAssignedTo?.length === 0 && (
                 <Typography variant="subtitle2" sx={{ color: '#848884' }}>
                   {t('no_protocols_found')}
                 </Typography>
               )}
-              {evaluationsMemberIsAssignedTo.length > 0 &&
+              {evaluationsMemberIsAssignedTo?.length > 0 &&
                 evaluationsMemberIsAssignedTo.map((evaluation) => (
                   <Evaluation
                     key={evaluation.userId}
@@ -126,7 +126,7 @@ export default function Evaluations({ setSelectedPage, link }) {
       </Grid>
       {isProtocolFormOpen && (
         <Protocol
-          evaluations={currentProtocol?.evaluatee?.evaluations}
+          evaluations={currentProtocol?.evaluations}
           isProtocolFormOpen={isProtocolFormOpen}
           handleClose={handleClose}
           evaluation={currentProtocol}
