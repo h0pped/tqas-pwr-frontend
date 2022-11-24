@@ -29,8 +29,7 @@ const Layout = () => {
 
   const { t } = useTranslation();
 
-  const { token, lastName, firstName, role } = useContext(UserContext);
-
+  const { token, lastName, firstName, role, logout } = useContext(UserContext);
 
   const pages = [
     {
