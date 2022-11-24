@@ -18,7 +18,7 @@ export const UserContextProvider = ({ children }) => {
   const [token, setToken] = useState(storageToken);
   const [firstName, setFirstName] = useState(getTokenInfo().first_name);
   const [lastName, setLastName] = useState(getTokenInfo().last_name);
-  const [role, setRole] = useState(getTokenInfo().role);
+  const [role, setRole] = useState(getTokenInfo().user_type);
   const [id, setId] = useState(getTokenInfo().id);
 
   const loginHandler = (jwt) => {

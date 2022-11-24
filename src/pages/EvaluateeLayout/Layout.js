@@ -29,7 +29,7 @@ const Layout = () => {
 
   const { t } = useTranslation();
 
-  const { token, lastName, firstName } = useContext(UserContext);
+  const { token, lastName, firstName, role } = useContext(UserContext);
 
   const pages = [
     {
@@ -71,7 +71,7 @@ const Layout = () => {
     navigate(pageURL);
   };
 
-  if (!token) {
+  if (!token || role === 'admin') {
     return <Navigate to="/" />;
   }
 
@@ -151,7 +151,7 @@ const Layout = () => {
               <LanguageSwitchV2 />
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt={lastName} src="/static/images/avatar/2.jpg" />
+                  <Avatar>{firstName[0] + lastName[0]}</Avatar>
                 </IconButton>
               </Tooltip>
               <Menu

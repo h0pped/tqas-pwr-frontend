@@ -196,7 +196,7 @@ export default function Layout() {
 
   const navigate = useNavigate();
 
-  if (!token) {
+  if (!token || role !== 'admin') {
     return <Navigate to="/" />;
   }
 
@@ -230,7 +230,7 @@ export default function Layout() {
           <Box sx={{ flexGrow: 0, pl: 2 }}>
             <Tooltip title={t('profile')}>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={lastName} />
+                <Avatar>{firstName[0] + lastName[0]}</Avatar>
               </IconButton>
             </Tooltip>
             <Menu
