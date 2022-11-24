@@ -14,32 +14,58 @@ export default function AssessmentCard({
   setId,
   isSelected,
   numberOfEvaluatees,
+  flag,
 }) {
   const { t } = useTranslation();
+
+  const styles = {
+    adminAssessments: {
+      p: 2,
+      ml: 0.8,
+      mr: 0.8,
+      mb: 1,
+      backgroundColor: '#ffffff',
+      background: isSelected
+        ? 'linear-gradient(45deg, rgba(217,55,42,1) 0%, rgba(255,128,118,1) 70%, rgba(217,55,42,1) 100%)'
+        : null,
+      border: isSelected
+        ? 'solid 0.5px #D9372A'
+        : 'solid 0.5px rgba(235, 235, 235)',
+      color: isSelected ? '#ffffff' : '#000000',
+      borderRadius: 0.5,
+      boxShadow: 2,
+      display: 'flex',
+      flexDirection: 'column',
+      '&:hover': {
+        backgroundColor: 'rgba(235, 235, 235, 0.53)',
+      },
+    },
+    scheduleApproval: {
+      p: 2,
+      backgroundColor: '#ffffff',
+      background: isSelected
+        ? 'linear-gradient(45deg, rgba(217,55,42,1) 0%, rgba(255,128,118,1) 70%, rgba(217,55,42,1) 100%)'
+        : null,
+      border: isSelected
+        ? 'solid 0.5px #D9372A'
+        : 'solid 0.5px rgba(235, 235, 235)',
+      color: isSelected ? '#ffffff' : '#000000',
+      borderRadius: 0.5,
+      boxShadow: 2,
+      display: 'flex',
+      flexDirection: 'column',
+      '&:hover': {
+        backgroundColor: 'rgba(235, 235, 235, 0.53)',
+      },
+    },
+  };
 
   return (
     <Box
       onClick={() => {
         setId(id);
       }}
-      sx={{
-        p: 2,
-        backgroundColor: '#ffffff',
-        background: isSelected
-          ? 'linear-gradient(45deg, rgba(217,55,42,1) 0%, rgba(255,128,118,1) 70%, rgba(217,55,42,1) 100%)'
-          : null,
-        border: isSelected
-          ? 'solid 0.5px #D9372A'
-          : 'solid 0.5px rgba(235, 235, 235)',
-        color: isSelected ? '#ffffff' : '#000000',
-        borderRadius: 0.5,
-        boxShadow: 2,
-        display: 'flex',
-        flexDirection: 'column',
-        '&:hover': {
-          backgroundColor: 'rgba(235, 235, 235, 0.53)',
-        },
-      }}
+      sx={styles[flag]}
     >
       <Box
         sx={{

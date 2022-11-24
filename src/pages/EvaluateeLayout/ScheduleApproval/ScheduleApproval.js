@@ -131,6 +131,7 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
                   setId={setSelectedAssessment}
                   isSelected={selectedAssessment === item.id}
                   numberOfEvaluatees={item.num_of_evaluatees}
+                  flag="scheduleApproval"
                 />
               ))}
           </Box>
