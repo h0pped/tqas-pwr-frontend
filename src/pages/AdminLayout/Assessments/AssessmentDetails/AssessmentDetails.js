@@ -363,6 +363,27 @@ export default function AssessmentDetails({
                 {assessmentDetails.name}
               </Typography>
             </Box>
+            {assessmentDetails.rejection_reason && (
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 8,
+                }}
+              >
+                <Typography
+                  variant="subtitle2"
+                  sx={{ width: 80, fontWeight: 'bold' }}
+                >
+                  {t('rejection_reason')}
+                </Typography>
+                <Typography variant="subtitle2" sx={{ width: '40%' }}>
+                  {assessmentDetails.rejection_reason}
+                </Typography>
+              </Box>
+            )}
+
             <Box
               sx={{
                 display: 'flex',

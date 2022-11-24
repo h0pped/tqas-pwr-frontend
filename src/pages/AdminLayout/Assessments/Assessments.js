@@ -288,6 +288,7 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
                   semester={item.name}
                   department={item.department}
                   status={item.status}
+                  rejectionReason={item.rejection_reason}
                   setId={setSelectedAssessment}
                   isSelected={selectedAssessment === item.id}
                   numberOfEvaluatees={item.num_of_evaluatees}

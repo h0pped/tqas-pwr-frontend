@@ -30,7 +30,7 @@ export const assessmentStatuses = [
   'Draft',
   'Awaiting approval',
   'Ongoing',
-  'Changes requested',
+  'Changes Required',
   'Done',
 ];
 
