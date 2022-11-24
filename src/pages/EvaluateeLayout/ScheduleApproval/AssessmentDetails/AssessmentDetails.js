@@ -335,6 +335,25 @@ export default function AssessmentDetails({
                             >
                               {member.member_email}
                             </TableCell>
+                            <TableCell
+                              component="th"
+                              scope="row"
+                              sx={{
+                                backgroundColor: member.is_head_of_team
+                                  ? '#d9372a'
+                                  : '#f4f4f4',
+                                color: member.is_head_of_team
+                                  ? 'white'
+                                  : 'black',
+                              }}
+                            >
+                              {member.is_head_of_team && (
+                                <Chip
+                                  label={t('is_head')}
+                                  sx={{ color: 'white' }}
+                                />
+                              )}
+                            </TableCell>
                           </TableRow>
                         ))}
                     </TableBody>

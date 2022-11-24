@@ -390,14 +390,17 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
 
   const setLeader = (id) => {
     const updatedEvalTeam = currentEvaluationTeam;
-    updatedEvalTeam[Object.keys(updatedEvalTeam)[0]].forEach((member) => {
-      const memberId = Object.keys(member)[0];
-      if (memberId === id) {
-        member[memberId] = true;
-      } else {
-        member[memberId] = false;
-      }
+    Object.keys(updatedEvalTeam).forEach((key) => {
+      updatedEvalTeam[key].forEach((member) => {
+        const memberId = Object.keys(member)[0];
+        if (memberId === id) {
+          member[memberId] = true;
+        } else {
+          member[memberId] = false;
+        }
+      });
     });
+
     setCurrentEvaluationTeam(updatedEvalTeam);
     setChangesMade(true);
     setTeamLeader(id);
@@ -638,7 +641,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                   color:
                                     teamLeader === Object.keys(member)[0]
                                       ? 'white'
-                                      : 'whblackite',
+                                      : 'black',
                                 }}
                               >
                                 {Object.keys(member)[0]}
@@ -651,7 +654,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                   color:
                                     teamLeader === Object.keys(member)[0]
                                       ? 'white'
-                                      : 'whblackite',
+                                      : 'black',
                                 }}
                               >
                                 {outsideList &&
@@ -668,7 +671,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                   color:
                                     teamLeader === Object.keys(member)[0]
                                       ? 'white'
-                                      : 'whblackite',
+                                      : 'black',
                                 }}
                               >
                                 {outsideList &&
@@ -685,7 +688,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                   color:
                                     teamLeader === Object.keys(member)[0]
                                       ? 'white'
-                                      : 'whblackite',
+                                      : 'black',
                                 }}
                               >
                                 {outsideList &&
@@ -702,7 +705,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                   color:
                                     teamLeader === Object.keys(member)[0]
                                       ? 'white'
-                                      : 'whblackite',
+                                      : 'black',
                                 }}
                               >
                                 {outsideList &&
@@ -719,7 +722,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                   color:
                                     teamLeader === Object.keys(member)[0]
                                       ? 'white'
-                                      : 'whblackite',
+                                      : 'black',
                                 }}
                               >
                                 {isWzhzMemeber(Object.keys(member)[0])
