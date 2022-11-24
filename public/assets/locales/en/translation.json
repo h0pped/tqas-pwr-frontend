@@ -187,5 +187,6 @@
   "department": "Department",
   "rejection_reason": "Rejection reason",
   "save_draft": "Save draft",
-  "team_members_header": "Team members:"
+  "team_members_header": "Team members:",
+  "logged_in_as": "Logged in as:"
 }

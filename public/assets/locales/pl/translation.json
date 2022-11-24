@@ -187,5 +187,6 @@
   "department": "Katedra",
   "rejection_reason": "Powód odrzucenia",
   "save_draft": "Zapisz jako wersję roboczą",
-  "team_members_header": "Członkowie zespołu hospitującego:"
+  "team_members_header": "Członkowie zespołu hospitującego:",
+  "logged_in_as": "Zalogowany jako:"
 }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -110,7 +110,7 @@ export default function Layout() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
-  const { token, role } = useContext(UserContext);
+  const { token, role, firstName, lastName, logout } = useContext(UserContext);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -129,6 +129,14 @@ export default function Layout() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleMenuItemClick = (e) => {
+    const option = e.target.textContent;
+    if (option === t('logout')) {
+      return logout();
+    }
+    return handleCloseUserMenu();
   };
 
   const [drawerSelectedItem, setDrawerSelectedItem] = useState('assessments');
@@ -181,22 +189,26 @@ export default function Layout() {
       component: <ManageUsers {...{ setDrawerSelectedItem, link: 'users' }} />,
     },
   ];
-  if (role === 'admin') {
-    drawerContentList.push({
-      title: t('drawer_item_title_users'),
-      icon: (
-        <GroupAddIcon
-          color={drawerSelectedItem === 'users' ? 'primary' : 'action'}
-        />
-      ),
-      link: 'users',
-      component: <ManageUsers {...{ setDrawerSelectedItem, link: 'users' }} />,
-    });
-  }
+  useEffect(() => {
+    if (role === 'admin') {
+      drawerContentList.push({
+        title: t('drawer_item_title_users'),
+        icon: (
+          <GroupAddIcon
+            color={drawerSelectedItem === 'users' ? 'primary' : 'action'}
+          />
+        ),
+        link: 'users',
+        component: (
+          <ManageUsers {...{ setDrawerSelectedItem, link: 'users' }} />
+        ),
+      });
+    }
+  }, [role]);
 
   const navigate = useNavigate();
 
-  if (!token) {
+  if (!token || role !== 'admin') {
     return <Navigate to="/" />;
   }
 
@@ -230,7 +242,7 @@ export default function Layout() {
           <Box sx={{ flexGrow: 0, pl: 2 }}>
             <Tooltip title={t('profile')}>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar>{firstName[0] + lastName[0]}</Avatar>
               </IconButton>
             </Tooltip>
             <Menu
@@ -249,8 +261,13 @@ export default function Layout() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
+              <MenuItem key="logged-in-as" disabled>
+                <Typography textAlign="center">
+                  {t('logged_in_as')} {`${firstName} ${lastName}`}
+                </Typography>
+              </MenuItem>
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={(e) => handleMenuItemClick(e)}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}

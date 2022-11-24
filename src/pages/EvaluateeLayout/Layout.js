@@ -29,7 +29,7 @@ const Layout = () => {
 
   const { t } = useTranslation();
 
-  const { token } = useContext(UserContext);
+  const { token, lastName, firstName, role, logout } = useContext(UserContext);
 
   const pages = [
     {
@@ -45,7 +45,7 @@ const Layout = () => {
       link: 'protocols',
     },
   ];
-  const settings = ['Logout'];
+  const settings = [t('logout')];
 
   const [selectedPage, setSelectedPage] = useState('my-assessments');
 
@@ -66,12 +66,19 @@ const Layout = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  const handleMenuItemClick = (e) => {
+    const option = e.target.textContent;
+    if (option === t('logout').trim()) {
+      return logout();
+    }
+    return handleCloseUserMenu();
+  };
 
   const handlePageChange = (pageURL) => {
     navigate(pageURL);
   };
 
-  if (!token) {
+  if (!token || role === 'admin') {
     return <Navigate to="/" />;
   }
 
@@ -151,7 +158,7 @@ const Layout = () => {
               <LanguageSwitchV2 />
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  <Avatar>{firstName[0] + lastName[0]}</Avatar>
                 </IconButton>
               </Tooltip>
               <Menu
@@ -170,8 +177,16 @@ const Layout = () => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
+                <MenuItem key="logged-in-as" disabled>
+                  <Typography textAlign="center">
+                    {t('logged_in_as')} {`${firstName} ${lastName}`}
+                  </Typography>
+                </MenuItem>
                 {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <MenuItem
+                    key={setting}
+                    onClick={(e) => handleMenuItemClick(e)}
+                  >
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
                 ))}
