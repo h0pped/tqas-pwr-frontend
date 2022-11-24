@@ -112,6 +112,7 @@ export default function Layout() {
 
   const { token, role, firstName, lastName } = useContext(UserContext);
 
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -129,6 +130,14 @@ export default function Layout() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleMenuItemClick = (e) => {
+    const option = e.target.innerText;
+    if (option === t('logout')) {
+      return logout();
+    }
+    return handleCloseUserMenu();
   };
 
   const [drawerSelectedItem, setDrawerSelectedItem] = useState('assessments');
@@ -255,7 +264,7 @@ export default function Layout() {
                 </Typography>
               </MenuItem>
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={(e) => handleMenuItemClick(e)}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
