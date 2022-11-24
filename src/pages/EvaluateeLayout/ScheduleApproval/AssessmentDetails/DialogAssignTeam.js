@@ -243,11 +243,13 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
               setChangesMade(false);
               setSaveLoading(false);
               setLeader(null);
+              setTeamLeader(null);
               onClose();
             } else {
               notifyError(t('et_save_error'));
               setChangesMade(false);
               setSaveLoading(false);
+              setLeader(null);
               setTeamLeader(null);
               onClose();
             }
@@ -351,7 +353,6 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
         setEvaluations(evaluationsETResponsibleFor);
 
         const currentEvaluationTeamApiFormat = {};
-        // let fetchedLeader;
         evaluationsETResponsibleFor.forEach((evaluation) => {
           const evaluationTeams = [];
           const uniqueMemberIds = [];
@@ -393,11 +394,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
     Object.keys(updatedEvalTeam).forEach((key) => {
       updatedEvalTeam[key].forEach((member) => {
         const memberId = Object.keys(member)[0];
-        if (memberId === id) {
-          member[memberId] = true;
-        } else {
-          member[memberId] = false;
-        }
+        member[memberId] = memberId === id;
       });
     });
 
