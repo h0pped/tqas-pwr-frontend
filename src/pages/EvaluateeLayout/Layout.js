@@ -29,7 +29,7 @@ const Layout = () => {
 
   const { t } = useTranslation();
 
-  const { token } = useContext(UserContext);
+  const { token, logout } = useContext(UserContext);
 
   const pages = [
     {
@@ -45,7 +45,7 @@ const Layout = () => {
       link: 'protocols',
     },
   ];
-  const settings = ['Logout'];
+  const settings = [t('logout')];
 
   const [selectedPage, setSelectedPage] = useState('my-assessments');
 
@@ -65,6 +65,13 @@ const Layout = () => {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+  const handleMenuItemClick = (e) => {
+    const option = e.target.innerText;
+    if (option === t('logout')) {
+      return logout();
+    }
+    return handleCloseUserMenu();
   };
 
   const handlePageChange = (pageURL) => {
@@ -171,7 +178,10 @@ const Layout = () => {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <MenuItem
+                    key={setting}
+                    onClick={(e) => handleMenuItemClick(e)}
+                  >
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
                 ))}
