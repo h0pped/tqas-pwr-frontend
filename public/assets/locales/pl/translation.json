@@ -185,5 +185,7 @@
   "second_info": "Masz 14 dni od daty wyświetlenia tego wyniku aby zaakceptować lub odrzucić wynik.",
   "no_assessments": "Nie znaleziono oceny",
   "department": "Katedra",
-  "rejection_reason": "Powód odrzucenia"
+  "rejection_reason": "Powód odrzucenia",
+  "save_draft": "Zapisz jako wersję roboczą",
+  "team_members_header": "Członkowie zespołu hospitującego:"
 }
