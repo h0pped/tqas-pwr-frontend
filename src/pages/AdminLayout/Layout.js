@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -132,7 +132,7 @@ export default function Layout() {
   };
 
   const handleMenuItemClick = (e) => {
-    const option = e.target.innerText;
+    const option = e.target.textContent;
     if (option === t('logout')) {
       return logout();
     }
@@ -189,18 +189,22 @@ export default function Layout() {
       component: <ManageUsers {...{ setDrawerSelectedItem, link: 'users' }} />,
     },
   ];
-  if (role === 'admin') {
-    drawerContentList.push({
-      title: t('drawer_item_title_users'),
-      icon: (
-        <GroupAddIcon
-          color={drawerSelectedItem === 'users' ? 'primary' : 'action'}
-        />
-      ),
-      link: 'users',
-      component: <ManageUsers {...{ setDrawerSelectedItem, link: 'users' }} />,
-    });
-  }
+  useEffect(() => {
+    if (role === 'admin') {
+      drawerContentList.push({
+        title: t('drawer_item_title_users'),
+        icon: (
+          <GroupAddIcon
+            color={drawerSelectedItem === 'users' ? 'primary' : 'action'}
+          />
+        ),
+        link: 'users',
+        component: (
+          <ManageUsers {...{ setDrawerSelectedItem, link: 'users' }} />
+        ),
+      });
+    }
+  }, [role]);
 
   const navigate = useNavigate();
 

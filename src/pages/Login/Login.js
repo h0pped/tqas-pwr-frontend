@@ -18,7 +18,7 @@ const Login = () => {
   const { isLoggedIn, role } = useContext(UserContext);
 
   if (isLoggedIn && role !== 'admin') {
-    return <Navigate to="/evaluatee" />;
+    return <Navigate to="/evaluatee/my-assessments" />;
   }
   if (isLoggedIn && role === 'admin') {
     return <Navigate to="/home/assessments" />;

@@ -67,8 +67,8 @@ const Layout = () => {
     setAnchorElUser(null);
   };
   const handleMenuItemClick = (e) => {
-    const option = e.target.innerText;
-    if (option === t('logout')) {
+    const option = e.target.textContent;
+    if (option === t('logout').trim()) {
       return logout();
     }
     return handleCloseUserMenu();
