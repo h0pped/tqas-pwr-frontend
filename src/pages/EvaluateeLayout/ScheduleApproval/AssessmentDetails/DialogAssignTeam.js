@@ -224,6 +224,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
   function saveEvaluationTeam() {
     if (isChangesMade) {
       if (isCurrentEvaluationTeamHasWZHZMember()) {
+        console.log(currentEvaluationTeam);
         setSaveLoading(true);
         try {
           fetch(
@@ -351,7 +352,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
         setEvaluations(evaluationsETResponsibleFor);
 
         const currentEvaluationTeamApiFormat = {};
-
+        // let fetchedLeader;
         evaluationsETResponsibleFor.forEach((evaluation) => {
           const evaluationTeams = [];
           const uniqueMemberIds = [];
@@ -374,7 +375,9 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
             const newMemberObjectApiFormat = {};
             newMemberObjectApiFormat[member.member_user_id] =
               member.is_head_of_team;
-
+            if (member.is_head_of_team) {
+              setTeamLeader(member.member_user_id.toString());
+            }
             evaluationTeams.push(newMemberObjectApiFormat);
           });
 
@@ -400,7 +403,24 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
     setChangesMade(true);
     setTeamLeader(id);
   };
+  // useEffect(() => {
+  //   if (isFirstOpen && currentEvaluationTeam) {
+  //     const leader = currentEvaluationTeam[
+  //       Object.keys(currentEvaluationTeam)[0]
+  //     ].forEach((member) => console.log(member[Object.keys(member)[0]]));
+  //     if (leader) {
+  //       setLeader(leader.member_user_id);
+  //     }
+  //     setIsFirstOpen(false);
+  //   }
+  // }, [currentEvaluationTeam]);
+  // useEffect(() => {
+  //   console.log('CURRENT LEADER', teamLeader);
+  // }, [teamLeader]);
 
+  useEffect(() => {
+    console.log('NEW TEAM LEADER', teamLeader);
+  }, [teamLeader]);
   return (
     <Dialog
       fullScreen
