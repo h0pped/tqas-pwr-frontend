@@ -179,7 +179,7 @@ const Layout = () => {
               >
                 <MenuItem key="logged-in-as" disabled>
                   <Typography textAlign="center">
-                    {t('logged_in_as')} {`${lastName} ${firstName}`}
+                    {t('logged_in_as')} {`${firstName} ${lastName}`}
                   </Typography>
                 </MenuItem>
                 {settings.map((setting) => (
