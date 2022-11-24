@@ -110,8 +110,7 @@ export default function Layout() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
-  const { token, role, firstName, lastName } = useContext(UserContext);
-
+  const { token, role, firstName, lastName, logout } = useContext(UserContext);
 
   const handleDrawerOpen = () => {
     setOpen(true);
