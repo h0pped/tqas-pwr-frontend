@@ -196,11 +196,11 @@ export default function AssessmentDetails({
           <TableCell width="18%" component="th" scope="row">
             {`${
               [
-              ...new Set(
-                row.evaluation_team.map((item) => item.member_user_id)
-              ),
-            ].length
-              } ${t('member')}`}
+                ...new Set(
+                  row.evaluation_team.map((item) => item.member_user_id)
+                ),
+              ].length
+            } ${t('member')}`}
           </TableCell>
           <TableCell width="18%" component="th" scope="row">
             <Tooltip title="Remove evaluatee" placement="top">
@@ -257,21 +257,26 @@ export default function AssessmentDetails({
                   {t('evaluation_team')}
                 </Typography>
                 {row.evaluation_team.length > 0 && (
-                    <Table size="small" aria-label="customized table">
-                      <TableHead>
-                        <StyledTableRow>
-                          <TableCell>{t('label_academic_title')}</TableCell>
-                          <TableCell>{t('label_first_name')}</TableCell>
-                          <TableCell>{t('label_last_name')}</TableCell>
-                          <TableCell>{t('label_email')}</TableCell>
-                        </StyledTableRow>
-                      </TableHead>
-                      <TableBody>
-                        {row.evaluation_team.filter((value, index, self) =>
-                          index === self.findIndex((team) => (
-                            team.member_user_id === value.member_user_id
-                          ))
-                        ).map((member) => (
+                  <Table size="small" aria-label="customized table">
+                    <TableHead>
+                      <StyledTableRow>
+                        <TableCell>{t('label_academic_title')}</TableCell>
+                        <TableCell>{t('label_first_name')}</TableCell>
+                        <TableCell>{t('label_last_name')}</TableCell>
+                        <TableCell>{t('label_email')}</TableCell>
+                      </StyledTableRow>
+                    </TableHead>
+                    <TableBody>
+                      {row.evaluation_team
+                        .filter(
+                          (value, index, self) =>
+                            index ===
+                            self.findIndex(
+                              (team) =>
+                                team.member_user_id === value.member_user_id
+                            )
+                        )
+                        .map((member) => (
                           <TableRow key={member.member_email}>
                             <TableCell component="th" scope="row">
                               {member.academic_title}
@@ -287,9 +292,9 @@ export default function AssessmentDetails({
                             </TableCell>
                           </TableRow>
                         ))}
-                      </TableBody>
-                    </Table>
-                  )}
+                    </TableBody>
+                  </Table>
+                )}
                 {row.evaluation_team.length === 0 && (
                   <Alert severity="info">
                     <Typography>{t('info_no_et')}</Typography>
