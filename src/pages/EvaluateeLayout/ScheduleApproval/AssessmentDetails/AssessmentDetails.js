@@ -285,7 +285,7 @@ export default function AssessmentDetails({
                               sx={{
                                 backgroundColor: member.is_head_of_team
                                   ? '#d9372a'
-                                  : '#f4f4f4',
+                                  : '#ffff',
                                 color: member.is_head_of_team
                                   ? 'white'
                                   : 'black',
@@ -299,7 +299,7 @@ export default function AssessmentDetails({
                               sx={{
                                 backgroundColor: member.is_head_of_team
                                   ? '#d9372a'
-                                  : '#f4f4f4',
+                                  : '#ffff',
                                 color: member.is_head_of_team
                                   ? 'white'
                                   : 'black',
@@ -313,7 +313,7 @@ export default function AssessmentDetails({
                               sx={{
                                 backgroundColor: member.is_head_of_team
                                   ? '#d9372a'
-                                  : '#f4f4f4',
+                                  : '#ffff',
                                 color: member.is_head_of_team
                                   ? 'white'
                                   : 'black',
@@ -327,7 +327,7 @@ export default function AssessmentDetails({
                               sx={{
                                 backgroundColor: member.is_head_of_team
                                   ? '#d9372a'
-                                  : '#f4f4f4',
+                                  : '#ffff',
                                 color: member.is_head_of_team
                                   ? 'white'
                                   : 'black',
@@ -341,7 +341,7 @@ export default function AssessmentDetails({
                               sx={{
                                 backgroundColor: member.is_head_of_team
                                   ? '#d9372a'
-                                  : '#f4f4f4',
+                                  : '#ffff',
                                 color: member.is_head_of_team
                                   ? 'white'
                                   : 'black',

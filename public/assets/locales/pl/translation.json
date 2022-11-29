@@ -190,5 +190,7 @@
   "team_members_header": "Członkowie zespołu hospitującego:",
   "logged_in_as": "Zalogowany jako:",
   "label_is_head": "Głową zespołu?",
-  "is_head": "Głową zespołu"
+  "is_head": "Głową zespołu",
+  "remove": "Usuń",
+  "make_leader": "Ustaw jako głowę zespołu"
 }

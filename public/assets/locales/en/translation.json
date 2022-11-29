@@ -190,5 +190,7 @@
   "team_members_header": "Team members:",
   "logged_in_as": "Logged in as:",
   "label_is_head": "Head of Team?",
-  "is_head": "Head of Team"
+  "is_head": "Head of Team",
+  "remove": "Remove",
+  "make_leader": "Make leader"
 }

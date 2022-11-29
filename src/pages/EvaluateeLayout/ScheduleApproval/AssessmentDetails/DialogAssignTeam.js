@@ -728,7 +728,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                               </TableCell>
                               <TableCell component="th" scope="row">
                                 <Box sx={{ m: 1, position: 'relative' }}>
-                                  <Tooltip title="Remove" placement="top">
+                                  <Tooltip title={t('remove')} placement="top">
                                     <Fab
                                       aria-label="save"
                                       onClick={() =>
@@ -761,7 +761,10 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                         }}
                                       />
                                     )}
-                                  <Tooltip title="Make leader" placement="top">
+                                  <Tooltip
+                                    title={t('make_leader')}
+                                    placement="top"
+                                  >
                                     <Fab
                                       aria-label="save"
                                       onClick={() =>
