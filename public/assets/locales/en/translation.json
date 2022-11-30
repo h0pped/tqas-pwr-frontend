@@ -181,9 +181,15 @@
   "open_protocol": "Open protocol form",
   "reason_decline": "Write your reason for declining",
   "decline": "Decline result",
-  "first_info": "You have been evaluated on",
-  "second_info": "You have 14 days from the date to see this result to accept or decline the result.",
+  "first_info": "You have a new evaluation in the system with the final score: 4.0",
+  "third_info": "Please note, you have 14 days in order to accept or decline the result.",
+  "second_info":"This is the final result of this particular assessment.",
   "no_assessments": "No assessments found",
   "department": "Department",
-  "rejection_reason": "Rejection reason"
+  "rejection_reason": "Rejection reason",
+  "result_accepted": "Result was successfully accepted",
+  "result_rejected": "Result was successfully rejected",
+  "result_rejected_error": "There was an error when rejected the result",
+  "rejection_reason_required":"Rejection reason can not be empty",
+  "congratulations": "Congaratulations!"
 }

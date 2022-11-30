@@ -1,34 +1,65 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import LinearProgress from '@mui/material/LinearProgress';
 import { useTranslation } from 'react-i18next';
+import { ToastContainer } from 'react-toastify';
 
 import EvaluationDetails from './EvaluationDetails/EvaluationDetails.js';
 import EvaluationCard from '../../../components/AssessmentCard/EvaluationCard.js';
+import UserContext from '../../../context/UserContext/UserContext.js';
+import config from '../../../config/index.config.js';
 
 export default function MyAssessments({ setSelectedPage, link }) {
-  const [isAssessmentsLoading] = useState(false);
+  const [isAssessmentsLoading, setAssessmentsLoading] = useState(false);
   const { t } = useTranslation();
-  const [assessments] = useState([
-    {
-      id: 33,
-      status: 'Open',
-      name: 'Winter 2022/2023',
-      createdAt: '2022-11-12T14:53:01.637Z',
-      updatedAt: '2022-11-20T13:49:19.576Z',
-      supervisor_id: 22,
-      num_of_evaluatees: 2,
-    },
-  ]);
+  const { token, id } = useContext(UserContext);
+  const [assessments, setAssessments] = useState([]);
+  // const [assessments] = useState([
+  //   {
+  //     id: 33,
+  //     status: 'Open',
+  //     name: 'Winter 2022/2023',
+  //     createdAt: '2022-11-12T14:53:01.637Z',
+  //     updatedAt: '2022-11-20T13:49:19.576Z',
+  //     supervisor_id: 22,
+  //     num_of_evaluatees: 2,
+  //   },
+  // ]);
   const [selectedAssessment, setSelectedAssessment] = useState(null);
+
+  async function getEvaluationByEvaluatee() {
+    setAssessmentsLoading(true);
+    try {
+      await fetch(
+        `${config.server.url}/evaluationsManagement/getEvaluationByEvaluatee?id=${id}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+        .then((response) => response.json())
+        .then(({ evaluatee }) => {
+          // console.log(data);
+          setAssessments(evaluatee);
+          setAssessmentsLoading(false);
+        });
+    } catch (error) {
+      setAssessmentsLoading(false);
+    }
+  }
 
   useEffect(() => {
     setSelectedPage(link);
+    getEvaluationByEvaluatee();
   }, [link, setSelectedPage]);
+
   return (
     <Box sx={{ flexGrow: 1, height: '75vh' }}>
+      <ToastContainer />
       <Grid container sx={{ height: '100%' }}>
         <Grid item xs={12}>
           <Box
@@ -67,12 +98,12 @@ export default function MyAssessments({ setSelectedPage, link }) {
             {!isAssessmentsLoading &&
               assessments.map((item) => (
                 <EvaluationCard
-                  key={item.id}
-                  id={item.id}
-                  semester={item.name}
-                  status={item.status}
+                  key={item.evaluations[0].id}
+                  id={item.evaluations[0].id}
+                  semester={item.evaluations[0].assessment.name}
+                  status={item.evaluations[0].status}
                   setId={setSelectedAssessment}
-                  isSelected={selectedAssessment === item.id}
+                  isSelected={selectedAssessment === item.evaluations[0].id}
                   numberOfEvaluatees={item.num_of_evaluatees}
                 />
               ))}
@@ -89,8 +120,9 @@ export default function MyAssessments({ setSelectedPage, link }) {
             }}
           >
             <EvaluationDetails
-              assessmentDetails={assessments.find(
-                (assessment) => assessment.id === selectedAssessment
+              EvaluationDetails={assessments.find(
+                (assessment) =>
+                  assessment.evaluations[0].id === selectedAssessment
               )}
             />
           </Box>

@@ -18,6 +18,7 @@ export default function EvaluationCard({
     <Box
       onClick={() => {
         setId(id);
+        // console.log('i was clicked yay');
       }}
       sx={{
         p: 2,

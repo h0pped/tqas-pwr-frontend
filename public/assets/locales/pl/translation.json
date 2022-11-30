@@ -181,9 +181,15 @@
   "open_protocol": "Otwarty formularz protokołu",
   "reason_decline": "Napisz powód odmowy",
   "decline": "Odrzuć wynik",
-  "first_info": "Zostałeś oceniony na",
-  "second_info": "Masz 14 dni od daty wyświetlenia tego wyniku aby zaakceptować lub odrzucić wynik.",
+  "first_info": "Masz nową ocenę w systemie z oceną końcową: 4.0",
+  "second_info": "To jest ostateczny wynik tej konkretnej oceny.",
+  "third_info":"Pamiętaj, że masz 14 dni na zaakceptowanie lub odrzucenie wyniku.",
   "no_assessments": "Nie znaleziono oceny",
   "department": "Katedra",
-  "rejection_reason": "Powód odrzucenia"
+  "rejection_reason": "Powód odrzucenia",
+  "result_accepted": "Wynik został pomyślnie zaakceptowany",
+  "result_rejected": "Wynik został pomyślnie odrzucony",
+  "result_rejected_error": "Podczas odrzucania wyniku wystąpił błąd",
+  "rejection_reason_required":"Powód odrzucenia nie może być pusty",
+  "congratulations": "Gratulacje!"
 }

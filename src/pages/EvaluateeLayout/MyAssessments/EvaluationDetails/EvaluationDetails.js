@@ -1,4 +1,4 @@
-import { useEffect, forwardRef, useState } from 'react';
+import { useEffect, forwardRef, useState, useContext } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
@@ -11,6 +11,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContentText from '@mui/material/DialogContentText';
 import Slide from '@mui/material/Slide';
+import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import DescriptionIcon from '@mui/icons-material/Description';
@@ -20,18 +21,24 @@ import CardMedia from '@mui/material/CardMedia';
 import ClearIcon from '@mui/icons-material/Clear';
 import DoneIcon from '@mui/icons-material/Done';
 import Divider from '@mui/material/Divider';
+import UserContext from '../../../../context/UserContext/UserContext.js';
+import config from '../../../../config/index.config.js';
 import c16Image from '../../../../assets/images/c-16-pict.jpeg';
 
 const Transition = forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
 ));
 
-export default function EvaluationDetails({ assessmentDetails }) {
+export default function EvaluationDetails({ EvaluationDetails }) {
   const { t } = useTranslation();
+  const { token } = useContext(UserContext);
   const [isOpen, setIsOpen] = useState(false);
-  const date = 'Thursday, October 21st, 2022';
+  const [rejectionReasonValue, setRejectionReasonValue] = useState('');
+  const [rejectionReasonError, setRejecetionReasonValueError] = useState(false);
 
   const handleClickOpen = () => {
+    setRejecetionReasonValueError(false);
+    setRejectionReasonValue('');
     setIsOpen(true);
   };
 
@@ -39,9 +46,90 @@ export default function EvaluationDetails({ assessmentDetails }) {
     setIsOpen(false);
   };
 
-  useEffect(() => {}, [assessmentDetails]);
+  const handleResultChange = (event) => {
+    setRejectionReasonValue(event.target.value);
+  };
 
-  if (assessmentDetails === undefined) {
+  const notifyError = (msg) =>
+    toast.error(`${t('error_dialog')} ${msg}`, {
+      position: 'top-center',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+    });
+  const notifySuccess = (msg) =>
+    toast.success(`${msg}`, {
+      position: 'top-center',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+    });
+
+  useEffect(() => {}, [EvaluationDetails]);
+
+  const handleAcceptResult = async () => {
+    const data = {
+      evaluation_id: EvaluationDetails.evaluations[0].id,
+      status: 'Accepted',
+    };
+    fetch(
+      `${config.server.url}/evaluationsManagement/evaluateeReviewEvaluation`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      }
+    ).then(notifySuccess(t('result_accepted')));
+  };
+
+  const handleRejectResult = async () => {
+    const data = {
+      evaluation_id: EvaluationDetails.evaluations[0].id,
+      status: 'Rejected',
+      rejection_reason: rejectionReasonValue,
+    };
+    if (rejectionReasonValue.length > 0) {
+      try {
+        fetch(
+          `${config.server.url}/evaluationsManagement/evaluateeReviewEvaluation`,
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          }
+        ).then((response) => {
+          if (response.ok) {
+            notifySuccess(t('result_rejected'));
+          } else {
+            notifyError(t('result_rejected_error'));
+          }
+        });
+      } catch (error) {
+        notifyError(t('error_server'));
+      }
+    } else {
+      notifyError(t('rejection_reason_required'));
+      setRejecetionReasonValueError(true);
+    }
+  };
+
+  if (EvaluationDetails === undefined) {
     return (
       <Box
         sx={{
@@ -102,7 +190,13 @@ export default function EvaluationDetails({ assessmentDetails }) {
                 {t('result')}: 4.0
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {t('first_info')} {date}. {t('second_info')}
+                {t('congratulations')}
+              </Typography>
+              <Typography sx={{ mt: 1 }} variant="body2" color="text.secondary">
+                {t('first_info')}. {t('second_info')}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {t('third_info')}
               </Typography>
             </CardContent>
             <CardActions>
@@ -135,14 +229,28 @@ export default function EvaluationDetails({ assessmentDetails }) {
                     minRows={5}
                     placeholder={t('reason_decline')}
                     style={{ width: '100%' }}
+                    error={rejectionReasonError}
+                    onChange={handleResultChange}
+                    value={rejectionReasonValue}
+                    helperText={
+                      rejectionReasonError && t('manage_user_required')
+                    }
+                    variant="standard"
                   />
                 </DialogContent>
                 <DialogActions>
-                  <Button onClick={handleClose}>{t('button_yes')}</Button>
+                  <Button onClick={handleRejectResult}>
+                    {t('button_yes')}
+                  </Button>
                   <Button onClick={handleClose}>{t('button_no')}</Button>
                 </DialogActions>
               </Dialog>
-              <Button sx={{ mb: 1 }} size="small" endIcon={<DoneIcon />}>
+              <Button
+                sx={{ mb: 1 }}
+                size="small"
+                endIcon={<DoneIcon />}
+                onClick={handleAcceptResult}
+              >
                 {t('approve_result')}
               </Button>
             </CardActions>
