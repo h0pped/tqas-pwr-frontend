@@ -16,6 +16,7 @@ const SingleChoiceWithAdditionalField = ({
   onChangeHandler,
   onInternalQuestionChangeHandler,
   sectionTitle,
+  disabled,
 }) => {
   const [parentChoice, setParentChoice] = useState(null);
   const formRadioGroup = useRef(null);
@@ -53,6 +54,7 @@ const SingleChoiceWithAdditionalField = ({
                 control={
                   <Radio
                     id={question}
+                    disabled={disabled}
                     onClick={(e) => handleChooseDefaultOption(e)}
                   />
                 }
@@ -71,6 +73,7 @@ const SingleChoiceWithAdditionalField = ({
                   value={option.answer}
                   control={
                     <Radio
+                      disabled={disabled}
                       id={question.answer}
                       onClick={() =>
                         handleChooseAdditionalField(question, option)
@@ -88,6 +91,7 @@ const SingleChoiceWithAdditionalField = ({
                     if (internalQuestion.question_type === 'open') {
                       return (
                         <OpenQuestion
+                          disabled={disabled}
                           question={internalQuestion.question_text}
                           key={`${internalQuestion.question_text}_${internalQuestion.qusetion_type}`}
                           onChangeHandler={(e) =>
@@ -104,6 +108,7 @@ const SingleChoiceWithAdditionalField = ({
                     if (internalQuestion.question_type === 'single choice') {
                       return (
                         <SingleChoiceQuestion
+                          disabled={disabled}
                           question={internalQuestion.question_text}
                           key={`${internalQuestion.question_text}_${internalQuestion.qusetion_type}`}
                           onChangeHandler={onChangeHandler}

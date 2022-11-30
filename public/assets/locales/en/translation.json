@@ -191,5 +191,12 @@
   "result_rejected": "Result was successfully rejected",
   "result_rejected_error": "There was an error when rejected the result",
   "rejection_reason_required":"Rejection reason can not be empty",
-  "congratulations": "Congaratulations!"
+  "congratulations": "Congaratulations!",
+  "save_draft": "Save draft",
+  "team_members_header": "Team members:",
+  "logged_in_as": "Logged in as:",
+  "label_is_head": "Head of Team?",
+  "is_head": "Head of Team",
+  "remove": "Remove",
+  "make_leader": "Make leader"
 }

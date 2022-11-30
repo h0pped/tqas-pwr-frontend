@@ -18,7 +18,7 @@ export const UserContextProvider = ({ children }) => {
   const [token, setToken] = useState(storageToken);
   const [firstName, setFirstName] = useState(getTokenInfo().first_name);
   const [lastName, setLastName] = useState(getTokenInfo().last_name);
-  const [role, setRole] = useState(getTokenInfo().role);
+  const [role, setRole] = useState(getTokenInfo().user_type);
   const [id, setId] = useState(getTokenInfo().id);
 
   const loginHandler = (jwt) => {
@@ -28,10 +28,9 @@ export const UserContextProvider = ({ children }) => {
     const jsonParsedTokenInfo = JSON.parse(window.atob(base64));
     setFirstName(jsonParsedTokenInfo.first_name);
     setLastName(jsonParsedTokenInfo.last_name);
-    setRole(jsonParsedTokenInfo.role);
+    setRole(jsonParsedTokenInfo.user_type);
     setId(jsonParsedTokenInfo.id);
     setExpiresIn(new Date(jsonParsedTokenInfo.exp));
-    setIsLoggedIn(true);
   };
   const logoutHandler = () => {
     clearToken();
@@ -41,7 +40,13 @@ export const UserContextProvider = ({ children }) => {
     setFirstName(null);
     setLastName(null);
   };
-
+  useEffect(() => {
+    if (firstName && lastName && role && id && expiresIn) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, [firstName, lastName, role, id, expiresIn, storageToken]);
   // eslint-disable-next-line consistent-return
   useEffect(() => {
     if (expiresIn && new Date() > expiresIn) {

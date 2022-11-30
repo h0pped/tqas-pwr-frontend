@@ -27,6 +27,7 @@ export default function Evaluations({ setSelectedPage, link }) {
   const [isProtocolFormOpen, setProtocolFormOpen] = useState(false);
   const [isEvaluationsLoading, setEvaluationsLoading] = useState(false);
   const [currentProtocol, setCurrentProtocol] = useState(null);
+
   const notifyError = (msg) =>
     toast.error(`${t('error_dialog')} ${msg}`, {
       position: 'top-center',

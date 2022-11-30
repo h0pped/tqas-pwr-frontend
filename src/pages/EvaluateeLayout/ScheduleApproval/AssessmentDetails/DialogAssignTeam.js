@@ -34,6 +34,7 @@ import Alert from '@mui/material/Alert';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 
 import config from '../../../../config/index.config.js';
 import UserContext from '../../../../context/UserContext/UserContext.js';
@@ -72,6 +73,8 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
   const [isDeleteLoading, setDeleteLoading] = useState(false);
 
   const [virtualUsers, setVirtualUsers] = useState([]);
+
+  const [teamLeader, setTeamLeader] = useState(null);
 
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [memberForDeletion, setMemberForDeletion] = useState(null);
@@ -239,11 +242,15 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
               notifySuccess(t('et_save_success'));
               setChangesMade(false);
               setSaveLoading(false);
+              setLeader(null);
+              setTeamLeader(null);
               onClose();
             } else {
               notifyError(t('et_save_error'));
               setChangesMade(false);
               setSaveLoading(false);
+              setLeader(null);
+              setTeamLeader(null);
               onClose();
             }
           });
@@ -346,11 +353,9 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
         setEvaluations(evaluationsETResponsibleFor);
 
         const currentEvaluationTeamApiFormat = {};
-
         evaluationsETResponsibleFor.forEach((evaluation) => {
           const evaluationTeams = [];
           const uniqueMemberIds = [];
-
           const uniqueMembersPerAllEvaluations = data.evaluation_team.filter(
             (member) => {
               const isDuplicate = uniqueMemberIds.includes(
@@ -366,10 +371,13 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
               return false;
             }
           );
-
           uniqueMembersPerAllEvaluations.forEach((member) => {
             const newMemberObjectApiFormat = {};
-            newMemberObjectApiFormat[member.member_user_id] = false;
+            newMemberObjectApiFormat[member.member_user_id] =
+              member.is_head_of_team;
+            if (member.is_head_of_team) {
+              setTeamLeader(member.member_user_id.toString());
+            }
             evaluationTeams.push(newMemberObjectApiFormat);
           });
 
@@ -380,6 +388,20 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
       }
     }
   }, [isOpen, virtualUsers]);
+
+  const setLeader = (id) => {
+    const updatedEvalTeam = currentEvaluationTeam;
+    Object.keys(updatedEvalTeam).forEach((key) => {
+      updatedEvalTeam[key].forEach((member) => {
+        const memberId = Object.keys(member)[0];
+        member[memberId] = memberId === id;
+      });
+    });
+
+    setCurrentEvaluationTeam(updatedEvalTeam);
+    setChangesMade(true);
+    setTeamLeader(id);
+  };
 
   return (
     <Dialog
@@ -603,71 +625,110 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                 '&:last-child td, &:last-child th': {
                                   border: 0,
                                 },
+                                backgroundColor:
+                                  teamLeader === Object.keys(member)[0]
+                                    ? '#D9372A'
+                                    : 'white',
                               }}
                             >
-                              <TableCell component="th" scope="row">
+                              <TableCell
+                                component="th"
+                                scope="row "
+                                sx={{
+                                  color:
+                                    teamLeader === Object.keys(member)[0]
+                                      ? 'white'
+                                      : 'black',
+                                }}
+                              >
                                 {Object.keys(member)[0]}
                               </TableCell>
                               <TableCell
                                 align="left"
                                 component="th"
                                 scope="row"
+                                sx={{
+                                  color:
+                                    teamLeader === Object.keys(member)[0]
+                                      ? 'white'
+                                      : 'black',
+                                }}
                               >
-                                {
+                                {outsideList &&
                                   outsideList.find(
                                     (user) =>
                                       user.id === Number(Object.keys(member)[0])
-                                  ).academic_title
-                                }
+                                  ).academic_title}
                               </TableCell>
                               <TableCell
                                 align="left"
                                 component="th"
                                 scope="row"
+                                sx={{
+                                  color:
+                                    teamLeader === Object.keys(member)[0]
+                                      ? 'white'
+                                      : 'black',
+                                }}
                               >
-                                {
+                                {outsideList &&
                                   outsideList.find(
                                     (user) =>
                                       user.id === Number(Object.keys(member)[0])
-                                  ).first_name
-                                }
+                                  ).first_name}
                               </TableCell>
                               <TableCell
                                 align="left"
                                 component="th"
                                 scope="row"
+                                sx={{
+                                  color:
+                                    teamLeader === Object.keys(member)[0]
+                                      ? 'white'
+                                      : 'black',
+                                }}
                               >
-                                {
+                                {outsideList &&
                                   outsideList.find(
                                     (user) =>
                                       user.id === Number(Object.keys(member)[0])
-                                  ).last_name
-                                }
+                                  ).last_name}
                               </TableCell>
                               <TableCell
                                 align="left"
                                 component="th"
                                 scope="row"
+                                sx={{
+                                  color:
+                                    teamLeader === Object.keys(member)[0]
+                                      ? 'white'
+                                      : 'black',
+                                }}
                               >
-                                {
+                                {outsideList &&
                                   outsideList.find(
                                     (user) =>
                                       user.id === Number(Object.keys(member)[0])
-                                  ).email
-                                }
+                                  ).email}
                               </TableCell>
                               <TableCell
                                 align="left"
                                 component="th"
                                 scope="row"
+                                sx={{
+                                  color:
+                                    teamLeader === Object.keys(member)[0]
+                                      ? 'white'
+                                      : 'black',
+                                }}
                               >
                                 {isWzhzMemeber(Object.keys(member)[0])
                                   ? 'WZHZ'
                                   : t('other')}
                               </TableCell>
                               <TableCell component="th" scope="row">
-                                <Tooltip title="Remove" placement="top">
-                                  <Box sx={{ m: 1, position: 'relative' }}>
+                                <Box sx={{ m: 1, position: 'relative' }}>
+                                  <Tooltip title={t('remove')} placement="top">
                                     <Fab
                                       aria-label="save"
                                       onClick={() =>
@@ -680,26 +741,47 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
                                         color: '#D9372A',
                                         boxShadow: 1,
                                         border: 'solid 0.5px #f4f5f7',
+                                        mr: 2,
                                       }}
                                       size="small"
                                     >
                                       <PersonRemoveIcon />
                                     </Fab>
-                                    {isDeleteLoading &&
-                                      memberForDeletion ===
-                                        Object.keys(member)[0] && (
-                                        <CircularProgress
-                                          size={44}
-                                          sx={{
-                                            position: 'absolute',
-                                            top: -2,
-                                            left: -2,
-                                            zIndex: 1,
-                                          }}
-                                        />
-                                      )}
-                                  </Box>
-                                </Tooltip>
+                                  </Tooltip>
+                                  {isDeleteLoading &&
+                                    memberForDeletion ===
+                                      Object.keys(member)[0] && (
+                                      <CircularProgress
+                                        size={44}
+                                        sx={{
+                                          position: 'absolute',
+                                          top: -2,
+                                          left: -1,
+                                          zIndex: 1,
+                                        }}
+                                      />
+                                    )}
+                                  <Tooltip
+                                    title={t('make_leader')}
+                                    placement="top"
+                                  >
+                                    <Fab
+                                      aria-label="save"
+                                      onClick={() =>
+                                        setLeader(Object.keys(member)[0])
+                                      }
+                                      sx={{
+                                        backgroundColor: '#ffffff',
+                                        color: '#D9372A',
+                                        boxShadow: 1,
+                                        border: 'solid 0.5px #f4f5f7',
+                                      }}
+                                      size="small"
+                                    >
+                                      <AssignmentIndIcon />
+                                    </Fab>
+                                  </Tooltip>
+                                </Box>
                               </TableCell>
                             </TableRow>
                           )

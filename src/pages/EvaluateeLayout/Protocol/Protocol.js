@@ -24,6 +24,7 @@ import UserContext from '../../../context/UserContext/UserContext.js';
 import config from '../../../config/index.config.js';
 
 import Section from './Section.js';
+import TeamMembers from './TeamMembers.js';
 
 const Transition = forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
@@ -34,6 +35,7 @@ const Protocol = ({
   isProtocolFormOpen,
   handleClose,
   notifyError,
+  evaluation,
 }) => {
   const [protocolQuestions, setProtocolQuestions] = useState(null);
   const [, setFullFilledProtocolQuestions] = useState({});
@@ -48,7 +50,9 @@ const Protocol = ({
   const [loading, setLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [courses, setCourses] = useState([]);
-  const { token } = useContext(UserContext);
+  const [isHeadOfTeam, setIsHeadOfTeam] = useState(false);
+
+  const { token, id } = useContext(UserContext);
 
   const { t } = useTranslation();
 
@@ -62,11 +66,11 @@ const Protocol = ({
   }, []);
 
   useEffect(() => {
-    const fetchProtocol = async (protocolId) => {
+    const fetchProtocol = async (evaluationId) => {
       setLoading(true);
       try {
         const res = await fetch(
-          `${config.server.url}/protocolManagement/getProtocol?protocol_id=${protocolId}`,
+          `${config.server.url}/protocolManagement/getProtocol?evaluationId=${evaluationId}`,
           {
             method: 'GET',
             headers: {
@@ -75,18 +79,33 @@ const Protocol = ({
           }
         ).then((res) => res.json());
         setProtocol(res);
-        setProtocolQuestions(JSON.parse(res.protocol_json));
-        setFullFilledProtocolQuestions(JSON.parse(res.protocol_json));
+        setProtocolQuestions(res);
+        setFullFilledProtocolQuestions(res);
       } catch (err) {
         notifyError(t('loading_protocol_error'));
       } finally {
         setLoading(false);
       }
     };
-    if (selectedCourse.protocolId) {
-      fetchProtocol(selectedCourse.protocolId);
+    if (selectedCourse) {
+      const currentEvaluation = evaluations.find(
+        (evaluation) =>
+          evaluation.course.course_code === selectedCourse.course.course_code
+      );
+      if (currentEvaluation) {
+        fetchProtocol(currentEvaluation.id);
+      }
     }
   }, [selectedCourse]);
+
+  useEffect(() => {
+    setIsHeadOfTeam(
+      evaluation.evaluation_team.some(
+        ({ userId, is_head_of_team: isHeadOfTeam }) =>
+          userId === id && isHeadOfTeam
+      )
+    );
+  }, [evaluation]);
 
   const onChangeHandler = (e, sectionTitle) => {
     const { id, value } = e.target;
@@ -204,6 +223,9 @@ const Protocol = ({
             )}
           </FormControl>
         </FormControl>
+        {evaluation && (
+          <TeamMembers evaluationTeam={evaluation.evaluation_team} />
+        )}
         {loading && (
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <CircularProgress />
@@ -211,25 +233,64 @@ const Protocol = ({
         )}
         {protocolQuestions && !loading && (
           <>
-            {Object.keys(protocolQuestions).map((sectionTitle, index) => (
-              <Section
-                sectionTitle={`${index + 1}. ${sectionTitle}`}
-                sectionTitleUnformatted={sectionTitle}
-                sectionData={protocolQuestions[sectionTitle]}
-                key={sectionTitle}
-                onChangeHandler={(e) => onChangeHandler(e, sectionTitle)}
-                onInternalQuestionChangeHandler={
-                  onInternalQuestionChangeHandler
-                }
-              />
-            ))}
-            <Button
-              variant="contained"
-              onClick={handleSubmitProtocol}
-              disabled={submitLoading}
-            >
-              {submitLoading ? <CircularProgress size={24} /> : t('submit')}
-            </Button>
+            {Object.keys(protocolQuestions).map((sectionTitle, index) =>
+              isHeadOfTeam ? (
+                <Section
+                  isHeadOfTeam={isHeadOfTeam}
+                  sectionTitle={`${index + 1}. ${sectionTitle}`}
+                  sectionTitleUnformatted={sectionTitle}
+                  sectionData={protocolQuestions[sectionTitle]}
+                  key={sectionTitle}
+                  onChangeHandler={(e) => onChangeHandler(e, sectionTitle)}
+                  onInternalQuestionChangeHandler={
+                    onInternalQuestionChangeHandler
+                  }
+                />
+              ) : (
+                <Section
+                  isHeadOfTeam={isHeadOfTeam}
+                  sectionTitle={`${index + 1}. ${sectionTitle}`}
+                  sectionTitleUnformatted={sectionTitle}
+                  sectionData={protocolQuestions[sectionTitle]}
+                  key={sectionTitle}
+                  onChangeHandler={(e) => onChangeHandler(e, sectionTitle)}
+                  onInternalQuestionChangeHandler={
+                    onInternalQuestionChangeHandler
+                  }
+                />
+              )
+            )}
+            {isHeadOfTeam && (
+              <Box
+                sx={{
+                  width: '100%',
+                  display: 'flex',
+                  margin: '0 auto',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <Button
+                  sx={{ width: '49%' }}
+                  variant="outlined"
+                  disabled={submitLoading}
+                >
+                  {submitLoading ? (
+                    <CircularProgress size={24} />
+                  ) : (
+                    t('save_draft')
+                  )}
+                </Button>
+                <Button
+                  sx={{ width: '49%' }}
+                  variant="contained"
+                  onClick={handleSubmitProtocol}
+                  disabled={submitLoading}
+                >
+                  {submitLoading ? <CircularProgress size={24} /> : t('submit')}
+                </Button>
+              </Box>
+            )}
           </>
         )}
       </Box>

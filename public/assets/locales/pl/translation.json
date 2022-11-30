@@ -191,5 +191,12 @@
   "result_rejected": "Wynik został pomyślnie odrzucony",
   "result_rejected_error": "Podczas odrzucania wyniku wystąpił błąd",
   "rejection_reason_required":"Powód odrzucenia nie może być pusty",
-  "congratulations": "Gratulacje!"
+  "congratulations": "Gratulacje!",
+  "save_draft": "Zapisz jako wersję roboczą",
+  "team_members_header": "Członkowie zespołu hospitującego:",
+  "logged_in_as": "Zalogowany jako:",
+  "label_is_head": "Głową zespołu?",
+  "is_head": "Głową zespołu",
+  "remove": "Usuń",
+  "make_leader": "Ustaw jako głowę zespołu"
 }

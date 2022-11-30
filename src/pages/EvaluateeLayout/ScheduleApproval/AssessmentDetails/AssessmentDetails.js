@@ -14,14 +14,13 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import Tooltip from '@mui/material/Tooltip';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import Alert from '@mui/material/Alert';
-import { LinearProgress } from '@mui/material';
+import { LinearProgress, Chip } from '@mui/material';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -158,7 +157,6 @@ export default function AssessmentDetails({
   useEffect(() => {
     getEvaluatees();
   }, [assessmentDetails]);
-
   const StyledTableRow = styled(TableRow)(() => ({
     '&:nth-of-type(odd)': {
       backgroundColor: 'rgba(235, 235, 235, 0.53)',
@@ -202,8 +200,10 @@ export default function AssessmentDetails({
               ].length
             } ${t('member')}`}
           </TableCell>
-          <TableCell width="18%" component="th" scope="row">
-            <Tooltip title="Remove evaluatee" placement="top">
+          {['awaiting approval', 'changes required'].includes(
+            assessmentDetails.status.toLowerCase()
+          ) && (
+            <TableCell width="18%" component="th" scope="row">
               <Button
                 sx={{ width: '100%' }}
                 size="small"
@@ -212,8 +212,8 @@ export default function AssessmentDetails({
               >
                 {t('assign_team')}
               </Button>
-            </Tooltip>
-          </TableCell>
+            </TableCell>
+          )}
         </TableRow>
         <TableRow>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -264,25 +264,98 @@ export default function AssessmentDetails({
                         <TableCell>{t('label_first_name')}</TableCell>
                         <TableCell>{t('label_last_name')}</TableCell>
                         <TableCell>{t('label_email')}</TableCell>
+                        <TableCell>{t('label_is_head')}</TableCell>
                       </StyledTableRow>
                     </TableHead>
                     <TableBody>
-                      {row.evaluation_team.map((member) => (
-                        <TableRow key={member.member_email}>
-                          <TableCell component="th" scope="row">
-                            {member.academic_title}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {member.first_name}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {member.last_name}
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            {member.member_email}
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                      {row.evaluation_team
+                        .filter(
+                          (value, index, self) =>
+                            index ===
+                            self.findIndex(
+                              (team) =>
+                                team.member_user_id === value.member_user_id
+                            )
+                        )
+                        .map((member) => (
+                          <TableRow key={member.member_email}>
+                            <TableCell
+                              component="th"
+                              scope="row"
+                              sx={{
+                                backgroundColor: member.is_head_of_team
+                                  ? '#d9372a'
+                                  : '#ffff',
+                                color: member.is_head_of_team
+                                  ? 'white'
+                                  : 'black',
+                              }}
+                            >
+                              {member.academic_title}
+                            </TableCell>
+                            <TableCell
+                              component="th"
+                              scope="row"
+                              sx={{
+                                backgroundColor: member.is_head_of_team
+                                  ? '#d9372a'
+                                  : '#ffff',
+                                color: member.is_head_of_team
+                                  ? 'white'
+                                  : 'black',
+                              }}
+                            >
+                              {member.first_name}
+                            </TableCell>
+                            <TableCell
+                              component="th"
+                              scope="row"
+                              sx={{
+                                backgroundColor: member.is_head_of_team
+                                  ? '#d9372a'
+                                  : '#ffff',
+                                color: member.is_head_of_team
+                                  ? 'white'
+                                  : 'black',
+                              }}
+                            >
+                              {member.last_name}
+                            </TableCell>
+                            <TableCell
+                              component="th"
+                              scope="row"
+                              sx={{
+                                backgroundColor: member.is_head_of_team
+                                  ? '#d9372a'
+                                  : '#ffff',
+                                color: member.is_head_of_team
+                                  ? 'white'
+                                  : 'black',
+                              }}
+                            >
+                              {member.member_email}
+                            </TableCell>
+                            <TableCell
+                              component="th"
+                              scope="row"
+                              sx={{
+                                backgroundColor: member.is_head_of_team
+                                  ? '#d9372a'
+                                  : '#ffff',
+                                color: member.is_head_of_team
+                                  ? 'white'
+                                  : 'black',
+                              }}
+                            >
+                              {member.is_head_of_team && (
+                                <Chip
+                                  label={t('is_head')}
+                                  sx={{ color: 'white' }}
+                                />
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        ))}
                     </TableBody>
                   </Table>
                 )}
@@ -470,7 +543,9 @@ export default function AssessmentDetails({
                   <TableCell>{t('label_email')}</TableCell>
                   <TableCell>{t('courses')}</TableCell>
                   <TableCell>{t('evaluation_team')}</TableCell>
-                  <TableCell>{t('label_actions')}</TableCell>
+                  {['awaiting approval', 'changes required'].includes(
+                    assessmentDetails.status.toLowerCase()
+                  ) && <TableCell>{t('label_actions')}</TableCell>}
                 </TableRow>
               </TableHead>
               <TableBody>
