@@ -80,7 +80,7 @@ export default function EvaluationDetails({ evaluationDetails }) {
       evaluation_id: evaluationDetails.evaluations[0].id,
       status: 'Accepted',
     };
-    fetch(
+    await fetch(
       `${config.server.url}/evaluationsManagement/evaluateeReviewEvaluation`,
       {
         method: 'POST',
@@ -102,7 +102,7 @@ export default function EvaluationDetails({ evaluationDetails }) {
     };
     if (rejectionReasonValue.length > 0) {
       try {
-        fetch(
+        await fetch(
           `${config.server.url}/evaluationsManagement/evaluateeReviewEvaluation`,
           {
             method: 'POST',
