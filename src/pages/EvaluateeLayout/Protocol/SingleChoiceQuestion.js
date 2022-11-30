@@ -6,7 +6,12 @@ import {
   FormControlLabel,
 } from '@mui/material';
 
-const SingleChoiceQuestion = ({ question, onChangeHandler, options }) => (
+const SingleChoiceQuestion = ({
+  question,
+  onChangeHandler,
+  options,
+  disabled,
+}) => (
   <FormControl sx={{ display: 'flex', width: '100%', my: 5 }}>
     <Typography sx={{ display: 'inline-block' }}>{question}</Typography>
 
@@ -22,7 +27,7 @@ const SingleChoiceQuestion = ({ question, onChangeHandler, options }) => (
           id={question}
           key={option}
           value={option}
-          control={<Radio id={question} />}
+          control={<Radio id={question} disabled={disabled} />}
           label={option}
           sx={{ display: 'inline' }}
         />
