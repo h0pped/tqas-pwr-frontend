@@ -29,7 +29,7 @@ const Transition = forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
 ));
 
-export default function EvaluationDetails({ EvaluationDetails }) {
+export default function EvaluationDetails({ evaluationDetails }) {
   const { t } = useTranslation();
   const { token } = useContext(UserContext);
   const [isOpen, setIsOpen] = useState(false);
@@ -73,11 +73,11 @@ export default function EvaluationDetails({ EvaluationDetails }) {
       theme: 'light',
     });
 
-  useEffect(() => {}, [EvaluationDetails]);
+  useEffect(() => {}, [evaluationDetails]);
 
   const handleAcceptResult = async () => {
     const data = {
-      evaluation_id: EvaluationDetails.evaluations[0].id,
+      evaluation_id: evaluationDetails.evaluations[0].id,
       status: 'Accepted',
     };
     fetch(
@@ -96,7 +96,7 @@ export default function EvaluationDetails({ EvaluationDetails }) {
 
   const handleRejectResult = async () => {
     const data = {
-      evaluation_id: EvaluationDetails.evaluations[0].id,
+      evaluation_id: evaluationDetails.evaluations[0].id,
       status: 'Rejected',
       rejection_reason: rejectionReasonValue,
     };
@@ -129,7 +129,7 @@ export default function EvaluationDetails({ EvaluationDetails }) {
     }
   };
 
-  if (EvaluationDetails === undefined) {
+  if (evaluationDetails === undefined) {
     return (
       <Box
         sx={{
@@ -232,10 +232,6 @@ export default function EvaluationDetails({ EvaluationDetails }) {
                     error={rejectionReasonError}
                     onChange={handleResultChange}
                     value={rejectionReasonValue}
-                    helperText={
-                      rejectionReasonError && t('manage_user_required')
-                    }
-                    variant="standard"
                   />
                 </DialogContent>
                 <DialogActions>

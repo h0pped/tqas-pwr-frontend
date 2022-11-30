@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import LinearProgress from '@mui/material/LinearProgress';
 import { useTranslation } from 'react-i18next';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 
 import EvaluationDetails from './EvaluationDetails/EvaluationDetails.js';
 import EvaluationCard from '../../../components/AssessmentCard/EvaluationCard.js';
@@ -16,18 +16,19 @@ export default function MyAssessments({ setSelectedPage, link }) {
   const { t } = useTranslation();
   const { token, id } = useContext(UserContext);
   const [assessments, setAssessments] = useState([]);
-  // const [assessments] = useState([
-  //   {
-  //     id: 33,
-  //     status: 'Open',
-  //     name: 'Winter 2022/2023',
-  //     createdAt: '2022-11-12T14:53:01.637Z',
-  //     updatedAt: '2022-11-20T13:49:19.576Z',
-  //     supervisor_id: 22,
-  //     num_of_evaluatees: 2,
-  //   },
-  // ]);
   const [selectedAssessment, setSelectedAssessment] = useState(null);
+
+  const notifyError = (msg) =>
+    toast.error(`${t('error_dialog')} ${msg}`, {
+      position: 'top-center',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+    });
 
   async function getEvaluationByEvaluatee() {
     setAssessmentsLoading(true);
@@ -43,12 +44,12 @@ export default function MyAssessments({ setSelectedPage, link }) {
       )
         .then((response) => response.json())
         .then(({ evaluatee }) => {
-          // console.log(data);
           setAssessments(evaluatee);
           setAssessmentsLoading(false);
         });
     } catch (error) {
       setAssessmentsLoading(false);
+      notifyError(t('error_server'));
     }
   }
 
@@ -120,7 +121,7 @@ export default function MyAssessments({ setSelectedPage, link }) {
             }}
           >
             <EvaluationDetails
-              EvaluationDetails={assessments.find(
+              evaluationDetails={assessments.find(
                 (assessment) =>
                   assessment.evaluations[0].id === selectedAssessment
               )}
