@@ -33,6 +33,10 @@ import { useTranslation } from 'react-i18next';
 import config from '../../../../config/index.config.js';
 import UserContext from '../../../../context/UserContext/UserContext.js';
 
+import generateFileName from '../../../../utils/generateFileName.js';
+
+const download = require('downloadjs');
+
 export default function AssessmentDetails({
   assessmentDetails,
   onAddEvalueatee,
@@ -60,6 +64,7 @@ export default function AssessmentDetails({
   };
 
   const handleExportAssessmentSchedule = () => {
+    const filename = generateFileName(assessmentDetails.name, 'xlsx');
     try {
       fetch(
         `${config.server.url}/assessmentManagement/exportAssessmentSchedule?id=${assessmentDetails.id}`,
@@ -72,16 +77,7 @@ export default function AssessmentDetails({
       )
         .then((resp) => resp.blob())
         .then((blob) => {
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.style.display = 'none';
-          a.href = url;
-          const fileName = new Date().getTime();
-          a.download = `${fileName}.xlsx`;
-          document.body.appendChild(a);
-          a.click();
-          window.URL.revokeObjectURL(url);
-          notifySuccess('Assessment schedule downloaded successfully!');
+          download(blob, filename);
         });
     } catch (err) {
       notifyError('There was a problem while downloading your file.');
@@ -332,16 +328,16 @@ export default function AssessmentDetails({
         >
           {(assessmentDetails.status === 'Ongoing' ||
             assessmentDetails.status === 'Done') && (
-              <Button
-                sx={{ mb: 1 }}
-                variant="outlined"
-                size="small"
-                onClick={handleExportAssessmentSchedule}
-                endIcon={<FileDownloadIcon />}
-              >
-                Export excel
-              </Button>
-            )}
+            <Button
+              sx={{ mb: 1 }}
+              variant="outlined"
+              size="small"
+              onClick={handleExportAssessmentSchedule}
+              endIcon={<FileDownloadIcon />}
+            >
+              Export excel
+            </Button>
+          )}
           <Button
             sx={{ mb: 1 }}
             disabled={assessmentDetails.status !== 'Draft'}
