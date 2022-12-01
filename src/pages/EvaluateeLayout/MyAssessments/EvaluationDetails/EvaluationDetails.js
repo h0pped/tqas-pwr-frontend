@@ -1,4 +1,4 @@
-import { useEffect, forwardRef, useState, useContext } from 'react';
+import { useEffect, forwardRef, useState, useContext, useReducer } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
@@ -34,6 +34,8 @@ export default function EvaluationDetails({ evaluationDetails }) {
   const { token } = useContext(UserContext);
   const [isOpen, setIsOpen] = useState(false);
   const [rejectionReasonValue, setRejectionReasonValue] = useState('');
+  const [isUpdated, setIsUpdate] = useState(false);
+  const [forceUpdate] = useReducer((x) => x + 1, 0);
 
   const handleClickOpen = () => {
     setRejectionReasonValue('');
@@ -71,7 +73,9 @@ export default function EvaluationDetails({ evaluationDetails }) {
       theme: 'light',
     });
 
-  useEffect(() => {}, [evaluationDetails]);
+  useEffect(() => {
+    setIsUpdate(false);
+  }, [evaluationDetails, isUpdated]);
 
   const handleAcceptResult = () => {
     const data = {
@@ -89,7 +93,12 @@ export default function EvaluationDetails({ evaluationDetails }) {
         },
         body: JSON.stringify(data),
       }
-    ).then(notifySuccess(t('result_accepted')));
+    ).then(() => {
+      notifySuccess(t('result_accepted'));
+      setIsUpdate(true);
+      handleClose();
+      forceUpdate();
+    });
   };
 
   const handleRejectResult = () => {
@@ -114,6 +123,9 @@ export default function EvaluationDetails({ evaluationDetails }) {
         ).then((response) => {
           if (response.ok) {
             notifySuccess(t('result_rejected'));
+            setIsUpdate(true);
+            handleClose();
+            forceUpdate();
           } else {
             notifyError(t('result_rejected_error'));
           }
@@ -216,6 +228,12 @@ export default function EvaluationDetails({ evaluationDetails }) {
                 size="small"
                 onClick={handleClickOpen}
                 endIcon={<ClearIcon />}
+                disabled={
+                  evaluationDetails.evaluations[0].status.toLowerCase() ===
+                    'accepted' ||
+                  evaluationDetails.evaluations[0].status.toLowerCase() ===
+                    'rejected'
+                }
               >
                 {t('decline_result')}
               </Button>
@@ -256,6 +274,12 @@ export default function EvaluationDetails({ evaluationDetails }) {
                 size="small"
                 endIcon={<DoneIcon />}
                 onClick={handleAcceptResult}
+                disabled={
+                  evaluationDetails.evaluations[0].status.toLowerCase() ===
+                    'accepted' ||
+                  evaluationDetails.evaluations[0].status.toLowerCase() ===
+                    'rejected'
+                }
               >
                 {t('approve_result')}
               </Button>
