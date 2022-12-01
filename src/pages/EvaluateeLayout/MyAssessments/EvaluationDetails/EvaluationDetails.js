@@ -34,10 +34,8 @@ export default function EvaluationDetails({ evaluationDetails }) {
   const { token } = useContext(UserContext);
   const [isOpen, setIsOpen] = useState(false);
   const [rejectionReasonValue, setRejectionReasonValue] = useState('');
-  const [rejectionReasonError, setRejecetionReasonValueError] = useState(false);
 
   const handleClickOpen = () => {
-    setRejecetionReasonValueError(false);
     setRejectionReasonValue('');
     setIsOpen(true);
   };
@@ -62,7 +60,7 @@ export default function EvaluationDetails({ evaluationDetails }) {
       theme: 'light',
     });
   const notifySuccess = (msg) =>
-    toast.success(`${msg}`, {
+    toast.success(`${t('success')} ${msg}`, {
       position: 'top-center',
       autoClose: 5000,
       hideProgressBar: false,
@@ -75,12 +73,12 @@ export default function EvaluationDetails({ evaluationDetails }) {
 
   useEffect(() => {}, [evaluationDetails]);
 
-  const handleAcceptResult = async () => {
+  const handleAcceptResult = () => {
     const data = {
       evaluation_id: evaluationDetails.evaluations[0].id,
       status: 'Accepted',
     };
-    await fetch(
+    fetch(
       `${config.server.url}/evaluationsManagement/evaluateeReviewEvaluation`,
       {
         method: 'POST',
@@ -94,7 +92,7 @@ export default function EvaluationDetails({ evaluationDetails }) {
     ).then(notifySuccess(t('result_accepted')));
   };
 
-  const handleRejectResult = async () => {
+  const handleRejectResult = () => {
     const data = {
       evaluation_id: evaluationDetails.evaluations[0].id,
       status: 'Rejected',
@@ -102,7 +100,7 @@ export default function EvaluationDetails({ evaluationDetails }) {
     };
     if (rejectionReasonValue.length > 0) {
       try {
-        await fetch(
+        fetch(
           `${config.server.url}/evaluationsManagement/evaluateeReviewEvaluation`,
           {
             method: 'POST',
@@ -125,7 +123,6 @@ export default function EvaluationDetails({ evaluationDetails }) {
       }
     } else {
       notifyError(t('rejection_reason_required'));
-      setRejecetionReasonValueError(true);
     }
   };
 
@@ -186,17 +183,31 @@ export default function EvaluationDetails({ evaluationDetails }) {
               alt="C-16 Building"
             />
             <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                {t('result')}: 4.0
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography
+                sx={{ mt: 1 }}
+                gutterBottom
+                variant="h5"
+                component="div"
+              >
                 {t('congratulations')}
               </Typography>
               <Typography sx={{ mt: 1 }} variant="body2" color="text.secondary">
-                {t('first_info')}. {t('second_info')}
+                {t('you_have_a_new_evaluation_in_the_system_with_the_score')}:
+                4.0
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {t('third_info')}
+                {t('this_is_the_final_result_of_this_particular_assessment')}
+              </Typography>
+              <Typography sx={{ mt: 1 }} variant="body2" color="text.secondary">
+                {t('you_have_only_14_days_to_accept_or_decline')}
+              </Typography>
+              <Typography
+                sx={{ mt: 2 }}
+                gutterBottom
+                variant="h6"
+                component="div"
+              >
+                4.0
               </Typography>
             </CardContent>
             <CardActions>
@@ -229,7 +240,6 @@ export default function EvaluationDetails({ evaluationDetails }) {
                     minRows={5}
                     placeholder={t('reason_decline')}
                     style={{ width: '100%' }}
-                    error={rejectionReasonError}
                     onChange={handleResultChange}
                     value={rejectionReasonValue}
                   />
