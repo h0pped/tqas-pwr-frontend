@@ -23,6 +23,7 @@ import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { toast } from 'react-toastify';
 import Autocomplete from '@mui/material/Autocomplete';
 import { LinearProgress } from '@mui/material';
@@ -56,6 +57,35 @@ export default function AssessmentDetails({
 
   const handleCloseSendForApprovalDialog = () => {
     setSendForApprovalDialogOpen(false);
+  };
+
+  const handleExportAssessmentSchedule = () => {
+    try {
+      fetch(
+        `${config.server.url}/assessmentManagement/exportAssessmentSchedule?id=${assessmentDetails.id}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+        .then((resp) => resp.blob())
+        .then((blob) => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.style.display = 'none';
+          a.href = url;
+          const fileName = new Date().getTime();
+          a.download = `${fileName}.xlsx`;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          notifySuccess('Assessment schedule downloaded successfully!');
+        });
+    } catch (err) {
+      notifyError('There was a problem while downloading your file.');
+    }
   };
 
   const notifySuccess = (msg) =>
@@ -293,16 +323,36 @@ export default function AssessmentDetails({
         <Typography sx={{ mb: 1 }} variant="h5">
           {t('assessment_details')}
         </Typography>
-        <Button
-          sx={{ mb: 1 }}
-          disabled={assessmentDetails.status !== 'Draft'}
-          variant="text"
-          size="small"
-          onClick={handleOpenSendForApprovalDialog}
-          endIcon={<SendIcon />}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            gap: 2,
+          }}
         >
-          {t('send_for_approval')}
-        </Button>
+          {(assessmentDetails.status === 'Ongoing' ||
+            assessmentDetails.status === 'Done') && (
+              <Button
+                sx={{ mb: 1 }}
+                variant="outlined"
+                size="small"
+                onClick={handleExportAssessmentSchedule}
+                endIcon={<FileDownloadIcon />}
+              >
+                Export excel
+              </Button>
+            )}
+          <Button
+            sx={{ mb: 1 }}
+            disabled={assessmentDetails.status !== 'Draft'}
+            variant="text"
+            size="small"
+            onClick={handleOpenSendForApprovalDialog}
+            endIcon={<SendIcon />}
+          >
+            {t('send_for_approval')}
+          </Button>
+        </Box>
       </Box>
       <Divider sx={{ m: 0 }} variant="middle" />
       <Box
