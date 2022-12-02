@@ -29,6 +29,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { LinearProgress } from '@mui/material';
 import Fab from '@mui/material/Fab';
 import { useTranslation } from 'react-i18next';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import config from '../../../../config/index.config.js';
 import UserContext from '../../../../context/UserContext/UserContext.js';
@@ -53,6 +54,8 @@ export default function AssessmentDetails({
     false
   );
 
+  const [isFileExportLoading, setFileExportLoading] = useState(false);
+
   const { token } = useContext(UserContext);
 
   const handleOpenSendForApprovalDialog = () => {
@@ -64,6 +67,7 @@ export default function AssessmentDetails({
   };
 
   const handleExportAssessmentSchedule = () => {
+    setFileExportLoading(true);
     const filename = generateFileName(assessmentDetails.name, 'xlsx');
     try {
       fetch(
@@ -78,9 +82,12 @@ export default function AssessmentDetails({
         .then((resp) => resp.blob())
         .then((blob) => {
           download(blob, filename);
+          setFileExportLoading(false);
+          notifySuccess('Exported successfully.');
         });
     } catch (err) {
-      notifyError('There was a problem while downloading your file.');
+      notifyError(t('error_server'));
+      setFileExportLoading(false);
     }
   };
 
@@ -323,21 +330,37 @@ export default function AssessmentDetails({
           sx={{
             display: 'flex',
             flexDirection: 'row',
-            gap: 2,
+            gap: 1,
           }}
         >
-          {(assessmentDetails.status === 'Ongoing' ||
-            assessmentDetails.status === 'Done') && (
-            <Button
-              sx={{ mb: 1 }}
-              variant="outlined"
-              size="small"
-              onClick={handleExportAssessmentSchedule}
-              endIcon={<FileDownloadIcon />}
-            >
-              Export excel
-            </Button>
-          )}
+          <Box sx={{ position: 'relative' }}>
+            {(assessmentDetails.status.toLowerCase() === 'ongoing' ||
+              assessmentDetails.status.toLowerCase() === 'done') && (
+              <Button
+                sx={{ mb: 1 }}
+                variant="outlined"
+                size="small"
+                onClick={handleExportAssessmentSchedule}
+                endIcon={<FileDownloadIcon />}
+                disabled={isFileExportLoading}
+              >
+                Export excel
+              </Button>
+            )}
+            {isFileExportLoading && (
+              <CircularProgress
+                size={24}
+                sx={{
+                  color: 'primary',
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  marginTop: '-16px',
+                  marginLeft: '-12px',
+                }}
+              />
+            )}
+          </Box>
           <Button
             sx={{ mb: 1 }}
             disabled={assessmentDetails.status !== 'Draft'}
