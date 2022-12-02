@@ -66,11 +66,11 @@ const Protocol = ({
   }, []);
 
   useEffect(() => {
-    const fetchProtocol = async (protocolId) => {
+    const fetchProtocol = async (evaluationId) => {
       setLoading(true);
       try {
         const res = await fetch(
-          `${config.server.url}/protocolManagement/getProtocol?protocol_id=${protocolId}`,
+          `${config.server.url}/protocolManagement/getProtocol?evaluationId=${evaluationId}`,
           {
             method: 'GET',
             headers: {
@@ -79,16 +79,22 @@ const Protocol = ({
           }
         ).then((res) => res.json());
         setProtocol(res);
-        setProtocolQuestions(JSON.parse(res.protocol_json));
-        setFullFilledProtocolQuestions(JSON.parse(res.protocol_json));
+        setProtocolQuestions(res);
+        setFullFilledProtocolQuestions(res);
       } catch (err) {
         notifyError(t('loading_protocol_error'));
       } finally {
         setLoading(false);
       }
     };
-    if (selectedCourse.protocolId) {
-      fetchProtocol(selectedCourse.protocolId);
+    if (selectedCourse) {
+      const currentEvaluation = evaluations.find(
+        (evaluation) =>
+          evaluation.course.course_code === selectedCourse.course.course_code
+      );
+      if (currentEvaluation) {
+        fetchProtocol(currentEvaluation.id);
+      }
     }
   }, [selectedCourse]);
 
@@ -230,6 +236,7 @@ const Protocol = ({
             {Object.keys(protocolQuestions).map((sectionTitle, index) =>
               isHeadOfTeam ? (
                 <Section
+                  isHeadOfTeam={isHeadOfTeam}
                   sectionTitle={`${index + 1}. ${sectionTitle}`}
                   sectionTitleUnformatted={sectionTitle}
                   sectionData={protocolQuestions[sectionTitle]}
@@ -241,6 +248,7 @@ const Protocol = ({
                 />
               ) : (
                 <Section
+                  isHeadOfTeam={isHeadOfTeam}
                   sectionTitle={`${index + 1}. ${sectionTitle}`}
                   sectionTitleUnformatted={sectionTitle}
                   sectionData={protocolQuestions[sectionTitle]}

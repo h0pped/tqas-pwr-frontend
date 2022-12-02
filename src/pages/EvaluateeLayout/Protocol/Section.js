@@ -10,6 +10,7 @@ const Section = ({
   onChangeHandler,
   onInternalQuestionChangeHandler,
   sectionTitleUnformatted,
+  isHeadOfTeam,
 }) => (
   <Box>
     <Typography variant="h5" sx={{ fontWeight: 'bold', my: 2 }}>
@@ -20,7 +21,9 @@ const Section = ({
         if (question.question_type === 'open') {
           return (
             <OpenQuestion
+              disabled={!isHeadOfTeam}
               question={question.question_text}
+              answer={question.answer}
               key={`${question.question_text}_${question.question_type}`}
               onChangeHandler={onChangeHandler}
             />
@@ -29,6 +32,7 @@ const Section = ({
         if (question.question_type === 'single choice') {
           return (
             <SingleChoiceQuestion
+              disabled={!isHeadOfTeam}
               question={question.question_text}
               key={`${question.question_text}_${question.question_type}`}
               onChangeHandler={onChangeHandler}
@@ -39,6 +43,7 @@ const Section = ({
         if (question.question_type === 'single choice with additional field') {
           return (
             <SingleChoiceWithAdditionalField
+              disabled={!isHeadOfTeam}
               question={question.question_text}
               options={question.answer_options}
               onChangeHandler={onChangeHandler}
