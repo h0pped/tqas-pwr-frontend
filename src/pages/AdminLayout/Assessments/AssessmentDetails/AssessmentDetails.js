@@ -68,7 +68,6 @@ export default function AssessmentDetails({
 
   const handleExportAssessmentSchedule = () => {
     setFileExportLoading(true);
-    const filename = generateFileName(assessmentDetails.name, 'xlsx');
     try {
       fetch(
         `${config.server.url}/assessmentManagement/exportAssessmentSchedule?id=${assessmentDetails.id}`,
@@ -81,6 +80,7 @@ export default function AssessmentDetails({
       )
         .then((resp) => resp.blob())
         .then((blob) => {
+          const filename = generateFileName(assessmentDetails.name, 'xlsx');
           download(blob, filename);
           setFileExportLoading(false);
           notifySuccess(t('file_successfully_exported'));
