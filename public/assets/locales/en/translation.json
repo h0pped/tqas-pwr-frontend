@@ -188,5 +188,7 @@
   "rejection_reason": "Rejection reason",
   "save_draft": "Save draft",
   "team_members_header": "Team members:",
-  "logged_in_as": "Logged in as:"
+  "logged_in_as": "Logged in as:",
+  "file_successfully_exported": "File successfully exported.",
+  "export_excel": "Export excel"
 }

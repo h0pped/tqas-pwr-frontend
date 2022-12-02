@@ -83,7 +83,7 @@ export default function AssessmentDetails({
         .then((blob) => {
           download(blob, filename);
           setFileExportLoading(false);
-          notifySuccess('Exported successfully.');
+          notifySuccess(t('file_successfully_exported'));
         });
     } catch (err) {
       notifyError(t('error_server'));
@@ -344,7 +344,7 @@ export default function AssessmentDetails({
                 endIcon={<FileDownloadIcon />}
                 disabled={isFileExportLoading}
               >
-                Export excel
+                {t('export_excel')}
               </Button>
             )}
             {isFileExportLoading && (
