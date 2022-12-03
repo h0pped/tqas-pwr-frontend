@@ -65,8 +65,11 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
         }
       )
         .then((response) => response.json())
-        .then((data) => {
-          setAssessments(data.assessments);
+        .then(({ assessments }) => {
+          assessments.sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          );
+          setAssessments(assessments);
           setAssessmentsLoading(false);
         });
     } catch (error) {
