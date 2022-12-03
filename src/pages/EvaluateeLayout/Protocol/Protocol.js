@@ -100,7 +100,7 @@ const Protocol = ({
 
   useEffect(() => {
     setIsHeadOfTeam(
-      evaluation.evaluation_team.some(
+      evaluation.evaluations[0].evaluation_team.some(
         ({ userId, is_head_of_team: isHeadOfTeam }) =>
           userId === id && isHeadOfTeam
       )
@@ -224,7 +224,9 @@ const Protocol = ({
           </FormControl>
         </FormControl>
         {evaluation && (
-          <TeamMembers evaluationTeam={evaluation.evaluation_team} />
+          <TeamMembers
+            evaluationTeam={evaluation.evaluations[0].evaluation_team}
+          />
         )}
         {loading && (
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
