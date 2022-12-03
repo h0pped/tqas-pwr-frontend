@@ -182,6 +182,7 @@ export default function AssessmentDetails({
         )
           .then((response) => response.json())
           .then(({ evaluatees }) => {
+            evaluatees.sort((a, b) => (a.id > b.id ? 1 : -1));
             setEvaluatees(evaluatees);
             setEvaluateesTableLoading(false);
           });
