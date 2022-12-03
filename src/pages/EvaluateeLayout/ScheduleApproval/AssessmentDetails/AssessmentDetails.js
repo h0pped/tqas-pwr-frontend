@@ -33,6 +33,7 @@ export default function AssessmentDetails({
   assessmentDetails,
   onAssignTeam,
   setEvaluateeDetails,
+  onApproveRejectSchedule,
 }) {
   const { t } = useTranslation();
   const { token } = useContext(UserContext);
@@ -78,6 +79,7 @@ export default function AssessmentDetails({
     );
     if (res.ok) {
       notifySuccess(t('schedule_approved'));
+      onApproveRejectSchedule();
     }
   };
 
@@ -101,6 +103,7 @@ export default function AssessmentDetails({
     if (res.ok) {
       notifySuccess(t('schedule_rejected'));
       setRejectDialogOpen(false);
+      onApproveRejectSchedule();
     }
   };
 
