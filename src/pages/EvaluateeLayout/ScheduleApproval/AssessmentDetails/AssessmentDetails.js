@@ -26,6 +26,7 @@ import { useTranslation } from 'react-i18next';
 import ClearIcon from '@mui/icons-material/Clear';
 import DoneIcon from '@mui/icons-material/Done';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
+import CircularProgress from '@mui/material/CircularProgress';
 import config from '../../../../config/index.config.js';
 import UserContext from '../../../../context/UserContext/UserContext.js';
 
@@ -43,6 +44,8 @@ export default function AssessmentDetails({
   const [isEvaluateesTableLoading, setEvaluateesTableLoading] = useState(false);
   const [isRejectDialogOpen, setRejectDialogOpen] = useState(false);
   const [rejectReason, setRejectReason] = useState('');
+  const [isApproveLoading, setApproveLoading] = useState(false);
+  const [isRejectLoading, setRejectLoading] = useState(false);
 
   const handleOpenRejectDialog = () => {
     setRejectDialogOpen(true);
@@ -62,6 +65,7 @@ export default function AssessmentDetails({
   };
 
   const handleOpenApproveSchedule = async () => {
+    setApproveLoading(true);
     const body = {
       assessment_id: assessmentDetails.id,
       status: 'Ongoing',
@@ -81,9 +85,11 @@ export default function AssessmentDetails({
       notifySuccess(t('schedule_approved'));
       onApproveRejectSchedule();
     }
+    setApproveLoading(false);
   };
 
   const handleRejection = async () => {
+    setRejectLoading(true);
     const body = {
       assessment_id: assessmentDetails.id,
       status: 'Changes Required',
@@ -105,6 +111,7 @@ export default function AssessmentDetails({
       setRejectDialogOpen(false);
       onApproveRejectSchedule();
     }
+    setRejectLoading(true);
   };
 
   const notifyError = (msg) =>
@@ -417,24 +424,56 @@ export default function AssessmentDetails({
         {assessmentDetails.status.toLowerCase() !== 'ongoing' &&
           assessmentDetails.status.toLowerCase() !== 'changes required' && (
             <Box sx={{ display: 'flex', gap: 1, flexDirection: 'row' }}>
-              <Button
-                sx={{ mb: 1 }}
-                variant="outlined"
-                size="small"
-                onClick={handleOpenRejectDialog}
-                endIcon={<ClearIcon />}
-              >
-                {t('reject_schedule')}
-              </Button>
-              <Button
-                sx={{ mb: 1 }}
-                variant="contained"
-                size="small"
-                endIcon={<DoneIcon />}
-                onClick={handleOpenApproveSchedule}
-              >
-                {t('approve_schedule')}
-              </Button>
+              <Box sx={{ position: 'relative' }}>
+                <Button
+                  sx={{ mb: 1 }}
+                  variant="outlined"
+                  size="small"
+                  onClick={handleOpenRejectDialog}
+                  disabled={isRejectLoading}
+                  endIcon={<ClearIcon />}
+                >
+                  {t('reject_schedule')}
+                </Button>
+                {isRejectLoading && (
+                  <CircularProgress
+                    size={24}
+                    sx={{
+                      color: 'primary',
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      marginTop: '-16px',
+                      marginLeft: '-12px',
+                    }}
+                  />
+                )}
+              </Box>
+              <Box sx={{ position: 'relative' }}>
+                <Button
+                  sx={{ mb: 1 }}
+                  variant="contained"
+                  size="small"
+                  endIcon={<DoneIcon />}
+                  disabled={isApproveLoading}
+                  onClick={handleOpenApproveSchedule}
+                >
+                  {t('approve_schedule')}
+                </Button>
+                {isApproveLoading && (
+                  <CircularProgress
+                    size={24}
+                    sx={{
+                      color: 'primary',
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      marginTop: '-16px',
+                      marginLeft: '-12px',
+                    }}
+                  />
+                )}
+              </Box>
             </Box>
           )}
       </Box>
