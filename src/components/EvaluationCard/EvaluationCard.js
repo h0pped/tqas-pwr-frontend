@@ -12,7 +12,7 @@ export default function ProtocolCard({ protocol, setOpenProtcolForm }) {
 
   let members = '';
 
-  protocol.evaluation_team.forEach((member, idx, array) => {
+  protocol.evaluations[0].evaluation_team.forEach((member, idx, array) => {
     const fullName = ` ${formatAcademicTitle(
       member.user_full.academic_title
     )} ${member.user_full.first_name} ${member.user_full.last_name}`;
