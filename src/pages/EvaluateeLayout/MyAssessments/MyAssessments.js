@@ -17,6 +17,7 @@ export default function MyAssessments({ setSelectedPage, link }) {
   const { token, id } = useContext(UserContext);
   const [assessments, setAssessments] = useState([]);
   const [selectedAssessment, setSelectedAssessment] = useState(null);
+  const [isEvaluationUpdated, setIsEvaluationUpdated] = useState(false);
 
   const notifyError = (msg) =>
     toast.error(`${t('error_dialog')} ${msg}`, {
@@ -31,9 +32,10 @@ export default function MyAssessments({ setSelectedPage, link }) {
     });
 
   async function getEvaluationByEvaluatee() {
+    setIsEvaluationUpdated(false);
     setAssessmentsLoading(true);
     try {
-      await fetch(
+      fetch(
         `${config.server.url}/evaluationsManagement/getEvaluationByEvaluatee?id=${id}`,
         {
           method: 'GET',
@@ -44,7 +46,8 @@ export default function MyAssessments({ setSelectedPage, link }) {
       )
         .then((response) => response.json())
         .then(({ evaluatee }) => {
-          setAssessments(evaluatee);
+          setAssessments(evaluatee[0]);
+          console.log(evaluatee[0]);
           setAssessmentsLoading(false);
         });
     } catch (error) {
@@ -56,7 +59,7 @@ export default function MyAssessments({ setSelectedPage, link }) {
   useEffect(() => {
     setSelectedPage(link);
     getEvaluationByEvaluatee();
-  }, [link, setSelectedPage]);
+  }, [link, setSelectedPage, isEvaluationUpdated]);
 
   return (
     <Box sx={{ flexGrow: 1, height: '75vh' }}>
@@ -91,20 +94,22 @@ export default function MyAssessments({ setSelectedPage, link }) {
             }}
           >
             {isAssessmentsLoading && <LinearProgress />}
-            {assessments.length === 0 && (
+            {assessments && assessments.length === 0 && (
               <Typography variant="subtitle2" sx={{ color: '#848884' }}>
                 {t('no_assessments')}
               </Typography>
             )}
+            {console.log(assessments)}
             {!isAssessmentsLoading &&
-              assessments.map((item) => (
+              assessments.length > 0 &&
+              assessments.evaluation.map((item) => (
                 <EvaluationCard
-                  key={item.evaluations[0].id}
-                  id={item.evaluations[0].id}
-                  semester={item.evaluations[0].assessment.name}
-                  status={item.evaluations[0].status}
+                  key={item.id}
+                  id={item.id}
+                  semester={item.assessment.name}
+                  status={item.status}
                   setId={setSelectedAssessment}
-                  isSelected={selectedAssessment === item.evaluations[0].id}
+                  isSelected={selectedAssessment === item.evaluations[1].id}
                   numberOfEvaluatees={item.num_of_evaluatees}
                 />
               ))}
@@ -120,12 +125,15 @@ export default function MyAssessments({ setSelectedPage, link }) {
               height: '100%',
             }}
           >
-            <EvaluationDetails
-              evaluationDetails={assessments.find(
-                (assessment) =>
-                  assessment.evaluations[0].id === selectedAssessment
-              )}
-            />
+            {assessments.length > 0 && (
+              <EvaluationDetails
+                evaluationDetails={assessments.find(
+                  (assessment) =>
+                    assessment.evaluations[0].id === selectedAssessment
+                )}
+                updatedEvaluation={() => setIsEvaluationUpdated(true)}
+              />
+            )}
           </Box>
         </Grid>
       </Grid>

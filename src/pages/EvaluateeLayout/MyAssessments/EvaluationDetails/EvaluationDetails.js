@@ -1,4 +1,4 @@
-import { useEffect, forwardRef, useState, useContext, useReducer } from 'react';
+import { useEffect, forwardRef, useState, useContext } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
@@ -29,13 +29,15 @@ const Transition = forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
 ));
 
-export default function EvaluationDetails({ evaluationDetails }) {
+export default function EvaluationDetails({
+  evaluationDetails,
+  updatedEvaluation,
+}) {
   const { t } = useTranslation();
   const { token } = useContext(UserContext);
   const [isOpen, setIsOpen] = useState(false);
   const [rejectionReasonValue, setRejectionReasonValue] = useState('');
   const [isUpdated, setIsUpdate] = useState(false);
-  const [forceUpdate] = useReducer((x) => x + 1, 0);
 
   const handleClickOpen = () => {
     setRejectionReasonValue('');
@@ -97,7 +99,7 @@ export default function EvaluationDetails({ evaluationDetails }) {
       notifySuccess(t('result_accepted'));
       setIsUpdate(true);
       handleClose();
-      forceUpdate();
+      updatedEvaluation();
     });
   };
 
@@ -125,7 +127,7 @@ export default function EvaluationDetails({ evaluationDetails }) {
             notifySuccess(t('result_rejected'));
             setIsUpdate(true);
             handleClose();
-            forceUpdate();
+            updatedEvaluation();
           } else {
             notifyError(t('result_rejected_error'));
           }
