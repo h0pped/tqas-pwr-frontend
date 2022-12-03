@@ -195,6 +195,8 @@
   "save_draft": "Save draft",
   "team_members_header": "Team members:",
   "logged_in_as": "Logged in as:",
+  "file_successfully_exported": "File successfully exported.",
+  "export_excel": "Export excel",
   "label_is_head": "Head of Team?",
   "is_head": "Head of Team",
   "remove": "Remove",

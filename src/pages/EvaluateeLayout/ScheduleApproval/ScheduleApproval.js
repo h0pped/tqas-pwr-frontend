@@ -25,6 +25,7 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
   const [selectedAssessment, setSelectedAssessment] = useState(null);
   const [isAssignTeamDialogOpen, setAssignTeamDialogOpen] = useState(false);
   const [dialogData, setDialogData] = useState([]);
+  const [isAssessmentsUpdated, setIsAssessmentsUpdated] = useState(false);
 
   const notifySuccess = (msg) =>
     toast.success(`${t('success')} ${msg}`, {
@@ -51,6 +52,7 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
     });
 
   async function getAssessments() {
+    setIsAssessmentsUpdated(false);
     setAssessmentsLoading(true);
     try {
       await fetch(
@@ -63,8 +65,11 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
         }
       )
         .then((response) => response.json())
-        .then((data) => {
-          setAssessments(data.assessments);
+        .then(({ assessments }) => {
+          assessments.sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          );
+          setAssessments(assessments);
           setAssessmentsLoading(false);
         });
     } catch (error) {
@@ -74,7 +79,7 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
   useEffect(() => {
     setSelectedPage(link);
     getAssessments();
-  }, [link, setSelectedPage]);
+  }, [link, setSelectedPage, isAssessmentsUpdated]);
 
   return (
     <Box sx={{ flexGrow: 1, height: '75vh' }}>
@@ -152,6 +157,7 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
                 (assessment) => assessment.id === selectedAssessment
               )}
               setEvaluateeDetails={setDialogData}
+              onApproveRejectSchedule={() => setIsAssessmentsUpdated(true)}
             />
           </Box>
         </Grid>

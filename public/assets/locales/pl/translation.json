@@ -195,6 +195,8 @@
   "save_draft": "Zapisz jako wersję roboczą",
   "team_members_header": "Członkowie zespołu hospitującego:",
   "logged_in_as": "Zalogowany jako:",
+  "file_successfully_exported": "Plik został pomyślnie wyeksportowany.",
+  "export_excel": "Eksportuj Excela",
   "label_is_head": "Głową zespołu?",
   "is_head": "Głową zespołu",
   "remove": "Usuń",
