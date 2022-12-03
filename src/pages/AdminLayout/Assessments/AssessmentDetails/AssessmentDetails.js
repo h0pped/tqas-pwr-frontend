@@ -236,7 +236,10 @@ export default function AssessmentDetails({
                   color: '#39e9e9e',
                   '&:hover': { bgcolor: '#D9372A', color: '#FFFFFF' },
                 }}
-                disabled={assessmentDetails.status !== 'Draft'}
+                disabled={
+                  assessmentDetails.status.toLowerCase() !== 'draft' &&
+                  assessmentDetails.status.toLowerCase() !== 'changes required'
+                }
                 aria-label="delete"
               >
                 <DeleteIcon />
@@ -363,7 +366,10 @@ export default function AssessmentDetails({
           </Box>
           <Button
             sx={{ mb: 1 }}
-            disabled={assessmentDetails.status !== 'Draft'}
+            disabled={
+              assessmentDetails.status.toLowerCase() !== 'draft' &&
+              assessmentDetails.status.toLowerCase() !== 'changes required'
+            }
             variant="text"
             size="small"
             onClick={handleOpenSendForApprovalDialog}
@@ -493,7 +499,10 @@ export default function AssessmentDetails({
           <Typography variant="h6">{t('evaluatees')}</Typography>
           <Button
             variant="contained"
-            disabled={assessmentDetails.status !== 'Draft'}
+            disabled={
+              assessmentDetails.status.toLowerCase() !== 'draft' &&
+              assessmentDetails.status.toLowerCase() !== 'changes required'
+            }
             size="small"
             endIcon={<Add />}
             onClick={handleOpenAddEvaluateeDialog}
