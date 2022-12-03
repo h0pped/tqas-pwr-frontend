@@ -29,7 +29,18 @@ export default function Evaluations({ setSelectedPage, link }) {
   const [currentProtocol, setCurrentProtocol] = useState(null);
 
   const notifyError = (msg) =>
-    toast.error(`${t('error_dialog')} ${msg}`, {
+    toast.error(`${msg}`, {
+      position: 'top-center',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+    });
+  const notifySuccess = (msg) =>
+    toast.success(`${msg}`, {
       position: 'top-center',
       autoClose: 5000,
       hideProgressBar: false,
@@ -132,6 +143,7 @@ export default function Evaluations({ setSelectedPage, link }) {
           handleClose={handleClose}
           evaluation={currentProtocol}
           notifyError={notifyError}
+          notifySuccess={notifySuccess}
         />
       )}
     </Box>

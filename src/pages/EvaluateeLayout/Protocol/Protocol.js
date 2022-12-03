@@ -35,10 +35,14 @@ const Protocol = ({
   isProtocolFormOpen,
   handleClose,
   notifyError,
+  notifySuccess,
   evaluation,
 }) => {
   const [protocolQuestions, setProtocolQuestions] = useState(null);
-  const [, setFullFilledProtocolQuestions] = useState({});
+  const [
+    fullfilledProtocolQuestions,
+    setFullFilledProtocolQuestions,
+  ] = useState({});
   const [, setProtocol] = useState(null);
   const [selectedCourse, setSelectedCourse] = useState({
     course: {
@@ -109,6 +113,7 @@ const Protocol = ({
 
   const onChangeHandler = (e, sectionTitle) => {
     const { id, value } = e.target;
+
     setFullFilledProtocolQuestions((prev) => {
       const newProtocol = { ...prev };
       newProtocol[sectionTitle]?.forEach((question) => {
@@ -135,7 +140,8 @@ const Protocol = ({
         if (question.question_text === parentQuestion) {
           // eslint-disable-next-line no-param-reassign
           question.answer = {
-            main_answer: parentQuestionChoice,
+            ...question.answer,
+            answer: parentQuestionChoice,
             [id]: value,
           };
         }
@@ -159,10 +165,92 @@ const Protocol = ({
     });
   };
 
+  const onInternalSectionChangeHandler = (
+    e,
+    parentSectionTitle,
+    internalSection
+  ) => {
+    setFullFilledProtocolQuestions((prev) => {
+      const newProtocol = { ...prev };
+      const internalSectionData = newProtocol[parentSectionTitle].find(
+        (row) => !row.question_text && !row.question_type
+      )[internalSection];
+
+      const internalQuestion = internalSectionData.find(
+        (question) => question.question_text === e.target.id
+      );
+      internalQuestion.answer = e.target.value;
+      return newProtocol;
+    });
+  };
+
   const handleSubmitProtocol = async () => {
     setSubmitLoading(true);
-    setTimeout(() => setSubmitLoading(false), 3000);
+    const currentEvaluation = evaluations.find(
+      (evaluation) =>
+        evaluation.course.course_code === selectedCourse.course.course_code
+    );
+    const body = {
+      protocol: JSON.stringify(fullfilledProtocolQuestions),
+      evaluation_id: currentEvaluation.id,
+    };
+    try {
+      const res = await fetch(
+        `${config.server.url}/protocolManagement/saveProtocol`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(body),
+        }
+      );
+      if (res.status() === 200) {
+        notifySuccess(t('protocol_submit_success'));
+      } else {
+        notifyError(t('protocol_submit_error'));
+      }
+    } catch (err) {
+      notifyError(t('protocol_submit_error'));
+    } finally {
+      setSubmitLoading(false);
+    }
   };
+  const handleSubmitDraftProtocol = async () => {
+    setSubmitLoading(true);
+    const currentEvaluation = evaluations.find(
+      (evaluation) =>
+        evaluation.course.course_code === selectedCourse.course.course_code
+    );
+    const body = {
+      protocol_draft: JSON.stringify(fullfilledProtocolQuestions),
+      evaluation_id: currentEvaluation.id,
+    };
+    try {
+      const res = await fetch(
+        `${config.server.url}/protocolManagement/saveDraftProtocol`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(body),
+        }
+      );
+      if (res.status() === 200) {
+        notifySuccess(t('protocol_submit_success'));
+      } else {
+        notifyError(t('protocol_submit_error'));
+      }
+    } catch (err) {
+      notifyError(t('saving_draft_protocol_error'));
+    } finally {
+      setSubmitLoading(false);
+    }
+  };
+
   return (
     <Dialog
       fullScreen
@@ -247,6 +335,9 @@ const Protocol = ({
                   onInternalQuestionChangeHandler={
                     onInternalQuestionChangeHandler
                   }
+                  onInternalSectionChangeHandler={
+                    onInternalSectionChangeHandler
+                  }
                 />
               ) : (
                 <Section
@@ -276,6 +367,7 @@ const Protocol = ({
                   sx={{ width: '49%' }}
                   variant="outlined"
                   disabled={submitLoading}
+                  onClick={handleSubmitDraftProtocol}
                 >
                   {submitLoading ? (
                     <CircularProgress size={24} />
