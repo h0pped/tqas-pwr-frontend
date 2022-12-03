@@ -165,6 +165,7 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
   };
 
   async function getAssessments() {
+    setIsAssessmentsUpdated(false);
     setAssessmentsLoading(true);
     try {
       await fetch(`${config.server.url}/assessmentManagement/getAssessments`, {
