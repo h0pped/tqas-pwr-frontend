@@ -37,7 +37,7 @@ export default function EvaluationDetails({
   const { token } = useContext(UserContext);
   const [isOpen, setIsOpen] = useState(false);
   const [rejectionReasonValue, setRejectionReasonValue] = useState('');
-  const [isUpdated, setIsUpdate] = useState(false);
+  const [isUpdated, setIsUpdated] = useState(false);
 
   const handleClickOpen = () => {
     setRejectionReasonValue('');
@@ -76,7 +76,7 @@ export default function EvaluationDetails({
     });
 
   useEffect(() => {
-    setIsUpdate(false);
+    setIsUpdated(false);
   }, [evaluationDetails, isUpdated]);
 
   const handleAcceptResult = () => {
@@ -97,7 +97,7 @@ export default function EvaluationDetails({
       }
     ).then(() => {
       notifySuccess(t('result_accepted'));
-      setIsUpdate(true);
+      setIsUpdated(true);
       handleClose();
       updatedEvaluation();
     });
@@ -125,7 +125,7 @@ export default function EvaluationDetails({
         ).then((response) => {
           if (response.ok) {
             notifySuccess(t('result_rejected'));
-            setIsUpdate(true);
+            setIsUpdated(true);
             handleClose();
             updatedEvaluation();
           } else {
