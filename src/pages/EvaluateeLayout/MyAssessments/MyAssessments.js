@@ -99,7 +99,8 @@ export default function MyAssessments({ setSelectedPage, link }) {
                 {t('no_assessments')}
               </Typography>
             )}
-            {assessments.evaluations &&
+            {assessments &&
+              assessments.evaluations &&
               !isAssessmentsLoading &&
               assessments.evaluations.length !== 0 &&
               assessments.evaluations.map((evaluation) => (
@@ -124,7 +125,7 @@ export default function MyAssessments({ setSelectedPage, link }) {
               height: '100%',
             }}
           >
-            {assessments.evaluations && (
+            {assessments && assessments.evaluations && (
               <EvaluationDetails
                 evaluationDetails={assessments.evaluations.find(
                   (evaluation) => evaluation.id === selectedAssessment

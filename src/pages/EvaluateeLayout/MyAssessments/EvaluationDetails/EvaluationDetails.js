@@ -81,7 +81,7 @@ export default function EvaluationDetails({
 
   const handleAcceptResult = () => {
     const data = {
-      evaluation_id: evaluationDetails.evaluations[0].id,
+      evaluation_id: evaluationDetails.id,
       status: 'Accepted',
     };
     fetch(
@@ -105,7 +105,7 @@ export default function EvaluationDetails({
 
   const handleRejectResult = () => {
     const data = {
-      evaluation_id: evaluationDetails.evaluations[0].id,
+      evaluation_id: evaluationDetails.id,
       status: 'Rejected',
       rejection_reason: rejectionReasonValue,
     };
