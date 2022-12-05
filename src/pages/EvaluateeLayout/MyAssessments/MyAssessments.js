@@ -99,18 +99,17 @@ export default function MyAssessments({ setSelectedPage, link }) {
                 {t('no_assessments')}
               </Typography>
             )}
-            {console.log(assessments)}
-            {!isAssessmentsLoading &&
-              assessments.length > 0 &&
-              assessments.evaluation.map((item) => (
+            {assessments.evaluations &&
+              !isAssessmentsLoading &&
+              assessments.evaluations.length !== 0 &&
+              assessments.evaluations.map((evaluation) => (
                 <EvaluationCard
-                  key={item.id}
-                  id={item.id}
-                  semester={item.assessment.name}
-                  status={item.status}
+                  key={evaluation.id}
+                  id={evaluation.id}
+                  semester={evaluation.assessment.name}
+                  status={evaluation.status}
                   setId={setSelectedAssessment}
-                  isSelected={selectedAssessment === item.evaluations[1].id}
-                  numberOfEvaluatees={item.num_of_evaluatees}
+                  isSelected={selectedAssessment === evaluation.id}
                 />
               ))}
           </Box>
@@ -125,11 +124,10 @@ export default function MyAssessments({ setSelectedPage, link }) {
               height: '100%',
             }}
           >
-            {assessments.length > 0 && (
+            {assessments.evaluations && (
               <EvaluationDetails
-                evaluationDetails={assessments.find(
-                  (assessment) =>
-                    assessment.evaluations[0].id === selectedAssessment
+                evaluationDetails={assessments.evaluations.find(
+                  (evaluation) => evaluation.id === selectedAssessment
                 )}
                 updatedEvaluation={() => setIsEvaluationUpdated(true)}
               />

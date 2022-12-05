@@ -231,10 +231,8 @@ export default function EvaluationDetails({
                 onClick={handleClickOpen}
                 endIcon={<ClearIcon />}
                 disabled={
-                  evaluationDetails.evaluations[0].status.toLowerCase() ===
-                    'accepted' ||
-                  evaluationDetails.evaluations[0].status.toLowerCase() ===
-                    'rejected'
+                  evaluationDetails.status.toLowerCase() === 'accepted' ||
+                  evaluationDetails.status.toLowerCase() === 'rejected'
                 }
               >
                 {t('decline_result')}
@@ -277,10 +275,8 @@ export default function EvaluationDetails({
                 endIcon={<DoneIcon />}
                 onClick={handleAcceptResult}
                 disabled={
-                  evaluationDetails.evaluations[0].status.toLowerCase() ===
-                    'accepted' ||
-                  evaluationDetails.evaluations[0].status.toLowerCase() ===
-                    'rejected'
+                  evaluationDetails.status.toLowerCase() === 'accepted' ||
+                  evaluationDetails.status.toLowerCase() === 'rejected'
                 }
               >
                 {t('approve_result')}
