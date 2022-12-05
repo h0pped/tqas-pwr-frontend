@@ -1,34 +1,68 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import LinearProgress from '@mui/material/LinearProgress';
 import { useTranslation } from 'react-i18next';
+import { toast, ToastContainer } from 'react-toastify';
 
 import EvaluationDetails from './EvaluationDetails/EvaluationDetails.js';
 import EvaluationCard from '../../../components/AssessmentCard/EvaluationCard.js';
+import UserContext from '../../../context/UserContext/UserContext.js';
+import config from '../../../config/index.config.js';
 
 export default function MyAssessments({ setSelectedPage, link }) {
-  const [isAssessmentsLoading] = useState(false);
+  const [isAssessmentsLoading, setAssessmentsLoading] = useState(false);
   const { t } = useTranslation();
-  const [assessments] = useState([
-    {
-      id: 33,
-      status: 'Open',
-      name: 'Winter 2022/2023',
-      createdAt: '2022-11-12T14:53:01.637Z',
-      updatedAt: '2022-11-20T13:49:19.576Z',
-      supervisor_id: 22,
-      num_of_evaluatees: 2,
-    },
-  ]);
+  const { token, id } = useContext(UserContext);
+  const [assessments, setAssessments] = useState([]);
   const [selectedAssessment, setSelectedAssessment] = useState(null);
+  const [isEvaluationUpdated, setIsEvaluationUpdated] = useState(false);
+
+  const notifyError = (msg) =>
+    toast.error(`${t('error_dialog')} ${msg}`, {
+      position: 'top-center',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+    });
+
+  async function getEvaluationByEvaluatee() {
+    setIsEvaluationUpdated(false);
+    setAssessmentsLoading(true);
+    try {
+      fetch(
+        `${config.server.url}/evaluationsManagement/getEvaluationByEvaluatee?id=${id}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+        .then((response) => response.json())
+        .then(({ evaluatee }) => {
+          setAssessments(evaluatee[0]);
+          setAssessmentsLoading(false);
+        });
+    } catch (error) {
+      setAssessmentsLoading(false);
+      notifyError(t('error_server'));
+    }
+  }
 
   useEffect(() => {
     setSelectedPage(link);
-  }, [link, setSelectedPage]);
+    getEvaluationByEvaluatee();
+  }, [link, setSelectedPage, isEvaluationUpdated]);
+
   return (
     <Box sx={{ flexGrow: 1, height: '75vh' }}>
+      <ToastContainer />
       <Grid container sx={{ height: '100%' }}>
         <Grid item xs={12}>
           <Box
@@ -59,21 +93,23 @@ export default function MyAssessments({ setSelectedPage, link }) {
             }}
           >
             {isAssessmentsLoading && <LinearProgress />}
-            {assessments.length === 0 && (
+            {assessments && assessments.length === 0 && (
               <Typography variant="subtitle2" sx={{ color: '#848884' }}>
                 {t('no_assessments')}
               </Typography>
             )}
-            {!isAssessmentsLoading &&
-              assessments.map((item) => (
+            {assessments &&
+              assessments.evaluations &&
+              !isAssessmentsLoading &&
+              assessments.evaluations.length !== 0 &&
+              assessments.evaluations.map((evaluation) => (
                 <EvaluationCard
-                  key={item.id}
-                  id={item.id}
-                  semester={item.name}
-                  status={item.status}
+                  key={evaluation.id}
+                  id={evaluation.id}
+                  semester={evaluation.assessment.name}
+                  status={evaluation.status}
                   setId={setSelectedAssessment}
-                  isSelected={selectedAssessment === item.id}
-                  numberOfEvaluatees={item.num_of_evaluatees}
+                  isSelected={selectedAssessment === evaluation.id}
                 />
               ))}
           </Box>
@@ -88,11 +124,14 @@ export default function MyAssessments({ setSelectedPage, link }) {
               height: '100%',
             }}
           >
-            <EvaluationDetails
-              assessmentDetails={assessments.find(
-                (assessment) => assessment.id === selectedAssessment
-              )}
-            />
+            {assessments && assessments.evaluations && (
+              <EvaluationDetails
+                evaluationDetails={assessments.evaluations.find(
+                  (evaluation) => evaluation.id === selectedAssessment
+                )}
+                updatedEvaluation={() => setIsEvaluationUpdated(true)}
+              />
+            )}
           </Box>
         </Grid>
       </Grid>
