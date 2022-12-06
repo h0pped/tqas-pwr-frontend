@@ -98,10 +98,10 @@ export default function AssessmentDetails({
   const handleProtocolDownload = (evaluatee) => {
     setProtocolFileExportLoading(true);
     const { id } = evaluatee.evaluations.find(
-      (evaluation) =>
-        evaluation.status.toLowerCase() === 'in review' ||
-        evaluation.status.toLowerCase() === 'accepted' ||
-        evaluation.status.toLowerCase() === 'rejected'
+      ({ status }) =>
+        status.toLowerCase() === 'in review' ||
+        status.toLowerCase() === 'accepted' ||
+        status.toLowerCase() === 'rejected'
     );
     if (id) {
       try {
@@ -303,10 +303,10 @@ export default function AssessmentDetails({
                   disabled={
                     isProtocolFileExportLoading ||
                     !row.evaluatee.evaluations.some(
-                      (evaluation) =>
-                        evaluation.status.toLowerCase() === 'in review' ||
-                        evaluation.status.toLowerCase() === 'accepted' ||
-                        evaluation.status.toLowerCase() === 'rejected'
+                      ({ status }) =>
+                        status.toLowerCase() === 'in review' ||
+                        status.toLowerCase() === 'accepted' ||
+                        status.toLowerCase() === 'rejected'
                     )
                   }
                   onClick={() => handleProtocolDownload(row.evaluatee)}
