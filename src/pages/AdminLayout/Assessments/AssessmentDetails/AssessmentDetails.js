@@ -126,7 +126,7 @@ export default function AssessmentDetails({
         setProtocolFileExportLoading(false);
       }
     } else {
-      notifyError('Problem with downloading your file. Try again.');
+      notifyError(t('export_pdf_protocol_error'));
     }
   };
 
@@ -270,7 +270,7 @@ export default function AssessmentDetails({
           <TableCell component="th" scope="row">
             {assessmentDetails.status.toLowerCase() !== 'ongoing' &&
               assessmentDetails.status.toLowerCase() !== 'done' && (
-                <Tooltip title="Remove evaluatee" placement="top">
+                <Tooltip title={t('remove_evaluatee')} placement="top">
                   <Fab
                     size="small"
                     sx={{
@@ -292,7 +292,7 @@ export default function AssessmentDetails({
 
             {(assessmentDetails.status.toLowerCase() === 'ongoing' ||
               assessmentDetails.status.toLowerCase() === 'done') && (
-              <Tooltip title="Download protocol" placement="top">
+              <Tooltip title={t('download_protocol')} placement="top">
                 <Fab
                   size="small"
                   sx={{

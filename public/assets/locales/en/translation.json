@@ -200,5 +200,8 @@
   "label_is_head": "Head of Team?",
   "is_head": "Head of Team",
   "remove": "Remove",
-  "make_leader": "Make leader"
+  "make_leader": "Make leader",
+  "export_pdf_protocol_error": "Problem with downloading your file. Please try again.",
+  "remove_evaluatee": "Remove evaluatee",
+  "download_protocol": "Download protocol"
 }

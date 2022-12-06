@@ -200,5 +200,8 @@
   "label_is_head": "Głową zespołu?",
   "is_head": "Głową zespołu",
   "remove": "Usuń",
-  "make_leader": "Ustaw jako głowę zespołu"
+  "make_leader": "Ustaw jako głowę zespołu",
+  "export_pdf_protocol_error": "Problem z pobraniem pliku. Proszę spróbuj ponownie.",
+  "remove_evaluatee": "Usuń hospitującego",
+  "download_protocol": "Pobierz protokół"
 }
