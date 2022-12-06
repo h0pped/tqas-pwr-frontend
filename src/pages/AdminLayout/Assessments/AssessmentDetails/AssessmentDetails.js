@@ -95,13 +95,18 @@ export default function AssessmentDetails({
     }
   };
 
+  function isProtocolButtonEnabled(status) {
+    return (
+      status.toLowerCase() === 'in review' ||
+      status.toLowerCase() === 'accepted' ||
+      status.toLowerCase() === 'rejected'
+    );
+  }
+
   const handleProtocolDownload = (evaluatee) => {
     setProtocolFileExportLoading(true);
-    const { id } = evaluatee.evaluations.find(
-      ({ status }) =>
-        status.toLowerCase() === 'in review' ||
-        status.toLowerCase() === 'accepted' ||
-        status.toLowerCase() === 'rejected'
+    const { id } = evaluatee.evaluations.find(({ status }) =>
+      isProtocolButtonEnabled(status)
     );
     if (id) {
       try {
@@ -302,11 +307,8 @@ export default function AssessmentDetails({
                   }}
                   disabled={
                     isProtocolFileExportLoading ||
-                    !row.evaluatee.evaluations.some(
-                      ({ status }) =>
-                        status.toLowerCase() === 'in review' ||
-                        status.toLowerCase() === 'accepted' ||
-                        status.toLowerCase() === 'rejected'
+                    !row.evaluatee.evaluations.some(({ status }) =>
+                      isProtocolButtonEnabled(status)
                     )
                   }
                   onClick={() => handleProtocolDownload(row.evaluatee)}
