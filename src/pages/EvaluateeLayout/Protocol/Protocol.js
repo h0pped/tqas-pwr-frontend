@@ -191,12 +191,12 @@ const Protocol = ({
         evaluation.course.course_code === selectedCourse.course.course_code
     );
     const body = {
-      protocol: JSON.stringify(fullfilledProtocolQuestions),
+      protocol_json: JSON.stringify(fullfilledProtocolQuestions),
       evaluation_id: currentEvaluation.id,
     };
     try {
       const res = await fetch(
-        `${config.server.url}/protocolManagement/saveProtocol`,
+        `${config.server.url}/protocolManagement/fillProtocol`,
         {
           method: 'POST',
           headers: {
@@ -206,7 +206,7 @@ const Protocol = ({
           body: JSON.stringify(body),
         }
       );
-      if (res.status() === 200) {
+      if (res.status === 200) {
         notifySuccess(t('protocol_submit_success'));
       } else {
         notifyError(t('protocol_submit_error'));
@@ -239,7 +239,7 @@ const Protocol = ({
           body: JSON.stringify(body),
         }
       );
-      if (res.status() === 200) {
+      if (res.status === 200) {
         notifySuccess(t('protocol_submit_success'));
       } else {
         notifyError(t('protocol_submit_error'));
