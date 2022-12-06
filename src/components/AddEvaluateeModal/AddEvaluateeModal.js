@@ -118,7 +118,6 @@ const AddEvaluateeModal = ({
     });
 
     try {
-      console.log(body);
       const res = await fetch(
         `${config.server.url}/assessmentManagement/createListOfClasses`,
         {
