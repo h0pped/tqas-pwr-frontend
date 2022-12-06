@@ -301,7 +301,7 @@ const AddEvaluateeModal = ({
           component="h5"
           sx={{ textAlign: 'center', marginBottom: '2rem !important' }}
         >
-          Add Evaluatee
+          {t('add_evaluatee')}
         </Typography>
         <Box
           component="form"
