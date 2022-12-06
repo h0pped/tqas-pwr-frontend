@@ -25,6 +25,10 @@ import UserContext from '../../../../context/UserContext/UserContext.js';
 import config from '../../../../config/index.config.js';
 import c16Image from '../../../../assets/images/c-16-pict.jpeg';
 
+import generateFileName from '../../../../utils/generateFileName.js';
+
+const download = require('downloadjs');
+
 const Transition = forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
 ));
@@ -38,6 +42,9 @@ export default function EvaluationDetails({
   const [isOpen, setIsOpen] = useState(false);
   const [rejectionReasonValue, setRejectionReasonValue] = useState('');
   const [isUpdated, setIsUpdated] = useState(false);
+  const [isProtocolFileExportLoading, setProtocolFileExportLoading] = useState(
+    false
+  );
 
   const handleClickOpen = () => {
     setRejectionReasonValue('');
@@ -140,6 +147,34 @@ export default function EvaluationDetails({
     }
   };
 
+  const handleProtocolDownload = () => {
+    setProtocolFileExportLoading(true);
+    try {
+      fetch(
+        `${config.server.url}/protocolManagement/getProtocolPDF?evaluation_id=${evaluationDetails.id}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+        .then((resp) => resp.blob())
+        .then((blob) => {
+          const filename = generateFileName(
+            `${evaluationDetails.academic_title}_${evaluationDetails.first_name}_${evaluationDetails.last_name}`,
+            'pdf'
+          );
+          download(blob, filename);
+          setProtocolFileExportLoading(false);
+          notifySuccess(t('file_successfully_exported'));
+        });
+    } catch (err) {
+      notifyError(t('error_server'));
+      setProtocolFileExportLoading(false);
+    }
+  };
+
   if (evaluationDetails === undefined) {
     return (
       <Box
@@ -206,22 +241,10 @@ export default function EvaluationDetails({
                 {t('congratulations')}
               </Typography>
               <Typography sx={{ mt: 1 }} variant="body2" color="text.secondary">
-                {t('you_have_a_new_evaluation_in_the_system_with_the_score')}:
-                4.0
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {t('this_is_the_final_result_of_this_particular_assessment')}
+                {t('you_have_a_new_evaluation_in_the_system_with_the_score')}
               </Typography>
               <Typography sx={{ mt: 1 }} variant="body2" color="text.secondary">
                 {t('you_have_only_14_days_to_accept_or_decline')}
-              </Typography>
-              <Typography
-                sx={{ mt: 2 }}
-                gutterBottom
-                variant="h6"
-                component="div"
-              >
-                4.0
               </Typography>
             </CardContent>
             <CardActions>
@@ -294,6 +317,8 @@ export default function EvaluationDetails({
               size="medium"
               variant="outlined"
               endIcon={<DescriptionIcon />}
+              onClick={handleProtocolDownload}
+              disabled={isProtocolFileExportLoading}
             >
               {t('open_protocol')}
             </Button>
