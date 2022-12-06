@@ -118,6 +118,7 @@ const AddEvaluateeModal = ({
     });
 
     try {
+      console.log(body);
       const res = await fetch(
         `${config.server.url}/assessmentManagement/createListOfClasses`,
         {
@@ -152,6 +153,9 @@ const AddEvaluateeModal = ({
   };
   const isFormFullfilledCheck = () =>
     evaluateeFormValues.courseCode &&
+    !courses.find(
+      ({ courseCode }) => courseCode === evaluateeFormValues.courseCode
+    ) &&
     evaluateeFormValues.courseName &&
     evaluateeFormValues.numberOfPeopleEnrolled &&
     evaluateeFormValues.details;
