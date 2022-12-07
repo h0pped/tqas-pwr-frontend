@@ -80,7 +80,7 @@ const Section = ({
                 onInternalQuestionChangeHandler={
                   onInternalQuestionChangeHandler
                 }
-                answer={question.answer || question.answer.answer}
+                answer={question.answer || question?.answer?.answer}
                 key={`${question.question_text}_${question.question_type}`}
               />
             );

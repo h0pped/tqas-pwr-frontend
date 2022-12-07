@@ -118,7 +118,11 @@ const SingleChoiceWithAdditionalField = ({
                               sectionTitle
                             )
                           }
-                          answer={answer[internalQuestion.question_text]}
+                          answer={
+                            answer && answer[internalQuestion?.question_text]
+                              ? answer[internalQuestion?.question_text]
+                              : ''
+                          }
                         />
                       );
                     }
