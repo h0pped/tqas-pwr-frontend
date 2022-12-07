@@ -23,6 +23,7 @@ import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { toast } from 'react-toastify';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -55,6 +56,9 @@ export default function AssessmentDetails({
   );
 
   const [isFileExportLoading, setFileExportLoading] = useState(false);
+  const [isProtocolFileExportLoading, setProtocolFileExportLoading] = useState(
+    false
+  );
 
   const { token } = useContext(UserContext);
 
@@ -88,6 +92,46 @@ export default function AssessmentDetails({
     } catch (err) {
       notifyError(t('error_server'));
       setFileExportLoading(false);
+    }
+  };
+
+  function isProtocolButtonEnabled(status) {
+    return (
+      status.toLowerCase() === 'in review' ||
+      status.toLowerCase() === 'accepted' ||
+      status.toLowerCase() === 'rejected'
+    );
+  }
+
+  const handleProtocolDownload = (evaluatee) => {
+    setProtocolFileExportLoading(true);
+    const { id } = evaluatee.evaluations.find(({ status }) =>
+      isProtocolButtonEnabled(status)
+    );
+    if (id) {
+      try {
+        fetch(
+          `${config.server.url}/protocolManagement/getProtocolPDF?evaluation_id=${id}`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+          .then((resp) => resp.blob())
+          .then((blob) => {
+            const filename = generateFileName(assessmentDetails.name, 'pdf');
+            download(blob, filename);
+            setProtocolFileExportLoading(false);
+            notifySuccess(t('file_successfully_exported'));
+          });
+      } catch (err) {
+        notifyError(t('error_server'));
+        setProtocolFileExportLoading(false);
+      }
+    } else {
+      notifyError(t('export_pdf_protocol_error'));
     }
   };
 
@@ -229,23 +273,51 @@ export default function AssessmentDetails({
             {row.evaluatee.evaluations.length}
           </TableCell>
           <TableCell component="th" scope="row">
-            <Tooltip title="Remove evaluatee" placement="top">
-              <Fab
-                size="small"
-                sx={{
-                  backgroundColor: '#fafafa',
-                  color: '#39e9e9e',
-                  '&:hover': { bgcolor: '#D9372A', color: '#FFFFFF' },
-                }}
-                disabled={
-                  assessmentDetails.status.toLowerCase() !== 'draft' &&
-                  assessmentDetails.status.toLowerCase() !== 'changes required'
-                }
-                aria-label="delete"
-              >
-                <DeleteIcon />
-              </Fab>
-            </Tooltip>
+            {assessmentDetails.status.toLowerCase() !== 'ongoing' &&
+              assessmentDetails.status.toLowerCase() !== 'done' && (
+                <Tooltip title={t('remove_evaluatee')} placement="top">
+                  <Fab
+                    size="small"
+                    sx={{
+                      backgroundColor: '#fafafa',
+                      color: '#39e9e9e',
+                      '&:hover': { bgcolor: '#D9372A', color: '#FFFFFF' },
+                    }}
+                    disabled={
+                      assessmentDetails.status.toLowerCase() !== 'draft' &&
+                      assessmentDetails.status.toLowerCase() !==
+                        'changes required'
+                    }
+                    aria-label="delete"
+                  >
+                    <DeleteIcon />
+                  </Fab>
+                </Tooltip>
+              )}
+
+            {(assessmentDetails.status.toLowerCase() === 'ongoing' ||
+              assessmentDetails.status.toLowerCase() === 'done') && (
+              <Tooltip title={t('download_protocol')} placement="top">
+                <Fab
+                  size="small"
+                  sx={{
+                    backgroundColor: '#fafafa',
+                    color: '#39e9e9e',
+                    '&:hover': { bgcolor: '#D9372A', color: '#FFFFFF' },
+                  }}
+                  disabled={
+                    isProtocolFileExportLoading ||
+                    !row.evaluatee.evaluations.some(({ status }) =>
+                      isProtocolButtonEnabled(status)
+                    )
+                  }
+                  onClick={() => handleProtocolDownload(row.evaluatee)}
+                  aria-label="download-protocol"
+                >
+                  <InsertDriveFileIcon />
+                </Fab>
+              </Tooltip>
+            )}
           </TableCell>
         </TableRow>
         <TableRow>
@@ -365,19 +437,18 @@ export default function AssessmentDetails({
               />
             )}
           </Box>
-          <Button
-            sx={{ mb: 1 }}
-            disabled={
-              assessmentDetails.status.toLowerCase() !== 'draft' &&
-              assessmentDetails.status.toLowerCase() !== 'changes required'
-            }
-            variant="text"
-            size="small"
-            onClick={handleOpenSendForApprovalDialog}
-            endIcon={<SendIcon />}
-          >
-            {t('send_for_approval')}
-          </Button>
+          {(assessmentDetails.status.toLowerCase() === 'draft' ||
+            assessmentDetails.status.toLowerCase() === 'changes required') && (
+            <Button
+              sx={{ mb: 1 }}
+              variant="text"
+              size="small"
+              onClick={handleOpenSendForApprovalDialog}
+              endIcon={<SendIcon />}
+            >
+              {t('send_for_approval')}
+            </Button>
+          )}
         </Box>
       </Box>
       <Divider sx={{ m: 0 }} variant="middle" />
