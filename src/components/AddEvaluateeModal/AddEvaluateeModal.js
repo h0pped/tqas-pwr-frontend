@@ -82,8 +82,8 @@ const AddEvaluateeModal = ({
   const { token } = useContext(UserContext);
 
   const sortUsersByEvaluationDate = (a, b) =>
-    new Date(a.evaluatee.last_evaluated_date) -
-    new Date(b.evaluatee.last_evaluated_date);
+    new Date(a.evaluatee?.last_evaluated_date) -
+    new Date(b.evaluatee?.last_evaluated_date);
 
   const mapUsersToDropDownValues = () => {
     const users = fetchedUsers.sort(sortUsersByEvaluationDate).map((user) => ({
