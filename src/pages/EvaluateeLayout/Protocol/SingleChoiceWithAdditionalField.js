@@ -25,7 +25,7 @@ const SingleChoiceWithAdditionalField = ({
   const [shownAdditionalQuestion, setShownAdditionalQuestion] = useState(null);
 
   useEffect(() => {
-    if (typeof answer === 'object') {
+    if (typeof answer === 'object' && answer.answer) {
       const option = options.find((option) => option.answer === answer.answer);
       setParentChoice(answer.answer);
       setIsChosenWithAdditionalField(true);
@@ -54,7 +54,9 @@ const SingleChoiceWithAdditionalField = ({
         sx={{ display: 'flex' }}
         row
         ref={formRadioGroup}
-        value={typeof answer === 'object' ? answer.answer : answer}
+        value={
+          typeof answer === 'object' && answer.answer ? answer?.answer : answer
+        }
       >
         {options.map((option) => {
           if (typeof option === 'string') {
