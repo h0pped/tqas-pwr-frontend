@@ -200,5 +200,7 @@
   "label_is_head": "Głową zespołu?",
   "is_head": "Głową zespołu",
   "remove": "Usuń",
-  "make_leader": "Ustaw jako głowę zespołu"
+  "make_leader": "Ustaw jako głowę zespołu",
+  "success_evaluatee_deleted": "Osoba oceniająca została usunięta.",
+  "error_evaluatee_not_deleted": "Podczas usuwania osoby ocenianej wystąpił błąd."
 }

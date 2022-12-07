@@ -55,6 +55,7 @@ export default function AssessmentDetails({
   );
 
   const [isFileExportLoading, setFileExportLoading] = useState(false);
+  const [isUpdated, setUpdated] = useState(false);
 
   const { token } = useContext(UserContext);
 
@@ -114,6 +115,37 @@ export default function AssessmentDetails({
       progress: undefined,
       theme: 'light',
     });
+
+  function handleEvaluateeDeletion(evaluationsOfEvaluatee) {
+    evaluationsOfEvaluatee.forEach(({ id }) => {
+      deleteEvaluatee(id);
+    });
+  }
+
+  function deleteEvaluatee(evaluationId) {
+    try {
+      fetch(`${config.server.url}/evaluationsManagement/deleteEvaluation`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          evaluation_id: evaluationId,
+        }),
+      }).then((response) => {
+        if (response.ok) {
+          notifySuccess(t('success_evaluatee_deleted'));
+          setUpdated(true);
+        } else {
+          notifyError('error_evaluatee_not_deleted');
+        }
+      });
+    } catch (error) {
+      notifyError(t('error_server'));
+    }
+  }
 
   const handleSendScheduleForApproval = () => {
     try {
@@ -193,7 +225,7 @@ export default function AssessmentDetails({
     }
 
     getSupervisors();
-  }, [assessmentDetails]);
+  }, [assessmentDetails, isUpdated]);
 
   const handleOpenAddEvaluateeDialog = () => {
     onAddEvalueatee();
@@ -240,6 +272,9 @@ export default function AssessmentDetails({
                 disabled={
                   assessmentDetails.status.toLowerCase() !== 'draft' &&
                   assessmentDetails.status.toLowerCase() !== 'changes required'
+                }
+                onClick={() =>
+                  handleEvaluateeDeletion(row.evaluatee.evaluations)
                 }
                 aria-label="delete"
               >
@@ -527,7 +562,7 @@ export default function AssessmentDetails({
                   <TableCell>{t('evaluatee')}</TableCell>
                   <TableCell>{t('label_email')}</TableCell>
                   <TableCell>{t('number_of_courses')}</TableCell>
-                  <TableCell>{t('label_actions')}</TableCell>
+                  <TableCell>{t('label_actions')} </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
