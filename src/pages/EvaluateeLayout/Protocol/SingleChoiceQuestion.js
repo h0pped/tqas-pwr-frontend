@@ -11,6 +11,7 @@ const SingleChoiceQuestion = ({
   onChangeHandler,
   options,
   disabled,
+  answer,
 }) => (
   <FormControl sx={{ display: 'flex', width: '100%', my: 5 }}>
     <Typography sx={{ display: 'inline-block' }}>{question}</Typography>
@@ -21,6 +22,7 @@ const SingleChoiceQuestion = ({
       onChange={onChangeHandler}
       sx={{ display: 'flex' }}
       row
+      value={answer}
     >
       {options.map((option) => (
         <FormControlLabel
