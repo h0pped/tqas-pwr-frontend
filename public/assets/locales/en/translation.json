@@ -183,14 +183,14 @@
   "decline": "Decline result",
   "you_have_a_new_evaluation_in_the_system_with_the_score": "You have a new evaluation in the system with the final score",
   "you_have_only_14_days_to_accept_or_decline": "Please note, you have 14 days in order to accept or decline the result.",
-  "this_is_the_final_result_of_this_particular_assessment":"This is the final result of this particular assessment.",
+  "this_is_the_final_result_of_this_particular_assessment": "This is the final result of this particular assessment.",
   "no_assessments": "No assessments found",
   "department": "Department",
   "rejection_reason": "Rejection reason",
   "result_accepted": "Result was successfully accepted",
   "result_rejected": "Result was successfully rejected",
   "result_rejected_error": "There was an error while rejecting the result",
-  "rejection_reason_required":"Rejection reason can not be empty",
+  "rejection_reason_required": "Rejection reason can not be empty",
   "congratulations": "Congratulations!",
   "save_draft": "Save draft",
   "team_members_header": "Team members:",
@@ -203,5 +203,9 @@
   "make_leader": "Make leader",
   "export_pdf_protocol_error": "Problem with downloading your file. Please try again.",
   "remove_evaluatee": "Remove evaluatee",
-  "download_protocol": "Download protocol"
+  "download_protocol": "Download protocol",
+  "draft_protocol_saved": "Draft version of the protocol was successfully saved!",
+  "saving_draft_protocol_error": "There was an error while saving draft version of the protocol. Try again later.",
+  "protocol_submit_success": "Protocol was successfully submitted!",
+  "protocol_submit_error": "There was an error while submitting protocol. Try again later."
 }

@@ -82,8 +82,8 @@ const AddEvaluateeModal = ({
   const { token } = useContext(UserContext);
 
   const sortUsersByEvaluationDate = (a, b) =>
-    new Date(a.evaluatee.last_evaluated_date) -
-    new Date(b.evaluatee.last_evaluated_date);
+    new Date(a.evaluatee?.last_evaluated_date) -
+    new Date(b.evaluatee?.last_evaluated_date);
 
   const mapUsersToDropDownValues = () => {
     const users = fetchedUsers.sort(sortUsersByEvaluationDate).map((user) => ({
@@ -152,6 +152,9 @@ const AddEvaluateeModal = ({
   };
   const isFormFullfilledCheck = () =>
     evaluateeFormValues.courseCode &&
+    !courses.find(
+      ({ courseCode }) => courseCode === evaluateeFormValues.courseCode
+    ) &&
     evaluateeFormValues.courseName &&
     evaluateeFormValues.numberOfPeopleEnrolled &&
     evaluateeFormValues.details;
@@ -298,7 +301,7 @@ const AddEvaluateeModal = ({
           component="h5"
           sx={{ textAlign: 'center', marginBottom: '2rem !important' }}
         >
-          Add Evaluatee
+          {t('add_evaluatee')}
         </Typography>
         <Box
           component="form"

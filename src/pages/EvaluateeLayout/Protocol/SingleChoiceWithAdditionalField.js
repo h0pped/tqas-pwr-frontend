@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
   FormControl,
   Typography,
@@ -17,15 +17,26 @@ const SingleChoiceWithAdditionalField = ({
   onInternalQuestionChangeHandler,
   sectionTitle,
   disabled,
+  answer,
 }) => {
   const [parentChoice, setParentChoice] = useState(null);
   const formRadioGroup = useRef(null);
   const [, setIsChosenWithAdditionalField] = useState(null);
   const [shownAdditionalQuestion, setShownAdditionalQuestion] = useState(null);
 
-  const handleChooseAdditionalField = (question, option) => {
+  useEffect(() => {
+    if (typeof answer === 'object' && answer.answer) {
+      const option = options.find((option) => option.answer === answer.answer);
+      setParentChoice(answer.answer);
+      setIsChosenWithAdditionalField(true);
+      setShownAdditionalQuestion(option.questions);
+    }
+  }, []);
+
+  const handleChooseAdditionalField = (e, question, option) => {
     setParentChoice(option.answer);
     setShownAdditionalQuestion(option.questions);
+    setIsChosenWithAdditionalField(true);
   };
   const handleChooseDefaultOption = (e) => {
     onChangeHandler(e);
@@ -43,6 +54,9 @@ const SingleChoiceWithAdditionalField = ({
         sx={{ display: 'flex' }}
         row
         ref={formRadioGroup}
+        value={
+          typeof answer === 'object' && answer.answer ? answer?.answer : answer
+        }
       >
         {options.map((option) => {
           if (typeof option === 'string') {
@@ -75,13 +89,15 @@ const SingleChoiceWithAdditionalField = ({
                     <Radio
                       disabled={disabled}
                       id={question.answer}
-                      onClick={() =>
-                        handleChooseAdditionalField(question, option)
+                      onClick={(e) =>
+                        handleChooseAdditionalField(e, question, option)
                       }
                     />
                   }
                   label={option.answer}
-                  onClick={() => handleChooseAdditionalField(question, option)}
+                  onClick={(e) =>
+                    handleChooseAdditionalField(e, question, option)
+                  }
                   sx={{ display: 'inline' }}
                 />
 
@@ -102,6 +118,7 @@ const SingleChoiceWithAdditionalField = ({
                               sectionTitle
                             )
                           }
+                          answer={answer[internalQuestion.question_text]}
                         />
                       );
                     }
@@ -113,6 +130,7 @@ const SingleChoiceWithAdditionalField = ({
                           key={`${internalQuestion.question_text}_${internalQuestion.qusetion_type}`}
                           onChangeHandler={onChangeHandler}
                           options={internalQuestion.answer_options}
+                          value={internalQuestion.answer}
                         />
                       );
                     }

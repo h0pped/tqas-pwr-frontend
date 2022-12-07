@@ -203,5 +203,9 @@
   "make_leader": "Ustaw jako głowę zespołu",
   "export_pdf_protocol_error": "Problem z pobraniem pliku. Proszę spróbuj ponownie.",
   "remove_evaluatee": "Usuń hospitującego",
-  "download_protocol": "Pobierz protokół"
+  "download_protocol": "Pobierz protokół",
+  "draft_protocol_saved": "Wersja robocza protokołu została pomyślnie zapisana.",
+  "saving_draft_protocol_error": "Wystąpił błąd podczas zapisywania wersji roboczej protokołu. Proszę spróbuj ponownie.",
+  "protocol_submit_success": "Protokół został pomyślnie wysłany.",
+  "protocol_submit_error": "Wystąpił błąd podczas wysyłania protokołu. Proszę spróbuj ponownie."
 }
