@@ -650,7 +650,7 @@ export default function AssessmentDetails({
                   <TableCell>{t('evaluatee')}</TableCell>
                   <TableCell>{t('label_email')}</TableCell>
                   <TableCell>{t('number_of_courses')}</TableCell>
-                  <TableCell>{t('label_actions')} </TableCell>
+                  <TableCell>{t('label_actions')}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
