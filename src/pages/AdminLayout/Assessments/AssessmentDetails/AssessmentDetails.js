@@ -183,7 +183,7 @@ export default function AssessmentDetails({
           notifySuccess(t('success_evaluatee_deleted'));
           setUpdated(true);
         } else {
-          notifyError('error_evaluatee_not_deleted');
+          notifyError(t('error_evaluatee_not_deleted'));
         }
       });
     } catch (error) {
