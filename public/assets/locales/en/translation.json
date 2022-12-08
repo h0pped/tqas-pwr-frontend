@@ -200,6 +200,8 @@
   "is_head": "Head of Team",
   "remove": "Remove",
   "make_leader": "Make leader",
+  "success_evaluatee_deleted": "Evaluatee was deleted.",
+  "error_evaluatee_not_deleted": "There was an error while deleting the Evaluatee.",
   "export_pdf_protocol_error": "Problem with downloading your file. Please try again.",
   "remove_evaluatee": "Remove evaluatee",
   "download_protocol": "Download protocol",

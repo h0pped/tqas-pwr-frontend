@@ -56,6 +56,7 @@ export default function AssessmentDetails({
   );
 
   const [isFileExportLoading, setFileExportLoading] = useState(false);
+  const [isUpdated, setUpdated] = useState(false);
   const [isProtocolFileExportLoading, setProtocolFileExportLoading] = useState(
     false
   );
@@ -159,6 +160,37 @@ export default function AssessmentDetails({
       theme: 'light',
     });
 
+  function handleEvaluateeDeletion(evaluationsOfEvaluatee) {
+    evaluationsOfEvaluatee.forEach(({ id }) => {
+      deleteEvaluatee(id);
+    });
+  }
+
+  function deleteEvaluatee(evaluationId) {
+    try {
+      fetch(`${config.server.url}/evaluationsManagement/deleteEvaluation`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          evaluation_id: evaluationId,
+        }),
+      }).then((response) => {
+        if (response.ok) {
+          notifySuccess(t('success_evaluatee_deleted'));
+          setUpdated(true);
+        } else {
+          notifyError(t('error_evaluatee_not_deleted'));
+        }
+      });
+    } catch (error) {
+      notifyError(t('error_server'));
+    }
+  }
+
   const handleSendScheduleForApproval = () => {
     try {
       fetch(
@@ -237,7 +269,7 @@ export default function AssessmentDetails({
     }
 
     getSupervisors();
-  }, [assessmentDetails]);
+  }, [assessmentDetails, isUpdated]);
 
   const handleOpenAddEvaluateeDialog = () => {
     onAddEvalueatee();
@@ -287,6 +319,9 @@ export default function AssessmentDetails({
                       assessmentDetails.status.toLowerCase() !== 'draft' &&
                       assessmentDetails.status.toLowerCase() !==
                         'changes required'
+                    }
+                    onClick={() =>
+                      handleEvaluateeDeletion(row.evaluatee.evaluations)
                     }
                     aria-label="delete"
                   >

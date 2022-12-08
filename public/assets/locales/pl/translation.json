@@ -200,6 +200,8 @@
   "is_head": "Głową zespołu",
   "remove": "Usuń",
   "make_leader": "Ustaw jako głowę zespołu",
+  "success_evaluatee_deleted": "Osoba oceniająca została usunięta.",
+  "error_evaluatee_not_deleted": "Podczas usuwania osoby ocenianej wystąpił błąd.",
   "export_pdf_protocol_error": "Problem z pobraniem pliku. Proszę spróbuj ponownie.",
   "remove_evaluatee": "Usuń hospitującego",
   "download_protocol": "Pobierz protokół",
