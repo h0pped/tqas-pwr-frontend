@@ -305,26 +305,6 @@ export default function AssessmentDetails({
             {row.evaluatee.evaluations.length}
           </TableCell>
           <TableCell component="th" scope="row">
-            <Tooltip title="Remove evaluatee" placement="top">
-              <Fab
-                size="small"
-                sx={{
-                  backgroundColor: '#fafafa',
-                  color: '#39e9e9e',
-                  '&:hover': { bgcolor: '#D9372A', color: '#FFFFFF' },
-                }}
-                disabled={
-                  assessmentDetails.status.toLowerCase() !== 'draft' &&
-                  assessmentDetails.status.toLowerCase() !== 'changes required'
-                }
-                onClick={() =>
-                  handleEvaluateeDeletion(row.evaluatee.evaluations)
-                }
-                aria-label="delete"
-              >
-                <DeleteIcon />
-              </Fab>
-            </Tooltip>
             {assessmentDetails.status.toLowerCase() !== 'ongoing' &&
               assessmentDetails.status.toLowerCase() !== 'done' && (
                 <Tooltip title={t('remove_evaluatee')} placement="top">
@@ -339,6 +319,9 @@ export default function AssessmentDetails({
                       assessmentDetails.status.toLowerCase() !== 'draft' &&
                       assessmentDetails.status.toLowerCase() !==
                         'changes required'
+                    }
+                    onClick={() =>
+                      handleEvaluateeDeletion(row.evaluatee.evaluations)
                     }
                     aria-label="delete"
                   >
