@@ -53,7 +53,12 @@ const Item = styled(Paper)(({ theme }) => ({
   border: 'solid 1px #f4f5f7',
 }));
 
-export default function DialogAssignTeam({ isOpen, onClose, data }) {
+export default function DialogAssignTeam({
+  isOpen,
+  onClose,
+  data,
+  onSaveEvaluationTeam,
+}) {
   // eslint-disable-next-line no-unused-vars
   const [ignored, forceUpdate] = useReducer((x) => x + 1, 0);
 
@@ -244,6 +249,7 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
               setSaveLoading(false);
               setLeader(null);
               setTeamLeader(null);
+              onSaveEvaluationTeam();
               onClose();
             } else {
               notifyError(t('et_save_error'));
@@ -251,7 +257,6 @@ export default function DialogAssignTeam({ isOpen, onClose, data }) {
               setSaveLoading(false);
               setLeader(null);
               setTeamLeader(null);
-              onClose();
             }
           });
         } catch (error) {
