@@ -250,7 +250,6 @@ export default function DialogAssignTeam({
               setLeader(null);
               setTeamLeader(null);
               onSaveEvaluationTeam();
-              onClose();
             } else {
               notifyError(t('et_save_error'));
               setChangesMade(false);
