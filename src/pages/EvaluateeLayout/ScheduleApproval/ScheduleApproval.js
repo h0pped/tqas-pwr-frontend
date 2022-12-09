@@ -27,6 +27,11 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
   const [dialogData, setDialogData] = useState([]);
   const [isAssessmentsUpdated, setIsAssessmentsUpdated] = useState(false);
 
+  const handleCloseAssignTeamDialog = () => {
+    setAssignTeamDialogOpen(false);
+    window.location.reload(false);
+  };
+
   const notifySuccess = (msg) =>
     toast.success(`${t('success')} ${msg}`, {
       position: 'top-center',
@@ -86,7 +91,7 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
       <ToastContainer />
       <DialogAssignTeam
         isOpen={isAssignTeamDialogOpen}
-        onClose={() => setAssignTeamDialogOpen(false)}
+        onClose={() => handleCloseAssignTeamDialog()}
         notifySuccess={notifySuccess}
         notifyError={notifyError}
         assessment={selectedAssessment}
