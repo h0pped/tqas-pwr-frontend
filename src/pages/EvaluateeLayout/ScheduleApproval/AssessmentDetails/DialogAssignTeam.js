@@ -256,6 +256,7 @@ export default function DialogAssignTeam({
               setSaveLoading(false);
               setLeader(null);
               setTeamLeader(null);
+              onClose();
             }
           });
         } catch (error) {
