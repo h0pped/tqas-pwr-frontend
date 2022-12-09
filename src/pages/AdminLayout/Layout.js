@@ -23,12 +23,10 @@ import ListItemText from '@mui/material/ListItemText';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
-import DescriptionIcon from '@mui/icons-material/Description';
 import MenuItem from '@mui/material/MenuItem';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import LanguageSwitchV2 from '../../components/LanguageSwitch/LanguageSwitchV2.js';
-import Protocols from './Protocols/Protocols.js';
 import ManageUsers from './ManageUsers/ManageUsers.js';
 import Assessments from './Assessments/Assessments.js';
 import ManageWZHZGroup from './ManageWZHZGroup/ManageWZHZGroup.js';
@@ -164,18 +162,6 @@ export default function Layout() {
       link: 'wzhz-szhz',
       component: (
         <ManageWZHZGroup {...{ setDrawerSelectedItem, link: 'wzhz-szhz' }} />
-      ),
-    },
-    {
-      title: t('drawer_item_title_protocols'),
-      icon: (
-        <DescriptionIcon
-          color={drawerSelectedItem === 'protocols' ? 'primary' : 'action'}
-        />
-      ),
-      link: 'protocols',
-      component: (
-        <Protocols {...{ setDrawerSelectedItem, link: 'protocols' }} />
       ),
     },
     {
