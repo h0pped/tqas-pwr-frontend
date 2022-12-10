@@ -87,6 +87,7 @@ export default function ScheduleApproval({ setSelectedPage, link }) {
       <DialogAssignTeam
         isOpen={isAssignTeamDialogOpen}
         onClose={() => setAssignTeamDialogOpen(false)}
+        onSaveEvaluationTeam={() => window.location.reload()}
         notifySuccess={notifySuccess}
         notifyError={notifyError}
         assessment={selectedAssessment}
