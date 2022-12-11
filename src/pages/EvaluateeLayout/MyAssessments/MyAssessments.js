@@ -46,7 +46,11 @@ export default function MyAssessments({ setSelectedPage, link }) {
       )
         .then((response) => response.json())
         .then(({ evaluatee }) => {
-          setAssessments(evaluatee[0]);
+          if (evaluatee[0]) {
+            setAssessments(evaluatee[0]);
+          } else {
+            setAssessments([]);
+          }
           setAssessmentsLoading(false);
         });
     } catch (error) {
