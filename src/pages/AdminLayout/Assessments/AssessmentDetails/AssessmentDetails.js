@@ -104,7 +104,7 @@ export default function AssessmentDetails({
     );
   }
 
-  const handleProtocolDownload = (evaluatee) => {
+  const handleProtocolDownload = (evaluatee, fullName) => {
     setProtocolFileExportLoading(true);
     const { id } = evaluatee.evaluations.find(({ status }) =>
       isProtocolButtonEnabled(status)
@@ -122,7 +122,7 @@ export default function AssessmentDetails({
         )
           .then((resp) => resp.blob())
           .then((blob) => {
-            const filename = generateFileName(assessmentDetails.name, 'pdf');
+            const filename = generateFileName(fullName, 'pdf');
             download(blob, filename);
             setProtocolFileExportLoading(false);
             notifySuccess(t('file_successfully_exported'));
@@ -346,7 +346,12 @@ export default function AssessmentDetails({
                       isProtocolButtonEnabled(status)
                     )
                   }
-                  onClick={() => handleProtocolDownload(row.evaluatee)}
+                  onClick={() =>
+                    handleProtocolDownload(
+                      row.evaluatee,
+                      `${row.academic_title} ${row.first_name} ${row.last_name}`
+                    )
+                  }
                   aria-label="download-protocol"
                 >
                   <InsertDriveFileIcon />
