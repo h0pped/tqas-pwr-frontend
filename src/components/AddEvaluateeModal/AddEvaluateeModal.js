@@ -88,7 +88,7 @@ const AddEvaluateeModal = ({
   const mapUsersToDropDownValues = () => {
     const users = fetchedUsers.sort(sortUsersByEvaluationDate).map((user) => ({
       ...user,
-      mappedDate: mapDate(user.evaluatee.last_evaluated_date),
+      mappedDate: mapDate(user.evaluatee?.last_evaluated_date),
       label: formatUserDropDownTitle(user),
     }));
     setEvaluatees(users);
@@ -98,8 +98,8 @@ const AddEvaluateeModal = ({
     `${formatAcademicTitle(user.academic_title)} ${user.first_name} ${
       user.last_name
     }${
-      user.evaluatee.last_evaluated_date
-        ? ` (Last evaluation: ${user.evaluatee.last_evaluated_date})`
+      user.evaluatee?.last_evaluated_date
+        ? ` (Last evaluation: ${user.evaluatee?.last_evaluated_date})`
         : ''
     }`;
 
