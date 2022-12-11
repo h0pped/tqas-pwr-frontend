@@ -38,7 +38,7 @@ export default function EvaluationDetails({
   updatedEvaluation,
 }) {
   const { t } = useTranslation();
-  const { token } = useContext(UserContext);
+  const { token, firstName, lastName } = useContext(UserContext);
   const [isOpen, setIsOpen] = useState(false);
   const [rejectionReasonValue, setRejectionReasonValue] = useState('');
   const [isUpdated, setIsUpdated] = useState(false);
@@ -161,10 +161,7 @@ export default function EvaluationDetails({
       )
         .then((resp) => resp.blob())
         .then((blob) => {
-          const filename = generateFileName(
-            `${evaluationDetails.academic_title}_${evaluationDetails.first_name}_${evaluationDetails.last_name}`,
-            'pdf'
-          );
+          const filename = generateFileName(`${firstName} ${lastName}`, 'pdf');
           download(blob, filename);
           setProtocolFileExportLoading(false);
           notifySuccess(t('file_successfully_exported'));
