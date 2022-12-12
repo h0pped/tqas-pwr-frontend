@@ -291,8 +291,11 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
                   alignItems: 'center',
                 }}
               >
-                <Typography variant="subtitle2" sx={{ color: '#848884' }}>
-                  {t('no_assessments')}
+                <Typography
+                  variant="subtitle2"
+                  sx={{ color: '#848884', width: '75%', textAlign: 'center' }}
+                >
+                  {t('admin_no_assessments')}
                 </Typography>
               </Box>
             )}
