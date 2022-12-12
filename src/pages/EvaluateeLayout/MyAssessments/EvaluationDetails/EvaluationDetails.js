@@ -148,6 +148,7 @@ export default function EvaluationDetails({
   };
 
   const handleProtocolDownload = () => {
+    const idOfFileLoadToast = toast.loading(t('please_wait'));
     setProtocolFileExportLoading(true);
     try {
       fetch(
@@ -164,11 +165,21 @@ export default function EvaluationDetails({
           const filename = generateFileName(`${firstName} ${lastName}`, 'pdf');
           download(blob, filename);
           setProtocolFileExportLoading(false);
+          toast.update(idOfFileLoadToast, {
+            render: t('file_successfully_exported'),
+            type: 'success',
+            isLoading: false,
+          });
           notifySuccess(t('file_successfully_exported'));
         });
     } catch (err) {
       notifyError(t('error_server'));
       setProtocolFileExportLoading(false);
+      toast.update(idOfFileLoadToast, {
+        render: t('error_server'),
+        type: 'error',
+        isLoading: false,
+      });
     }
   };
 

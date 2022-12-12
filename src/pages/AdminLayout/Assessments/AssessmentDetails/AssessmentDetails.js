@@ -105,7 +105,7 @@ export default function AssessmentDetails({
   }
 
   const handleProtocolDownload = (evaluatee, fullName) => {
-    const idOfFileLoadToast = toast.loading('Please wait...');
+    const idOfFileLoadToast = toast.loading(t('please_wait'));
     setProtocolFileExportLoading(true);
     const { id } = evaluatee.evaluations.find(({ status }) =>
       isProtocolButtonEnabled(status)
