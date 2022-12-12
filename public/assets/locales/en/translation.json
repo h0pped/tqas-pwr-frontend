@@ -209,5 +209,6 @@
   "saving_draft_protocol_error": "There was an error while saving draft version of the protocol. Try again later.",
   "protocol_submit_success": "Protocol was successfully submitted!",
   "protocol_submit_error": "There was an error while submitting protocol. Try again later.",
+  "please_wait": "Please wait...",
   "admin_no_assessments": "No assessments found. Click „New assessment +” to create new one."
 }
