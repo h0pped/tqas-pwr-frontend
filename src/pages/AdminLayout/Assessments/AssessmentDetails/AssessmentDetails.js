@@ -105,6 +105,7 @@ export default function AssessmentDetails({
   }
 
   const handleProtocolDownload = (evaluatee, fullName) => {
+    const idOfFileLoadToast = toast.loading('Please wait...');
     setProtocolFileExportLoading(true);
     const { id } = evaluatee.evaluations.find(({ status }) =>
       isProtocolButtonEnabled(status)
@@ -125,14 +126,26 @@ export default function AssessmentDetails({
             const filename = generateFileName(fullName, 'pdf');
             download(blob, filename);
             setProtocolFileExportLoading(false);
-            notifySuccess(t('file_successfully_exported'));
+            toast.update(idOfFileLoadToast, {
+              render: t('file_successfully_exported'),
+              type: 'success',
+              isLoading: false,
+            });
           });
       } catch (err) {
-        notifyError(t('error_server'));
         setProtocolFileExportLoading(false);
+        toast.update(idOfFileLoadToast, {
+          render: t('error_server'),
+          type: 'error',
+          isLoading: false,
+        });
       }
     } else {
-      notifyError(t('export_pdf_protocol_error'));
+      toast.update(idOfFileLoadToast, {
+        render: t('export_pdf_protocol_error'),
+        type: 'error',
+        isLoading: false,
+      });
     }
   };
 
