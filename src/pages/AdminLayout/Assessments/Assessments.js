@@ -280,6 +280,23 @@ export default function Assessments({ setDrawerSelectedItem, link }) {
                 </Select>
               </FormControl>
             </Box>
+
+            {assessments && assessments.length === 0 && (
+              <Box
+                sx={{
+                  display: 'flex',
+                  width: '100%',
+                  height: '100%',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Typography variant="subtitle2" sx={{ color: '#848884' }}>
+                  {t('no_assessments')}
+                </Typography>
+              </Box>
+            )}
+
             {isAssessmentsLoading && <LinearProgress />}
             {!isAssessmentsLoading &&
               filteredAssessments.map((item) => (
