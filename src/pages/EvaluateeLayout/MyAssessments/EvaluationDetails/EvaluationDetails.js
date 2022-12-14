@@ -170,7 +170,6 @@ export default function EvaluationDetails({
             type: 'success',
             isLoading: false,
           });
-          notifySuccess(t('file_successfully_exported'));
         });
     } catch (err) {
       notifyError(t('error_server'));
