@@ -1,5 +1,5 @@
 export const formatAcademicTitle = (title) =>
   title
     .split(' ')
-    .map((word) => `${word[0].toUpperCase()}${word.substring(1)}`)
+    .map((word) => `${word[0]?.toUpperCase()}${word.substring(1)}`)
     .join('. ');
