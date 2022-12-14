@@ -1,5 +1,5 @@
 export const academicTitlesList = [
-  '---',
+  '',
   'lic',
   'inz',
   'mgr',
