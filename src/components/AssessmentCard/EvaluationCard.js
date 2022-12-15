@@ -90,7 +90,7 @@ export default function EvaluationCard({
         <Chip
           sx={{ color: isSelected ? '#ffffff' : '#000000' }}
           size="small"
-          label={status}
+          label={t(`${status.toLowerCase()}`)}
         />
       </Box>
     </Box>

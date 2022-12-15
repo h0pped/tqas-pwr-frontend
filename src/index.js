@@ -7,6 +7,8 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import i18next from 'i18next';
+import cookies from 'js-cookie';
+import { plPL, enUS } from '@mui/material/locale';
 import { initReactI18next } from 'react-i18next';
 import HttpApi from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
@@ -18,31 +20,34 @@ import reportWebVitals from './reportWebVitals.js';
 import Login from './pages/Login/Login.js';
 import { UserContextProvider } from './context/UserContext/UserContext.js';
 
-const theme = createTheme({
-  typography: {
-    fontFamily: [
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(','),
-  },
-  palette: {
-    primary: {
-      light: '#DF9A8C',
-      main: '#D9372A',
-      dark: '#C31E1A',
+const theme = createTheme(
+  {
+    typography: {
+      fontFamily: [
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+      ].join(','),
     },
-    secondary: {
-      light: '#DF9A8C',
-      main: '#FFFFFF',
-      dark: '#C31E1A',
+    palette: {
+      primary: {
+        light: '#DF9A8C',
+        main: '#D9372A',
+        dark: '#C31E1A',
+      },
+      secondary: {
+        light: '#DF9A8C',
+        main: '#FFFFFF',
+        dark: '#C31E1A',
+      },
     },
   },
-});
+  cookies.get('i18next') === 'en' ? enUS : plPL
+);
 
 i18next
   .use(HttpApi)

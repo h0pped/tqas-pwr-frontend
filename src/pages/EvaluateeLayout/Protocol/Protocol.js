@@ -287,7 +287,7 @@ const Protocol = ({
       >
         <FormControl sx={{ display: 'flex', width: '100%', my: 5 }}>
           <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Course</InputLabel>
+            <InputLabel id="demo-simple-select-label">{t('course')}</InputLabel>
             {courses && courses.length > 0 && (
               <Select
                 labelId="demo-simple-select-label"

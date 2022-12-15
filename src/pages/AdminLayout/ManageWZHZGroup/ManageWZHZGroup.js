@@ -226,6 +226,7 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
         <DataGrid
           rows={members}
           columns={columns}
+          disableSelectionOnClick
           rowsPerPageOptions={[5, 25, 50]}
           pageSize={pageSize}
           getRowId={(row) => row.id}

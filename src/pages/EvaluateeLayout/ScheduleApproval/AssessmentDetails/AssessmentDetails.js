@@ -510,7 +510,7 @@ export default function AssessmentDetails({
               Status
             </Typography>
             <Typography variant="subtitle2" sx={{ width: '40%' }}>
-              {assessmentDetails.status}
+              {t(`${assessmentDetails.status.toLowerCase()}`)}
             </Typography>
           </Box>
           <Box
