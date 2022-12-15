@@ -19,14 +19,14 @@ const customDataGridToolbar = function CustomToolbar() {
           justifyContent: 'space-between',
         }}
       >
+        <Box sx={{ width: '25%' }}>
+          <GridToolbarQuickFilter sx={{ width: '100%' }} />
+        </Box>
         <Box>
           <GridToolbarExport />
           <GridToolbarColumnsButton />
           <GridToolbarDensitySelector />
           <GridToolbarFilterButton />
-        </Box>
-        <Box sx={{ width: '25%' }}>
-          <GridToolbarQuickFilter sx={{ width: '100%' }} />
         </Box>
       </Box>
     </GridToolbarContainer>
