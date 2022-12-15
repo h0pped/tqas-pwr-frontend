@@ -1,6 +1,9 @@
 MIT License
 
 Copyright (c) 2022 Illia Nykonchuk
+Copyright (c) 2022 Anton Chernukha
+Copyright (c) 2022 Danylo Wasylyshyn
+Copyright (c) 2022 Tania Munthe
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
