@@ -133,17 +133,23 @@ const Protocol = ({
     sectionTitle
   ) => {
     const { id, value } = e.target;
-
     setFullFilledProtocolQuestions((prev) => {
       const newProtocol = { ...prev };
       newProtocol[sectionTitle]?.forEach((question) => {
         if (question.question_text === parentQuestion) {
           // eslint-disable-next-line no-param-reassign
-          question.answer = {
-            ...question.answer,
-            answer: parentQuestionChoice,
-            [id]: value,
-          };
+          if (typeof question.answer === 'string') {
+            question.answer = {
+              answer: parentQuestionChoice,
+              [id]: value,
+            };
+          } else if (typeof question.answer === 'object') {
+            question.answer = {
+              ...question.answer,
+              answer: parentQuestionChoice,
+              [id]: value,
+            };
+          }
         }
       });
       return newProtocol;
