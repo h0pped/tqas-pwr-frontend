@@ -227,6 +227,42 @@ export default function ManageEvaluationGroup({ setDrawerSelectedItem, link }) {
           rows={members}
           columns={columns}
           disableSelectionOnClick
+          localeText={{
+            toolbarColumns: t('columns'),
+            toolbarFilters: t('filters'),
+            toolbarDensity: t('density'),
+            toolbarExport: t('export'),
+            toolbarQuickFilterPlaceholder: t('search'),
+            toolbarExportCSV: t('export_csv'),
+            toolbarExportPrint: t('print'),
+            toolbarDensityComfortable: t('comfortable'),
+            toolbarDensityStandard: t('standard'),
+            toolbarDensityCompact: t('compact'),
+            columnsPanelHideAllButton: t('hide_all'),
+            columnsPanelShowAllButton: t('show_all'),
+            columnsPanelTextFieldLabel: t('find_column'),
+            columnsPanelTextFieldPlaceholder: t('column_title'),
+            filterPanelColumns: t('columns'),
+            filterPanelOperators: t('operators'),
+            filterPanelInputLabel: t('value'),
+            filterPanelInputPlaceholder: t('filter_value'),
+            filterOperatorContains: t('filterOperatorContains'),
+            filterOperatorEndsWith: t('filterOperatorEndsWith'),
+            filterOperatorEquals: t('filterOperatorEquals'),
+            filterOperatorIs: t('filterOperatorIs'),
+            filterOperatorIsAnyOf: t('filterOperatorIsAnyOf'),
+            filterOperatorIsEmpty: t('filterOperatorIsEmpty'),
+            filterOperatorIsNotEmpty: t('filterOperatorIsNotEmpty'),
+            filterOperatorNot: t('filterOperatorNot'),
+            filterOperatorStartsWith: t('filterOperatorStartsWith'),
+            noRowsLabel: t('no_rows'),
+            columnMenuSortAsc: t('sort_by_asc'),
+            columnMenuSortDesc: t('sort_by_desc'),
+            columnMenuFilter: t('filter'),
+            columnMenuHideColumn: t('hide'),
+            columnMenuShowColumns: t('show_columns'),
+            columnMenuUnsort: t('unsort'),
+          }}
           rowsPerPageOptions={[5, 25, 50]}
           pageSize={pageSize}
           getRowId={(row) => row.id}
