@@ -96,7 +96,7 @@ export default function ProtocolCard({ protocol, setOpenProtcolForm }) {
           <Chip
             sx={{ color: '#000000' }}
             size="small"
-            label={protocol.evaluations[0].status}
+            label={t(`${protocol.evaluations[0].status.toLowerCase()}`)}
           />
         </Box>
       </Box>

@@ -543,7 +543,7 @@ export default function DialogAssignTeam({
                       `${option.academic_title} ${option.first_name} ${option.last_name} `
                     }
                     renderInput={(params) => (
-                      <TextField {...params} label="WZHZ List" />
+                      <TextField {...params} label={t('wzhz')} />
                     )}
                   />
                   <Button
@@ -575,7 +575,7 @@ export default function DialogAssignTeam({
                       `${option.academic_title} ${option.first_name} ${option.last_name} `
                     }
                     renderInput={(params) => (
-                      <TextField {...params} label="User" />
+                      <TextField {...params} label={t('user')} />
                     )}
                   />
                   <Button

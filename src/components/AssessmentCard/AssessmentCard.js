@@ -156,7 +156,7 @@ export default function AssessmentCard({
         <Chip
           sx={{ color: isSelected ? '#ffffff' : '#000000' }}
           size="small"
-          label={status}
+          label={t(`${status.toLowerCase()}`)}
         />
         <Typography variant="subtitle1">
           {`${numberOfEvaluatees} ${t('assessment_card_evaluatees')}`}
