@@ -27,7 +27,7 @@ export default function validate(values) {
   } else {
     if (
       String(values.password).length < 8 ||
-      String(values.password).length > 16
+      String(values.password).length > 64
     ) {
       errors.password = 'login_validation_psw_err_length';
     }
