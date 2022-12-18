@@ -53,6 +53,7 @@
   "acc_revovery_error": "Account recovery failed. Please try again later.",
   "acc_recovery_success": "Your account has been successfully recovered",
   "email_not_found": "There was an error while trying to activate your account.",
+  "email_reset_psw_not_found": "There was an error while trying to reset password for your account.",
   "recovery_code_blocked": "Recovery process is blocked for that account. Please, try again later in 15 minutes.",
   "admin_manage_users_title": "Manage users",
   "label_academic_title": "Academic title",
