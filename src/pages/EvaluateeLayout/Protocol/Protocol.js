@@ -277,9 +277,6 @@ const Protocol = ({
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
             {t('protocol')}
           </Typography>
-          <Button autoFocus color="inherit" onClick={handleClose}>
-            {t('submit')}
-          </Button>
         </Toolbar>
       </AppBar>
       <Box
