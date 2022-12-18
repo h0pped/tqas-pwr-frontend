@@ -107,7 +107,7 @@ export default function ActivateAccountComponent({ handleFormClick }) {
         setDialogContent({
           title: t('error_dialog'),
           severity: 'error',
-          content: t('already_activated'),
+          content: t('email_not_found'),
         });
         setIsOpen(true);
       } else if (codeSendStatus === 200) {

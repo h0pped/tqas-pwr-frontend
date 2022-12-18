@@ -310,7 +310,7 @@ const Protocol = ({
                       data-protocolid={protocolId}
                       key={course.course_code}
                     >
-                      {course.course_name}
+                      {`${course.course_code}: ${course.course_name}`}
                     </MenuItem>
                   ))}
               </Select>

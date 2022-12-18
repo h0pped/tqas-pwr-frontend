@@ -48,7 +48,7 @@
   "acc_activation_code_error": "Podany kod aktywacyjny jest nieprawidłowy. Proszę spróbuj ponownie.",
   "acc_activation_error": "Aktywacja konta nie powiodła się. Proszę spróbuj ponownie.",
   "acc_activation_error_not_found": "Konto z podanym adresem e-mail nie istnieje.",
-  "email_not_found": "Podany adres e-mail nie został znaleziony w naszych rejestrach. Spróbuj innego.",
+  "email_not_found": "Podczas próby aktywacji konta wystąpił błąd.",
   "wrong_recovery_code": "Podany kod odzyskiwania jest nieprawidłowy. Proszę spróbuj ponownie.",
   "acc_revovery_not_found": "Konto z podanym adresem e-mail nie istnieje.",
   "acc_revovery_error": "Odzyskiwanie konta nie powiodło się. Spróbuj ponownie później.",
@@ -252,6 +252,7 @@
   "done": "Ukończona",
   "accepted": "Zaakceptowana",
   "rejected": "Odrzucona",
+  "in review": "W recenzji",
   "wzhz": "Członek z WZHZ/SZHZ",
   "user": "Członek",
   "course": "Kurs"
