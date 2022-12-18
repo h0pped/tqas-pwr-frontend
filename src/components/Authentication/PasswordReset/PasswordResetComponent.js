@@ -104,7 +104,7 @@ export default function PasswordResetComponent({ handleFormClick }) {
         setDialogContent({
           title: t('error_dialog'),
           severity: 'error',
-          content: t('email_not_found'),
+          content: t('email_reset_psw_not_found'),
         });
         setIsOpen(true);
       } else if (codeSendStatus === 500) {
