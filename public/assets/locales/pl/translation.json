@@ -25,7 +25,7 @@
   "btn_forgot_email_reset": "Zresetuj",
   "btn_reset_password": "Zresetuj",
   "reset_password_email_tooltip": "Użyjemy tego e-maila, aby wysłać link do zresetowania hasła.",
-  "login_validation_psw_err_length": "Hasło powinno mieć od 8 do 16 znaków.",
+  "login_validation_psw_err_length": "Hasło powinno mieć od 8 do 64 znaków.",
   "login_validation_psw_err_spec_chars": "Hasło musi zawierać co najmniej jeden z tych znaków specjalnych: !@#$%&*()+-=?",
   "login_validation_psw_err_digits": "Hasło musi zawierać co najmniej jedną cyfrę.",
   "login_validation_psw_err_lowercase": "Hasło musi zawierać co najmniej jedną małą literę.",
