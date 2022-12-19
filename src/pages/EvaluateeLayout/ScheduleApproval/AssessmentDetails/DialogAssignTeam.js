@@ -211,7 +211,7 @@ export default function DialogAssignTeam({
       )
     ) {
       notifyError(t('user_already_selected'));
-    } else {
+    } else if (user) {
       setVirtualUsers((oldArray) => [...oldArray, user]);
       setChangesMade(true);
       const updatedEvalTeam = currentEvaluationTeam;
