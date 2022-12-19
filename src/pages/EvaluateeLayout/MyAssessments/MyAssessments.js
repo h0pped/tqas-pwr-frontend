@@ -106,16 +106,18 @@ export default function MyAssessments({ setSelectedPage, link }) {
               assessments.evaluations &&
               !isAssessmentsLoading &&
               assessments.evaluations.length !== 0 &&
-              assessments.evaluations.map((evaluation) => (
-                <EvaluationCard
-                  key={evaluation.id}
-                  id={evaluation.id}
-                  semester={evaluation.assessment.name}
-                  status={evaluation.status}
-                  setId={setSelectedAssessment}
-                  isSelected={selectedAssessment === evaluation.id}
-                />
-              ))}
+              assessments.evaluations
+                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                .map((evaluation) => (
+                  <EvaluationCard
+                    key={evaluation.id}
+                    id={evaluation.id}
+                    semester={evaluation.assessment.name}
+                    status={evaluation.status}
+                    setId={setSelectedAssessment}
+                    isSelected={selectedAssessment === evaluation.id}
+                  />
+                ))}
           </Box>
         </Grid>
         <Grid item xs={8} sx={{ height: '100%' }}>
